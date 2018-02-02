@@ -1,0 +1,32 @@
+# Hover at the initial point using full 3D control
+
+INCLUDE QuadPhysicalParams.txt
+
+# simulation setup
+Sim.RunMode = Repeat
+Sim.EndTime = 10
+Sim.Vehicle1=Quad
+
+Quad.SimMode = Full3D
+
+# Controller selection
+Quad.ControllerType = FullCascadedController
+Quad.ControllerConfig = Controller
+
+# reference trajectory (just the starting position)
+Controller.Trajectory=0,0,-1
+
+# initial conditions
+Quad.InitialPos=0,0,-1
+Quad.InitialVel=0,0,0
+Quad.InitialYPR=0,0,0
+Quad.InitialOmega=0,0,0
+
+# graphing commands
+Commands.1=AddGraph.Quad.Pos.X
+Commands.2=AddGraph.Quad.Pos.Y
+Commands.2=AddGraph.Quad.Pos.Z
+
+INCLUDE ControllerParams.txt
+
+INCLUDE Simulation.txt

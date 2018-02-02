@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{6ce8217a-07b7-4d06-b8f8-7f7f4516cb93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{88ed2785-a755-45e6-9c76-5ab4465703b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Drawing">
+      <UniqueIdentifier>{99cee053-6d74-4886-9a34-662cd67e8bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Simulation">
+      <UniqueIdentifier>{88cbfddc-fe69-4464-a3fd-f995b25f94e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{666f7e33-1df4-4d84-9213-33cbea3f186d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Random.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utility\Timer.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utility\Camera.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Drawing\DrawingFuncs.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Drawing\ColorUtils.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Utility\SimpleConfig.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Drawing\Graph.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simulation\QuadDynamics.cpp">
+      <Filter>Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Drawing\Visualizer_GLUT.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Drawing\GLUTMenu.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Trajectory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simulation\Simulator.cpp">
+      <Filter>Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BaseController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Drawing\GraphManager.cpp">
+      <Filter>Drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Simulation\BaseDynamics.cpp">
+      <Filter>Simulation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Math\Mat3x3D.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\Quaternion.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\V3F.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\Angles.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utility\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\Random.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\V4D.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\V3D.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OnboardControls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Drawing\ColorUtils.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Drawing\DrawingFuncs.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math\Geometry.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utility\SimpleConfig.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utility\Mutex.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Drawing\Graph.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utility\StringUtils.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utility\FixedQueue.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DataSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simulation\QuadDynamics.h">
+      <Filter>Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Drawing\Visualizer_GLUT.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Drawing\GLUTMenu.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Trajectory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simulation\Simulator.h">
+      <Filter>Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\VehicleDatatypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Drawing\GraphManager.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Simulation\BaseDynamics.h">
+      <Filter>Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BaseController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FullCascadedController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SandboxController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SimpleAttitudeController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

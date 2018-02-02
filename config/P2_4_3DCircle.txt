@@ -1,0 +1,34 @@
+# Follow a circular trajectory in full 3D
+
+INCLUDE QuadPhysicalParams.txt
+
+# simulation setup
+Sim.RunMode = Repeat
+Sim.EndTime = 5
+Sim.Vehicle1=Quad
+
+Quad.SimMode = Full3D
+
+# Controller selection
+Quad.ControllerType = FullCascadedController
+Quad.ControllerConfig = Controller
+
+# reference trajectory (just the starting position)
+Controller.Trajectory=traj/CircleNoFF.txt
+
+# initial conditions
+Quad.InitialPos=0,0,-1
+Quad.InitialVel=0,0,0
+Quad.InitialYPR=0,0,1
+Quad.InitialOmega=0,0,0
+
+# graphing commands
+Commands.1=AddGraph.Quad.Pos.X
+Commands.2=AddGraph.Quad.Pos.Y
+Commands.3=AddGraph.Controller.Ref.X
+Commands.4=AddGraph.Controller.Ref.Y
+Commands.5=Toggle.Trajectory
+
+INCLUDE ControllerParams.txt
+
+INCLUDE Simulation.txt

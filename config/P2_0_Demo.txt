@@ -1,0 +1,31 @@
+# Sandbox controller (setting thrusts directly)
+
+INCLUDE QuadPhysicalParams.txt
+
+# simulation setup
+Sim.RunMode = Repeat
+Sim.EndTime = 1
+Sim.Vehicle1=Quad
+
+Quad.SimMode = Full3D
+
+# Controller selection
+Quad.ControllerType = SandboxController
+Quad.ControllerConfig = Controller
+
+# reference trajectory (just the starting position)
+Controller.Trajectory=traj/CircleNoFF.txt
+
+# initial conditions
+Quad.InitialPos=0,0,-1
+Quad.InitialVel=0,0,0
+Quad.InitialYPR=0,0,0
+Quad.InitialOmega=0,0,0
+
+# graphing commands
+Commands.1=AddGraph.Quad.Roll
+Commands.2=AddGraph.Quad.Pos.Z
+Commands.3=Toggle.Trajectory
+
+## CONTROLLER
+Controller.Type = SandboxController

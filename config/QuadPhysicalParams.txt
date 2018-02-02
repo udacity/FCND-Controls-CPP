@@ -1,0 +1,37 @@
+############################## SLR SIMPLECONFIG ############################
+# # or / or // begins a comment line
+# [X] <- namespace. Any parameter name Y after that becomes "X.Y".
+# Namespace and parameter names are not case-sensitive
+# X=Y defines a parameter 'X' to have value 'Y'
+# Y may be a string, float, or comma-separated list of several numbers
+############################################################################
+
+# Simulated quadcopter physical parameters
+
+[Sim] 
+# mass [Kg]
+Mass = 0.5
+
+# distance from vehicle origin to motors [m]
+L = 0.14
+
+# offset center-of-mass to vehicle body origin [m]
+cx = 0
+cy = 0
+
+# moments of inertia (assumed diagonal) [kg m2]
+Ixx = 0.0023
+Iyy = 0.0023
+Izz = 0.0046
+
+# time constant for props ramping up [s]
+tauaUp = 0.01
+
+# time constant for props ramping down [s]
+tauaDown = 0.02
+
+# thrust [N] per prop RPM [rad/s2]
+muBar = 00000425
+
+# ratio between thrust [N] and torque due to drag [N m]
+kappa = 0.016

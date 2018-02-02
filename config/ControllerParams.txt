@@ -1,0 +1,32 @@
+############################## SLR SIMPLECONFIG ############################
+# this is a comment. [X] is a namespace. [X:Y] initializes X from Y
+# Namespace and parameter names are not case-sensitive
+# X=Y sets X to Y. Y may be a string, float, or list of 3 floats
+############################################################################
+
+[Controller] 
+
+UseIdealEstimator=1
+
+# Physical properties
+Mass = 0.5
+L = 0.14
+Ixx = 0.0023
+Iyy = 0.0023
+Izz = 0.0046
+kappa = 0.016
+
+# Position control gains
+PGain_Pos_XY = 2
+PGain_Pos_Z = 3
+
+# Velocity control gains
+PGain_Vel_XY = 8
+PGain_Vel_Z = 12
+
+# Bank control gains
+PGain_Bank = 15
+PGain_Yaw = 1
+
+# Angle rate gains
+PGain_Omega = 100, 100, 20
