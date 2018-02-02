@@ -1,6 +1,6 @@
 CONFIG += c++11 console
 
-TARGET = simpoc
+TARGET = CPPSim
 
 INCLUDEPATH += ../src
 INCLUDEPATH += ../lib
