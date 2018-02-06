@@ -1,3 +1,4 @@
+#include "Common.h"
 #include "GLUTMenu.h"
 #include <vector>
 #include "DrawingFuncs.h"
