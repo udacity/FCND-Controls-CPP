@@ -1,4 +1,6 @@
+TEMPLATE = app
 CONFIG += c++11 console
+CONFIG -= qt
 
 TARGET = CPPSim
 
@@ -18,6 +20,6 @@ HEADERS += ../src/Simulation/*.h
 HEADERS += ../src/Utility/*.h
 HEADERS += ../lib/matrix/*.hpp
 
-LIBS += -lglut -lGLU
+LIBS += -lglut -lGLU -lGL
 
 QMAKE_CXXFLAGS += -Wno-unused-parameter -Wno-unused-local-typedefs
