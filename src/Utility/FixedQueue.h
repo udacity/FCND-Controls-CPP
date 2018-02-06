@@ -56,7 +56,7 @@ public:
 		_failret = b._failret;
 		reset();
 		if(b.empty()) return;
-		for(unsigned int i=b.n_meas()-1;i>=0;i--)
+		for(int i=(int)b.n_meas()-1;i>=0;i--)
 		{
 			push(b.at(i));
 		}
