@@ -99,7 +99,6 @@ public:
 	inline T pop_newest()
 	{
 		if(_begin==_end) return _failret;
-		unsigned int b = _end;
 		_end = (_end-1+_span+1)%(_span+1);
 		return _data[_end];
 	}

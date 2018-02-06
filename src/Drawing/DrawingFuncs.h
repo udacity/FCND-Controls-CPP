@@ -1,8 +1,14 @@
 #pragma once
 
+#ifndef __APPLE__
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <GL/glut.h>
+#include <GL/glu.h>
+#include <GL/freeglut.h>
+#else
+#include <GLUT/glut.h>
+#endif
+
 #include "Math/Quaternion.h"
 
 

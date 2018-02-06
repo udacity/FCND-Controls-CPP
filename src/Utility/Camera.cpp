@@ -1,6 +1,14 @@
 #include "Camera.h"
-#include <GL/glu.h>
 #include "../Math/MathUtils.h"
+
+#ifndef __APPLE__
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <GL/glu.h>
+#include <GL/freeglut.h>
+#else
+#include <GLUT/glut.h>
+#endif
 
 #define PI 3.1415926535897932384626433832795
 #define PIdiv180 (PI/180.0)

@@ -1,7 +1,5 @@
 #include "Common.h"
 #include "Graph.h"
-#include <GL/gl.h>
-#include <GL/glut.h>
 #include "../Drawing/DrawingFuncs.h"
 #include "../Utility/SimpleConfig.h"
 #include "../Utility/StringUtils.h"

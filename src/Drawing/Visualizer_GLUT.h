@@ -6,7 +6,6 @@
 #include <set>
 
 #include "Math/Geometry.h"
-#include <GL/glu.h>
 #include "Drawing/DrawingFuncs.h"
 #include "VehicleDatatypes.h"
 #include "Trajectory.h"

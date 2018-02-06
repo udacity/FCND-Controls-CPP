@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <GL/glut.h>
 
 using namespace std;
 using namespace fastdelegate;

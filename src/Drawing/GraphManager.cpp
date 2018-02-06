@@ -2,7 +2,7 @@
 #include "GraphManager.h"
 #include "../Utility/SimpleConfig.h"
 #include "../Utility/StringUtils.h"
-#include "GL/glut.h"
+#include "DrawingFuncs.h"
 #include "DataSource.h"
 
 using namespace SLR;

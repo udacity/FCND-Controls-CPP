@@ -123,7 +123,7 @@ public:
 		current = GetTimeMicroseconds();
 #endif
 		if(current<_begin_t) return 0;
-		return (unsigned long) ( ((double)(current-_begin_t)) * 10000.0 / (double)__highResCounterFreq);
+		return (TICKS) ( ((double)(current-_begin_t)) * 10000.0 / (double)__highResCounterFreq);
 	}
 
 	virtual uint64_t ElapsedMicroseconds() const

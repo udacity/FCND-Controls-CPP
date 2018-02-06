@@ -7,12 +7,18 @@
 
 #include "Drawing/DrawingFuncs.h"
 
-#include <GL/glut.h>
-#include <GL/freeglut.h>
-
 #include "../Simulation/QuadDynamics.h"
 #include "Drawing/ColorUtils.h"
 #include "GraphManager.h"
+
+#ifndef __APPLE__
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <GL/glu.h>
+#include <GL/freeglut.h>
+#else
+#include <GLUT/glut.h>
+#endif
 
 #define GRAPH_SCALE  0.4f
 
@@ -41,7 +47,7 @@ void _g_OnResize(int width, int height)
 void _g_OnDisplay()
 {
   if (_g_viz != NULL)
-  {
+  {	
     _g_viz->Paint();
   }
 }
@@ -60,6 +66,11 @@ void _g_OnWindowClose()
   {
     _g_viz->_exiting = true;
   }
+}
+
+void _g_OnExit()
+{
+  exit(0);
 }
 
 bool _g_keySpecialStates[246];
@@ -160,10 +171,8 @@ void Visualizer_GLUT::Reset()
 
 void Visualizer_GLUT::Update()
 {
-  glutMainLoopEvent();
+  glutPostWindowRedisplay(_glutWindowNum);
   if (_exiting) return;
-  glutSetWindow(_glutWindowNum);
-  glutPostRedisplay();
 }
 
 void Visualizer_GLUT::initializeGL(int *argcp, char **argv)
@@ -181,7 +190,10 @@ void Visualizer_GLUT::initializeGL(int *argcp, char **argv)
   _exiting = false;
   glutWMCloseFunc(&_g_OnWindowClose);
 
-  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+  glutWMCloseFunc(&_g_OnExit);
+  
+  // MAC GLUT implementation doesn't have this
+  //glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
   glutKeyboardFunc(_g_OnKeyPressed);
   glutKeyboardUpFunc(_g_OnKeyUp);
@@ -516,12 +528,12 @@ void Visualizer_GLUT::OnMouseMove(int x, int y)
 	int dx = x - lastPosX;
 	int dy = y - lastPosY;
 
-  if (_mouseLeftDown && (IsSpecialKeyDown(GLUT_KEY_CTRL_L) || IsSpecialKeyDown(GLUT_KEY_CTRL_R)))
+  if (_mouseLeftDown && (glutGetModifiers() & GLUT_ACTIVE_CTRL))
 	{
 		_camera.PanLeft(-dx/20.0);
 		_camera.PanUp(-dy/20.0);
 	}
-  else if(_mouseLeftDown && (IsSpecialKeyDown(GLUT_KEY_SHIFT_L) || IsSpecialKeyDown(GLUT_KEY_SHIFT_R)))
+  else if(_mouseLeftDown && (glutGetModifiers() & GLUT_ACTIVE_SHIFT))
 	{
 		_camera.DollyIn(-dy/10.0);
 	}

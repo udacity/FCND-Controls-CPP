@@ -369,7 +369,7 @@ public:
   };
 
 	// CHECKED
-	inline Quaternion IntegrateBodyRate_fast(const V3F pqr[3], const float half_dt) //body rates must be expressed in the body coordinate frame!
+	inline Quaternion IntegrateBodyRate_fast(const V3F pqr, const float half_dt) //body rates must be expressed in the body coordinate frame!
   {
 		// half-pqr-dt values
     const float p = -half_dt*pqr[0];

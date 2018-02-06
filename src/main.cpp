@@ -8,16 +8,32 @@
 #include "Utility/SimpleConfig.h"
 #include "Utility/StringUtils.h"
 #include "Drawing/GraphManager.h"
-#include "GL/glut.h"
 
 using SLR::Quaternion;
 using SLR::ToUpper;
 
-void KeyboardInteraction(V3F& force, Visualizer_GLUT& vis);
+void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> vis);
 bool receivedResetRequest = true;
 bool paused = false;
 void PrintHelpText();
-void ProcessConfigCommands(Visualizer_GLUT& vis);
+void ProcessConfigCommands(shared_ptr<Visualizer_GLUT> vis);
+
+
+QuadcopterHandle quad;
+shared_ptr<Trajectory> followed_traj;
+
+shared_ptr<Visualizer_GLUT> visualizer;
+shared_ptr<GraphManager> grapher;
+
+float dtSim = 0.001f;
+Timer lastDraw;
+V3F force, moment;
+
+float simulationTime=0;
+int randomNumCarry=0;
+string flightMode;
+
+void OnTimer(int v);
 
 int main(int argcp, char **argv)
 {
@@ -27,124 +43,112 @@ int main(int argcp, char **argv)
   ParamsHandle config = SimpleConfig::GetInstance();
 
   // initialize visualizer
-  Visualizer_GLUT visualizer(&argcp, argv);
-  shared_ptr<GraphManager> grapher(new GraphManager(false));
-
-  // initialize simulation
-  Simulator sim;
+  visualizer.reset(new Visualizer_GLUT(&argcp, argv));
+  grapher.reset(new GraphManager(false));
 
   // create a quadcopter to simulate
-  QuadcopterHandle quad = QuadDynamics::Create("Quad");
-  sim.AddVehicle(quad);
+  quad = QuadDynamics::Create("Quad");
 
   // Initialise the trajectory log
   string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", "");
-  shared_ptr<Trajectory> followed_traj(new Trajectory());
+  followed_traj.reset(new Trajectory());
   followed_traj->SetLogFile(followedTrajFile);
   quad->followedTrajectoryCallback = MakeDelegate(followed_traj.get(), &Trajectory::AddTrajectoryPoint);
 
   grapher->RegisterDataSource("Quad",quad);
 
-  visualizer.InitializeMenu(grapher->GetGraphableStrings());
+  visualizer->InitializeMenu(grapher->GetGraphableStrings());
 
-  visualizer.quad = quad;
-  visualizer.graph = grapher;
-  visualizer.followed_traj = followed_traj;
-
-  float dtSim = 0.001f;
-  Timer lastDraw;
-
-  V3F force, moment;
-
-  float simulationTime=0;
-  int randomNumCarry=0;
-  string flightMode;
+  visualizer->quad = quad;
+  visualizer->graph = grapher;
+  visualizer->followed_traj = followed_traj;
 
   ProcessConfigCommands(visualizer);
   
-  // main loop - everything is happening here
-  while (!visualizer._exiting)
-  {
-    // logic to reset the simulation based on key input or reset conditions
-    float endTime = config->Get("Sim.EndTime",-1.f);
-    if(receivedResetRequest ==true || 
-      (ToUpper(config->Get("Sim.RunMode", "Continuous"))=="REPEAT" && endTime>0 && simulationTime >= endTime))
-    {
-      receivedResetRequest = false;
-      simulationTime = 0;
-      config->Reset();
-      dtSim = config->Get("Sim.Timestep", 0.001f);
-      
-      flightMode = config->Get("Quad.SimMode","Full3D");
-
-      // Reset the followed trajectory
-      followed_traj->Clear();
-      string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", ""); 
-      followed_traj->SetLogFile(followedTrajFile);
-
-      quad->Reset();
-      grapher->Clear();
-    }
-
-    // main loop
-    if (!paused)
-    {
-      grapher->UpdateData(simulationTime);
-      quad->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
-    }
-
-    KeyboardInteraction(force, visualizer);
-
-    if (lastDraw.ElapsedSeconds() > 0.030)
-    {
-      visualizer.SetArrow(quad->Position() - force, quad->Position());
-      visualizer.Update();
-      grapher->DrawUpdate();
-      lastDraw.Reset();
-    }
-
-    // Only increment the simulation time if not paused
-    if (!paused)
-    {
-      simulationTime += dtSim;
-    }
-    Sleep((int)(dtSim * 1000));
-  } // end of while loop
+  glutTimerFunc(1,&OnTimer,0);
+  
+  glutMainLoop();
 
   return 0;
 }
 
-void KeyboardInteraction(V3F& force, Visualizer_GLUT& visualizer)
+void OnTimer(int v)
+{
+  ParamsHandle config = SimpleConfig::GetInstance();
+  
+  // logic to reset the simulation based on key input or reset conditions
+  float endTime = config->Get("Sim.EndTime",-1.f);
+  if(receivedResetRequest ==true ||
+     (ToUpper(config->Get("Sim.RunMode", "Continuous"))=="REPEAT" && endTime>0 && simulationTime >= endTime))
+  {
+    receivedResetRequest = false;
+    simulationTime = 0;
+    config->Reset();
+    dtSim = config->Get("Sim.Timestep", 0.001f);
+    
+    flightMode = config->Get("Quad.SimMode","Full3D");
+    
+    // Reset the followed trajectory
+    followed_traj->Clear();
+    string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", "");
+    followed_traj->SetLogFile(followedTrajFile);
+    
+    quad->Reset();
+    grapher->Clear();
+  }
+  
+  // main loop
+  if (!paused)
+  {
+    grapher->UpdateData(simulationTime);
+    quad->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+    simulationTime += dtSim;
+  }
+  
+  KeyboardInteraction(force, visualizer);
+  
+  if (lastDraw.ElapsedSeconds() > 0.030)
+  {
+    visualizer->SetArrow(quad->Position() - force, quad->Position());
+    visualizer->Update();
+    grapher->DrawUpdate();
+    lastDraw.Reset();
+  }
+  
+  glutTimerFunc(1,&OnTimer,0);
+}
+
+void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
 {
   bool keyPressed = false;
   const float forceStep = 0.04f;
 
-  if (visualizer.IsSpecialKeyDown(GLUT_KEY_LEFT))
+  if (visualizer->IsSpecialKeyDown(GLUT_KEY_LEFT))
   {
     force += V3F(0, -forceStep, 0);
     keyPressed = true;
   }
-  if (visualizer.IsSpecialKeyDown(GLUT_KEY_UP))
+  if (visualizer->IsSpecialKeyDown(GLUT_KEY_UP))
   {
     force += V3F(0, 0, -forceStep);
     keyPressed = true;
   }
-  if (visualizer.IsSpecialKeyDown(GLUT_KEY_RIGHT))
+  if (visualizer->IsSpecialKeyDown(GLUT_KEY_RIGHT))
   {
     force += V3F(0, forceStep, 0);
     keyPressed = true;
   }
-  if (visualizer.IsSpecialKeyDown(GLUT_KEY_DOWN))
+  if (visualizer->IsSpecialKeyDown(GLUT_KEY_DOWN))
   {
     force += V3F(0, 0, forceStep);
     keyPressed = true;
   }
-  if (visualizer.IsKeyDown('w'))
+  if (visualizer->IsKeyDown('w'))
   {
     force += V3F(forceStep, 0, 0);
     keyPressed = true;
   }
-  if (visualizer.IsKeyDown('s'))
+  if (visualizer->IsKeyDown('s'))
   {
     force += V3F(-forceStep, 0, 0);
     keyPressed = true;
@@ -159,27 +163,26 @@ void KeyboardInteraction(V3F& force, Visualizer_GLUT& visualizer)
     force = force / force.mag() * 2.f;
   }
 
-  if (visualizer.IsKeyDown('c'))
+  if (visualizer->IsKeyDown('c'))
   {
-    visualizer.graph->graph->RemoveAllSeries();
+    visualizer->graph->graph->RemoveAllSeries();
   }
 
-  if (visualizer.IsKeyDown('r'))
+  if (visualizer->IsKeyDown('r'))
   {
     receivedResetRequest = true;
   }
-
 
   static bool key_p_pressed = false;
   static bool key_t_pressed = false;
   static bool key_space_pressed = false;
 
-  if (visualizer.IsKeyDown('p'))
+  if (visualizer->IsKeyDown('p'))
   {
     if (!key_p_pressed)
     {
       key_p_pressed = true;
-      visualizer.showPropCommands = !visualizer.showPropCommands;
+      visualizer->showPropCommands = !visualizer->showPropCommands;
     }
   }
   else
@@ -187,12 +190,12 @@ void KeyboardInteraction(V3F& force, Visualizer_GLUT& visualizer)
     key_p_pressed = false;
   }
 
-  if (visualizer.IsKeyDown('t'))
+  if (visualizer->IsKeyDown('t'))
   {
     if (!key_t_pressed)
     {
       key_t_pressed = true;
-      visualizer.showTrajectory = !visualizer.showTrajectory;
+      visualizer->showTrajectory = !visualizer->showTrajectory;
     }
   }
   else
@@ -200,13 +203,13 @@ void KeyboardInteraction(V3F& force, Visualizer_GLUT& visualizer)
     key_t_pressed = false;
   }
 
-  if (visualizer.IsKeyDown(' '))
+  if (visualizer->IsKeyDown(' '))
   {
     if (!key_space_pressed)
     {
       key_space_pressed = true;
       paused = !paused;
-      visualizer.paused = paused;
+      visualizer->paused = paused;
     }
   }
   else
@@ -215,7 +218,7 @@ void KeyboardInteraction(V3F& force, Visualizer_GLUT& visualizer)
   }
 }
 
-void ProcessConfigCommands(Visualizer_GLUT& vis)
+void ProcessConfigCommands(shared_ptr<Visualizer_GLUT> vis)
 {
   ParamsHandle config = SimpleConfig::GetInstance();
   int i = 1;
@@ -225,7 +228,7 @@ void ProcessConfigCommands(Visualizer_GLUT& vis)
     sprintf_s(buf, 100, "Commands.%d", i);
     string cmd = config->Get(buf, "");
     if (cmd == "") break;
-    vis.OnMenu(cmd);
+    vis->OnMenu(cmd);
     i++;
   }
 }

@@ -1,6 +1,6 @@
 #include "GLUTMenu.h"
 #include <vector>
-#include <GL/glut.h>
+#include "DrawingFuncs.h"
 
 using std::vector;
 

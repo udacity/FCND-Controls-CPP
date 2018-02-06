@@ -3,7 +3,7 @@
 #include "BaseDynamics.h"
 #include "Math/V4D.h"
 #include "BaseController.h"
-#include "matrix/math.hpp"
+#include <matrix/math.hpp>
 #include "Math/LowPassFilter.h"
 
 class QuadDynamics;
