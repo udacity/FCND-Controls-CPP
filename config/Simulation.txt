@@ -8,8 +8,8 @@
 
 [Sim] 
 
-# 1ms simulation steps
-Timestep = 0.001 
+# 5ms simulation steps
+Timestep = 0.005 
 
 # Record vehicle state to this file
 # comment out to disable

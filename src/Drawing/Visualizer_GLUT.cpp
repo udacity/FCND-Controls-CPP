@@ -528,12 +528,12 @@ void Visualizer_GLUT::OnMouseMove(int x, int y)
 	int dx = x - lastPosX;
 	int dy = y - lastPosY;
 
-  if (_mouseLeftDown && (glutGetModifiers() & GLUT_ACTIVE_CTRL))
+  if (_mouseLeftDown && IsKeyDown('x'))
 	{
 		_camera.PanLeft(-dx/20.0);
 		_camera.PanUp(-dy/20.0);
 	}
-  else if(_mouseLeftDown && (glutGetModifiers() & GLUT_ACTIVE_SHIFT))
+  else if(_mouseLeftDown && IsKeyDown('z'))
 	{
 		_camera.DollyIn(-dy/10.0);
 	}

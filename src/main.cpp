@@ -72,6 +72,26 @@ int main(int argcp, char **argv)
   return 0;
 }
 
+void ResetSimulation()
+{
+  ParamsHandle config = SimpleConfig::GetInstance();
+
+  receivedResetRequest = false;
+  simulationTime = 0;
+  config->Reset();
+  dtSim = config->Get("Sim.Timestep", 0.005f);
+  
+  flightMode = config->Get("Quad.SimMode","Full3D");
+  
+  // Reset the followed trajectory
+  followed_traj->Clear();
+  string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", "");
+  followed_traj->SetLogFile(followedTrajFile);
+  
+  quad->Reset();
+  grapher->Clear();
+}
+
 void OnTimer(int v)
 {
   ParamsHandle config = SimpleConfig::GetInstance();
@@ -81,20 +101,7 @@ void OnTimer(int v)
   if(receivedResetRequest ==true ||
      (ToUpper(config->Get("Sim.RunMode", "Continuous"))=="REPEAT" && endTime>0 && simulationTime >= endTime))
   {
-    receivedResetRequest = false;
-    simulationTime = 0;
-    config->Reset();
-    dtSim = config->Get("Sim.Timestep", 0.001f);
-    
-    flightMode = config->Get("Quad.SimMode","Full3D");
-    
-    // Reset the followed trajectory
-    followed_traj->Clear();
-    string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", "");
-    followed_traj->SetLogFile(followedTrajFile);
-    
-    quad->Reset();
-    grapher->Clear();
+    ResetSimulation();
   }
   
   // main loop
@@ -115,7 +122,7 @@ void OnTimer(int v)
     lastDraw.Reset();
   }
   
-  glutTimerFunc(1,&OnTimer,0);
+  glutTimerFunc(5,&OnTimer,0);
 }
 
 void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
@@ -237,7 +244,7 @@ void PrintHelpText()
 {
   printf("SIMULATOR!\n");
   printf("Select main window to interact with keyboard/mouse:\n");
-  printf("LEFT DRAG / CTRL+LEFT DRAG / SHIFT+LEFT DRAG = rotate, pan, zoom camera\n");
+  printf("LEFT DRAG / X+LEFT DRAG / Z+LEFT DRAG = rotate, pan, zoom camera\n");
   printf("W/S/UP/LEFT/DOWN/RIGHT - apply force\n");
   printf("P - show thrusts\n");
   printf("T - show trajectory\n");
