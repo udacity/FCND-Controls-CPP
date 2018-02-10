@@ -3,11 +3,12 @@
 
 #include <math.h>
 #include "Math/MathUtils.h"
+#include "Utility/StringUtils.h"
 #include <limits>
 
 #include "Drawing/DrawingFuncs.h"
 
-#include "../Simulation/QuadDynamics.h"
+#include "Simulation/QuadDynamics.h"
 #include "Drawing/ColorUtils.h"
 #include "GraphManager.h"
 
@@ -21,6 +22,8 @@
 #endif
 
 #define GRAPH_SCALE  0.4f
+
+using namespace SLR;
 
 
 Visualizer_GLUT* _g_viz = NULL;
@@ -94,7 +97,7 @@ void _g_OnSpecialKeyUp(int key, int x, int y) {
 
 
 Visualizer_GLUT::Visualizer_GLUT(int *argcp, char **argv)
-: _camera(V3D(-5,-1,-5),V3D(0,0,-1))
+: _camera(V3D(-5,-1,-5),V3D(0,0,-1)), _draw_dt_ms(.1f)
 {
   _camera.SetUp(V3D(0,0,-1));
   glutInit(argcp, argv);
@@ -322,6 +325,9 @@ SLR::LineD Visualizer_GLUT::ScreenToPickVector(double x, double y)
 
 void Visualizer_GLUT::Paint()
 {
+  _draw_dt_ms = (float)_lastDraw.Seconds() * 1000.f;
+  _lastDraw.Reset();
+  
   glutSetWindow(_glutWindowNum);
   
 	Timer t;
@@ -399,10 +405,6 @@ void Visualizer_GLUT::Paint()
     VisualizeTrajectory(*followed_traj.get(), false, V3F(1,1,.5f));
   }
 
-
-  // Update the last paint time
-	_lastPaintTime.Reset();
-
   // disable lights and fancy 3d effects for 2d drawing
 	_glDraw->SetLighting(false);
 
@@ -438,7 +440,9 @@ void Visualizer_GLUT::Paint()
     DrawStrokeText("Paused", -1+0.1f, 1-0.2f, 0, 3.f);
   }
 
-  glutSwapBuffers();
+  //glutSwapBuffers();
+  
+  _last_draw_time_ms = (float)t.Seconds()*1000.f;
 }
 
 void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
@@ -653,4 +657,37 @@ void Visualizer_GLUT::OnMenu(string cmd)
   {
     graph->AddGraph(cmd);
   }
+}
+
+void Visualizer_GLUT::OnMainTimer()
+{
+  _timer_dt_ms = (float)_lastMainTimerEvent.Seconds()*1000.f;
+  _lastMainTimerEvent.Reset();
+}
+
+bool Visualizer_GLUT::GetData(const string& name, float& ret) const
+{
+  if (name.find_first_of(".") == string::npos) return false;
+  string leftPart = LeftOf(name, '.');
+  string rightPart = RightOf(name, '.');
+  
+  if (ToUpper(leftPart) == "SIM")
+  {
+#define GETTER_HELPER(A,B) if (SLR::ToUpper(rightPart) == SLR::ToUpper(A)){ ret=(B); return true; }
+    // UDACITY CONVENTION
+    GETTER_HELPER("Draw_dt", _draw_dt_ms);
+    GETTER_HELPER("Update_dt", _timer_dt_ms);
+    GETTER_HELPER("DrawTime", _last_draw_time_ms);
+#undef GETTER_HELPER
+  }
+  return false;
+}
+
+vector<string> Visualizer_GLUT::GetFields() const
+{
+  vector<string> ret;
+  ret.push_back("Sim.Draw_dt");
+  ret.push_back("Sim.Update_dt");
+  ret.push_back("Sim.DrawTime");
+  return ret;
 }

@@ -61,7 +61,7 @@
 		DB49FB43202A0CC600DED4E6 /* GraphManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphManager.cpp; sourceTree = "<group>"; };
 		DB49FB44202A0CC600DED4E6 /* GraphManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphManager.h; sourceTree = "<group>"; };
 		DB49FB45202A0CC600DED4E6 /* Visualizer_GLUT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = Visualizer_GLUT.cpp; sourceTree = "<group>"; tabWidth = 2; };
-		DB49FB46202A0CC600DED4E6 /* Visualizer_GLUT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Visualizer_GLUT.h; sourceTree = "<group>"; };
+		DB49FB46202A0CC600DED4E6 /* Visualizer_GLUT.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = Visualizer_GLUT.h; sourceTree = "<group>"; tabWidth = 2; };
 		DB49FB47202A0CC600DED4E6 /* FullCascadedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullCascadedController.h; sourceTree = "<group>"; };
 		DB49FB48202A0CC600DED4E6 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; tabWidth = 2; };
 		DB49FB4A202A0CC600DED4E6 /* Angles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Angles.h; sourceTree = "<group>"; };

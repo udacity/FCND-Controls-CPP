@@ -130,7 +130,7 @@ void GraphManager::Paint()
   }
 }
 
-void GraphManager::RegisterDataSource(string name, shared_ptr<DataSource> src)
+void GraphManager::RegisterDataSource(shared_ptr<DataSource> src)
 {
   _sources.push_back(src);
 }

@@ -9,7 +9,7 @@
 #include "Drawing/DrawingFuncs.h"
 #include "VehicleDatatypes.h"
 #include "Trajectory.h"
-
+#include "DataSource.h"
 #include "Drawing/GLUTMenu.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
 class QuadDynamics;
 class GraphManager;
 
-class Visualizer_GLUT 
+class Visualizer_GLUT : public DataSource
 {
 
 public:
@@ -62,7 +62,6 @@ protected:
 	
   
   shared_ptr<SLR::OpenGLDrawer> _glDraw;
-	Timer _lastPaintTime, _lastUpdateTime;
   int _glutWindowNum;
 
 private:
@@ -104,21 +103,18 @@ protected:
 	void DrawMarkers(vector<V3F>& markers);
 	
 
-
-	//Mutexed<map<VehicleID,shared_ptr<ExperimentRenderer> > > expRenderers;
-
 public:
-
-  void SetPosition(GlobalPose newGP)
-  {
-    gp = newGP;
-  }
-
 	bool showPropCommands;
 
     bool showTrajectory;
 
   bool paused;
+
+   // data source functions
+   virtual bool GetData(const string& name, float& ret) const;
+   virtual vector<string> GetFields() const;
+
+  void OnMainTimer();
 
 protected:
 	V3D _doubleClickMousePoint;
@@ -126,17 +122,15 @@ protected:
   
   SLR::LineD ScreenToPickVector(double x, double y);
 
-	int _quadDrawStyle;
-	
 	bool _objectSelected;
-		int _selectedObjectIndex;
+	int _selectedObjectIndex;
 	V3F _selectedObjectPos;	
 	LowPassFilter<V3D> _selectedObjectPos_filtered;
 
-  int lastPosX, lastPosY;
-
-
-  GlobalPose gp;
+  Timer _lastDraw, _lastMainTimerEvent;
+  float _draw_dt_ms, _timer_dt_ms, _last_draw_time_ms;
   
+  // mouse
+  int lastPosX, lastPosY;
 };
 

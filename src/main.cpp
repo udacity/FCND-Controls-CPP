@@ -55,7 +55,8 @@ int main(int argcp, char **argv)
   followed_traj->SetLogFile(followedTrajFile);
   quad->followedTrajectoryCallback = MakeDelegate(followed_traj.get(), &Trajectory::AddTrajectoryPoint);
 
-  grapher->RegisterDataSource("Quad",quad);
+  grapher->RegisterDataSource(quad);
+  grapher->RegisterDataSource(visualizer);
 
   visualizer->InitializeMenu(grapher->GetGraphableStrings());
 
@@ -103,6 +104,8 @@ void OnTimer(int v)
   {
     ResetSimulation();
   }
+  
+  visualizer->OnMainTimer();
   
   // main loop
   if (!paused)

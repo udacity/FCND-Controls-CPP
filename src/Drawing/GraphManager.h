@@ -20,7 +20,7 @@ public:
   void InitPaint();
   void Paint();
 
-  void RegisterDataSource(string name, shared_ptr<DataSource> src);
+  void RegisterDataSource(shared_ptr<DataSource> src);
   
   shared_ptr<Graph> graph;
   std::vector<shared_ptr<DataSource> > _sources;
