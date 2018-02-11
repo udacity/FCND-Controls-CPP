@@ -110,8 +110,8 @@ void OnTimer(int v)
   // main loop
   if (!paused)
   {
-    grapher->UpdateData(simulationTime);
     quad->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+    grapher->UpdateData(simulationTime);
     simulationTime += dtSim;
   }
   

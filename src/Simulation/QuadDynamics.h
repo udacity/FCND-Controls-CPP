@@ -86,4 +86,5 @@ protected:
   double controllerUpdateInterval, timeSinceLastControllerUpdate;
 
 	V3F _rawGyro;
+  float _lastPosFollowErr;
 };

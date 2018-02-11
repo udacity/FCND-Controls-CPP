@@ -87,6 +87,8 @@ int QuadDynamics::Initialize()
     updateIdealStateCallback = MakeDelegate(controller.get(), &BaseController::OverrideEstimates);
   }  
 
+  _lastPosFollowErr = 0;
+
   V3F ypr = config->Get(_name + ".InitialYPR", V3F());
   ResetState(config->Get(_name + ".InitialPos", V3F(0, 0, 1)),
     config->Get(_name + ".InitialVel", V3F()),
@@ -105,7 +107,6 @@ void QuadDynamics::Run(double dt, double simulationTime, int &idum, V3F external
 		printf("Something is wrong with dt: %lf", dt);
 	}
   double remainingTimeToSimulate = dt;
-
 
   while(remainingTimeToSimulate > 0.000001) // Time intervals lower than that are just discarded (for speed of running)
   {
@@ -141,6 +142,7 @@ void QuadDynamics::Run(double dt, double simulationTime, int &idum, V3F external
 			if (controller)
 			{
         curCmd = controller->RunControl(controllerUpdateInterval, simulationTime);
+        _lastPosFollowErr = controller->desiredPos.dist(Position());
 			}
 
       if (simulationTime < 0.0000001){
@@ -362,6 +364,7 @@ bool QuadDynamics::GetData(const string& name, float& ret) const
     GETTER_HELPER("Thrust.B", motorCmdsN(1));
     GETTER_HELPER("Thrust.C", motorCmdsN(2));
     GETTER_HELPER("Thrust.D", motorCmdsN(3));
+    GETTER_HELPER("PosFollowErr", _lastPosFollowErr);
 #undef GETTER_HELPER
     return BaseDynamics::GetData(name, ret);
   }
@@ -381,6 +384,7 @@ vector<string> QuadDynamics::GetFields() const
   ret.push_back(_name + ".Thrust.B");
   ret.push_back(_name + ".Thrust.C");
   ret.push_back(_name + ".Thrust.D");
+  ret.push_back(_name + ".PosFollowErr");
   
   if (controller)
   {
