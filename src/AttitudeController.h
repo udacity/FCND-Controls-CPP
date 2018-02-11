@@ -69,7 +69,7 @@ public:
   }
 
   // returns a desired roll and pitch rate 
-  V3F RollPitchController(V3F acceleration_cmd, Quaternion<float> attitude)
+  V3F LateralControl(V3F acceleration_cmd, Quaternion<float> attitude)
   {
     // get our current Euler angles
     float curRoll, curPitch, curYaw;
@@ -99,7 +99,7 @@ public:
     V3F thrustVector = M*des_acceleration + V3F(0, 0, -M*9.81f);
     float desCollThrust = thrustVector.mag();
 
-    V3F desOmega = RollPitchController(des_acceleration, estAtt);
+    V3F desOmega = LateralControl(des_acceleration, estAtt);
     desOmega.z = YawControl(yaw_cmd, estAtt.Yaw());
 
     V3F desMoment = BodyRateControl(desOmega, estOmega);
