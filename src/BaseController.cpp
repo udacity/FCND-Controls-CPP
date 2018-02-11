@@ -24,7 +24,6 @@ void BaseController::Init()
   Iyy = config->Get(_config + ".Iyy", 0.001f);
   Izz = config->Get(_config + ".Izz", 0.002f);
   kappa = config->Get(_config + ".kappa", 0.01f);
-  desYaw = 0;
 
   trajectory.Clear();
   string trajFile = config->Get(_config + ".Trajectory","");
@@ -83,9 +82,9 @@ bool BaseController::GetData(const string& name, float& ret) const
   {
 #define GETTER_HELPER(A,B) if (SLR::ToUpper(rightPart) == SLR::ToUpper(A)){ ret=(B); return true; }
     // UDACITY CONVENTION
-    GETTER_HELPER("Ref.X", desiredPos.x);
-    GETTER_HELPER("Ref.Y", desiredPos.y);
-    GETTER_HELPER("Ref.Z", desiredPos.z);
+    GETTER_HELPER("Ref.X", curTrajPoint.position.x);
+    GETTER_HELPER("Ref.Y", curTrajPoint.position.y);
+    GETTER_HELPER("Ref.Z", curTrajPoint.position.z);
 #undef GETTER_HELPER
   }
   return false;

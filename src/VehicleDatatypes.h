@@ -28,6 +28,7 @@ struct TrajectoryPoint {
   V3F position;
   V3F velocity;
   V3F omega;
+  V3F accel;
   Quaternion<float> attitude;
 
   // Initialise all fields to zero when declared

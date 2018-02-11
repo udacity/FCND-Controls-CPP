@@ -339,6 +339,24 @@ public:
     return V3D(y,p,r);
   }
 
+  // convenience functions for Udacity
+  float Yaw() const
+  {
+    const T div1 = _q[0] * _q[0] + _q[1] * _q[1] - _q[2] * _q[2] - _q[3] * _q[3];
+    return atan2(2 * (_q[1] * _q[2] + _q[0] * _q[3]), div1);
+  }
+
+  float Pitch() const
+  {
+    return asin(-2 * (_q[1] * _q[3] - _q[0] * _q[2]));
+  }
+
+  float Roll() const
+  {
+    const T div2 = _q[0] * _q[0] - _q[1] * _q[1] - _q[2] * _q[2] + _q[3] * _q[3];
+    return atan2(2 * (_q[2] * _q[3] + _q[0] * _q[1]), div2);
+  }
+
 
 	V3D ToEulerRPY(void) const
   {

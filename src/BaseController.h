@@ -47,14 +47,7 @@ public:
 
   // controller input (reference state)
   int mode;
-  V3F desiredPos;
-  V3F desOmegaDot;
-  float desYaw;
   VehicleCommand cmd;
-
-  // controller intermediates
-  V3F desOmega;
-  float desCollThrust;
   
   // Estimator state
   Quaternion<float> estAtt;
@@ -69,5 +62,6 @@ public:
   float range;
 
   Trajectory trajectory;
+  TrajectoryPoint curTrajPoint;
   string _config;
 };

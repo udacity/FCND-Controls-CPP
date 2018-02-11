@@ -2,10 +2,8 @@
 
 
 #include "SandboxController.h"
-#include "SimpleAttitudeController.h"
+#include "AttitudeController.h"
 #include "FullCascadedController.h"
-
-
 
 inline ControllerHandle CreateController(string controllerType, string config)
 {
@@ -16,9 +14,9 @@ inline ControllerHandle CreateController(string controllerType, string config)
     ret.reset(new SandboxController(config));
   }
 
-  else if (controllerType == "SimpleAttitudeController")
+  else if (controllerType == "AttitudeController")
   {
-    ret.reset(new SimpleAttitudeController(config));
+    ret.reset(new AttitudeController(config));
   }
 
   else if (controllerType == "FullCascadedController")

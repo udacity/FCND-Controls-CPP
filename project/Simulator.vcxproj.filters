@@ -169,7 +169,7 @@
     <ClInclude Include="..\src\SandboxController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\SimpleAttitudeController.h">
+    <ClInclude Include="..\src\AttitudeController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
   </ItemGroup>

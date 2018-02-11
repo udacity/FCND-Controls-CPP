@@ -10,7 +10,7 @@ Sim.Vehicle1=Quad
 Quad.SimMode = AttitudeOnly
 
 # Controller selection
-Quad.ControllerType = SimpleAttitudeController
+Quad.ControllerType = AttitudeController
 Quad.ControllerConfig = Controller
 
 # reference trajectory (just the starting position)

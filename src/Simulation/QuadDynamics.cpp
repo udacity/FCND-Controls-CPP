@@ -135,14 +135,14 @@ void QuadDynamics::Run(double dt, double simulationTime, int &idum, V3F external
 			// This is the update of the onboard controller -- runs timeout logic, sensor filtering, estimation, 
 			// controller, and produces a new set of motor commands
 			//_onboard.RunEstimation();
-			if (updateIdealStateCallback)
+			if (updateIdealStateCallback) 
 			{
 				updateIdealStateCallback(Position(), Velocity(), quat, Omega());
 			}
 			if (controller)
 			{
         curCmd = controller->RunControl(controllerUpdateInterval, simulationTime);
-        _lastPosFollowErr = controller->desiredPos.dist(Position());
+        _lastPosFollowErr = controller->curTrajPoint.position.dist(Position());
 			}
 
       if (simulationTime < 0.0000001){

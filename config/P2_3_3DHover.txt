@@ -17,7 +17,7 @@ Quad.ControllerConfig = Controller
 Controller.Trajectory=0,0,-1
 
 # initial conditions
-Quad.InitialPos=0,0,-1
+Quad.InitialPos=1,0,-.5
 Quad.InitialVel=0,0,0
 Quad.InitialYPR=0,0,0
 Quad.InitialOmega=0,0,0

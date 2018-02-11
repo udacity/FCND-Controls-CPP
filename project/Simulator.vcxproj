@@ -37,6 +37,7 @@
     <ClCompile Include="..\src\Utility\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\AttitudeController.h" />
     <ClInclude Include="..\src\BaseController.h" />
     <ClInclude Include="..\src\Common.h" />
     <ClInclude Include="..\src\DataSource.h" />
@@ -57,7 +58,6 @@
     <ClInclude Include="..\src\Math\V4D.h" />
     <ClInclude Include="..\src\OnboardControls.h" />
     <ClInclude Include="..\src\SandboxController.h" />
-    <ClInclude Include="..\src\SimpleAttitudeController.h" />
     <ClInclude Include="..\src\Simulation\BaseDynamics.h" />
     <ClInclude Include="..\src\Simulation\QuadDynamics.h" />
     <ClInclude Include="..\src\Simulation\Simulator.h" />

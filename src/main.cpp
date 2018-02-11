@@ -93,7 +93,7 @@ void ResetSimulation()
   grapher->Clear();
 }
 
-void OnTimer(int v)
+void OnTimer(int)
 {
   ParamsHandle config = SimpleConfig::GetInstance();
   
