@@ -153,12 +153,12 @@ void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
     force += V3F(0, 0, forceStep);
     keyPressed = true;
   }
-  if (visualizer->IsKeyDown('w'))
+  if (visualizer->IsKeyDown('w') || visualizer->IsKeyDown('W'))
   {
     force += V3F(forceStep, 0, 0);
     keyPressed = true;
   }
-  if (visualizer->IsKeyDown('s'))
+  if (visualizer->IsKeyDown('s') || visualizer->IsKeyDown('S'))
   {
     force += V3F(-forceStep, 0, 0);
     keyPressed = true;
@@ -173,45 +173,17 @@ void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
     force = force / force.mag() * 2.f;
   }
 
-  if (visualizer->IsKeyDown('c'))
+  if (visualizer->IsKeyDown('c') || visualizer->IsKeyDown('C'))
   {
     visualizer->graph->graph->RemoveAllSeries();
   }
 
-  if (visualizer->IsKeyDown('r'))
+  if (visualizer->IsKeyDown('r') || visualizer->IsKeyDown('R'))
   {
     receivedResetRequest = true;
   }
 
-  static bool key_p_pressed = false;
-  static bool key_t_pressed = false;
   static bool key_space_pressed = false;
-
-  if (visualizer->IsKeyDown('p'))
-  {
-    if (!key_p_pressed)
-    {
-      key_p_pressed = true;
-      visualizer->showPropCommands = !visualizer->showPropCommands;
-    }
-  }
-  else
-  {
-    key_p_pressed = false;
-  }
-
-  if (visualizer->IsKeyDown('t'))
-  {
-    if (!key_t_pressed)
-    {
-      key_t_pressed = true;
-      visualizer->showTrajectory = !visualizer->showTrajectory;
-    }
-  }
-  else
-  {
-    key_t_pressed = false;
-  }
 
   if (visualizer->IsKeyDown(' '))
   {
@@ -249,8 +221,6 @@ void PrintHelpText()
   printf("Select main window to interact with keyboard/mouse:\n");
   printf("LEFT DRAG / X+LEFT DRAG / Z+LEFT DRAG = rotate, pan, zoom camera\n");
   printf("W/S/UP/LEFT/DOWN/RIGHT - apply force\n");
-  printf("P - show thrusts\n");
-  printf("T - show trajectory\n");
   printf("C - clear all graphs\n");
   printf("R - reset simulation\n");
   printf("Space - pause simulation\n");
