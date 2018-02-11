@@ -78,7 +78,7 @@ protected:
   // properties of the prop/motor system as modeled
   double tauaUp, tauaDown; // time constant
   float kappa; // Nm drag per N lift
-	V4D mf,mfB; // mu factor - prop force per rpm factor acting on ka
+  float minMotorThrust, maxMotorThrust;
 
 	double xyzDisturbanceInt, xyzDisturbanceBW, rotDisturbanceInt, rotDisturbanceBW, gyroNoiseInt;
 	V3D xyzDisturbance, rotDisturbance;

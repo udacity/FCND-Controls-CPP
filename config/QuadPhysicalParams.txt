@@ -24,14 +24,14 @@ Ixx = 0.0023
 Iyy = 0.0023
 Izz = 0.0046
 
-# time constant for props ramping up [s]
+# time constant for props ramping up & down [s]
 tauaUp = 0.01
-
-# time constant for props ramping down [s]
 tauaDown = 0.02
 
-# thrust [N] per prop RPM [rad/s2]
-muBar = 00000425
+# motor min/max thrust [N]
+minMotorThrust = .1
+maxMotorThrust = 4.5
 
 # ratio between thrust [N] and torque due to drag [N m]
+# torque = kappa * thrust
 kappa = 0.016

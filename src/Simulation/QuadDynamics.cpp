@@ -66,8 +66,6 @@ int QuadDynamics::Initialize()
   tauaDown = config->Get("Sim.tauaDown", 0.02f);
 
   kappa = config->Get("Sim.kappa", 0.01f);
-  
-  mf[0] = mf[1] = mf[2] = mf[3] = 1; // prop factors
 
   gyroNoiseInt = config->Get("Sim.gyroNoiseInt", 0.f);
   rotDisturbanceInt = config->Get("Sim.rotDisturbanceInt", 0.f);
@@ -75,8 +73,8 @@ int QuadDynamics::Initialize()
   rotDisturbanceBW = config->Get("Sim.rotDisturbanceBW", 0.f);
   xyzDisturbanceBW = config->Get("Sim.xyzDisturbanceBW", 0.f);
 
-  // errors on mu factors
-  mfB = V4D(1,1,1,1); // assume ideal props
+  minMotorThrust = config->Get("Sim.minMotorThrust", .1f);
+  maxMotorThrust = config->Get("Sim.maxMotorThrust", 4.5f);
 
   ResetState(V3F());
 
@@ -171,27 +169,21 @@ void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, 
   ext_moment(1) = external_moment.y;
   ext_moment(2) = external_moment.z;
 
-  // constrain the desired thrusts (mostly for visualization): placed in dynamics because controller can be written without them
-
-  const float minThrust = .1f, maxThrust = 4.5f;
+  // constrain the desired thrusts to reflect real-world constraints
   for (int i = 0; i < 4; i++)
   {
-		curCmd.desiredThrustsN[i] = CONSTRAIN(curCmd.desiredThrustsN[i], minThrust, maxThrust);
+		curCmd.desiredThrustsN[i] = CONSTRAIN(curCmd.desiredThrustsN[i], minMotorThrust, maxMotorThrust);
+    motorCmdsN(i) = curCmd.desiredThrustsN[i];
   }
 
-  motorCmdsN(0) = curCmd.desiredThrustsN[0];
-  motorCmdsN(1) = curCmd.desiredThrustsN[1];
-  motorCmdsN(2) = curCmd.desiredThrustsN[2];
-  motorCmdsN(3) = curCmd.desiredThrustsN[3];
-
-
   // Prop dynamics, props cannot change thrusts in a non continuous manner
-
   for (int m = 0; m < 4; m++){
-    if (motorCmdsN(m) >= motorCmdsOld(m)){
+    if (motorCmdsN(m) >= motorCmdsOld(m))
+    {
       motorCmdsN(m) = motorCmdsN(m) * ((float)dt/((float)dt + (float)tauaUp)) + motorCmdsOld(m) * ((float)tauaUp/((float)dt + (float)tauaUp));
     }
-    else {
+    else 
+    {
       motorCmdsN(m) = motorCmdsN(m) * ((float)dt/((float)dt + (float)tauaDown)) + motorCmdsOld(m) * ((float)tauaDown/((float)dt + (float)tauaDown));
     }
   }
@@ -341,30 +333,14 @@ void QuadDynamics::SetCommands(const VehicleCommand& cmd)
 
 void QuadDynamics::TurnOffNonidealities()
 {
-	/*This function turns off all nonidealities
-	  in the simulator.
-    */
-
-	//Set thrust per prop speed factors equals 1.
-	//Default values are read from X3DVehicles.xml.
-	mf(0) = 1; //PROP_FACTOR_FRONT
-	mf(1) = 1; //PROP_FACTOR_LEFT
-	mf(2) = 1; //PROP_FACTOR_REAR
-	mf(3) = 1; //PROP_FACTOR_RIGHT
+	// This function turns off all nonidealities in the simulator.
 
 	//Set noise terms to zero.
-	//Default values are read from Simulator.xml
 	gyroNoiseInt = 0; //gyroNoiseInt
 	rotDisturbanceInt = 0; //rotDistInt
 	xyzDisturbanceInt = 0; //xyzDistInt
 	rotDisturbanceBW = 0; //rotDistBW
 	xyzDisturbanceBW = 0; //xyzDistBW
-
-	//Multiplicative mu factor error (1=no error)
-	mfB(0) = 1; //muFact0Err
-	mfB(1) = 1; //muFact1Err
-	mfB(2) = 1; //muFact2Err
-	mfB(3) = 1; //muFact3Err
 
 	//Meters error in CMToSpine
 	//Reload cx and cy because there has been added an error to them,
