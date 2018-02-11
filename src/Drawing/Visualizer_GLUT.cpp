@@ -196,7 +196,9 @@ void Visualizer_GLUT::initializeGL(int *argcp, char **argv)
   glutWMCloseFunc(&_g_OnExit);
   
   // MAC GLUT implementation doesn't have this
-  //glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+#ifndef __APPLE__
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+#endif
 
   glutKeyboardFunc(_g_OnKeyPressed);
   glutKeyboardUpFunc(_g_OnKeyUp);

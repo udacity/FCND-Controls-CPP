@@ -65,13 +65,9 @@ int QuadDynamics::Initialize()
   tauaUp = config->Get("Sim.tauaUp", 0.01f);
   tauaDown = config->Get("Sim.tauaDown", 0.02f);
 
-  muBar = config->Get("Sim.muBar", 0.000004f); // thrust per (rad/s)^2
   kappa = config->Get("Sim.kappa", 0.01f);
   
   mf[0] = mf[1] = mf[2] = mf[3] = 1; // prop factors
- 
-  minMot = 100;
-  maxMot = 800;
 
   gyroNoiseInt = config->Get("Sim.gyroNoiseInt", 0.f);
   rotDisturbanceInt = config->Get("Sim.rotDisturbanceInt", 0.f);
@@ -83,8 +79,6 @@ int QuadDynamics::Initialize()
   mfB = V4D(1,1,1,1); // assume ideal props
 
   ResetState(V3F());
-
-  _propForces = V4D();
 
   string controllerType = config->Get(_name + ".ControllerType", "CascadedController");
   string controllerConfig = config->Get(_name + ".ControllerConfig", "Default");
@@ -150,11 +144,6 @@ void QuadDynamics::Run(double dt, double simulationTime, int &idum, V3F external
 			{
         curCmd = controller->RunControl(controllerUpdateInterval, simulationTime);
 			}
-	    // pull the new motor commands out from simulated controller (convert to thrust)
-			motCmd[0] = FToPropDes(curCmd.desiredThrustsN[0],0);
-	    motCmd[1] = FToPropDes(curCmd.desiredThrustsN[1],1);
-	    motCmd[2] = FToPropDes(curCmd.desiredThrustsN[2],2);
-	    motCmd[3] = FToPropDes(curCmd.desiredThrustsN[3],3);
 
       if (simulationTime < 0.0000001){
         motorCmdsOld(0) = curCmd.desiredThrustsN[0];
@@ -343,20 +332,6 @@ void QuadDynamics::RunRoomConstraints(const V3F& oldPos)
     vel[2] = 0.0;
   }
 }
-// converts a desired motor force [N] to desired RPM [rad/s]
-double QuadDynamics::FToPropDes(double F, int ii)
-{
-  if(F>0.0)
-  {
-    double temp;
-		temp = sqrt(F/muBar/mfB(ii));
-		temp = CONSTRAIN(temp,minMot,maxMot);
-		return temp;
-  } else {
-    return minMot;
-  }
-}
-
 
 void QuadDynamics::SetCommands(const VehicleCommand& cmd)
 {
