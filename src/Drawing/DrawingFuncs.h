@@ -37,6 +37,7 @@ public:
   void SetLighting(bool enable);
 
   void DrawQuadrotor(V3F pos, Quaternion<float> att, V3F color, double alpha = 1, bool noWireframe = false, float scale = 1);
+  void DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F centerOffset, float centerScale);
 
   void DrawArrow(double len, double r1, double r2, double arrowLen);
   void DrawArrow(V3D from, V3D to, V3D color);

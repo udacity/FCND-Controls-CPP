@@ -1,6 +1,8 @@
 #pragma once
 
 #include <map>
+#include <vector>
+using std::vector;
 using std::map;
 
 namespace SLR{
@@ -22,6 +24,7 @@ public:
   bool GetFloat(const string& param, float& ret);
   bool GetString(const string& param, string& ret);
   bool GetV3F(const string& param, V3F& ret);
+  bool GetFloatVector(const string& param, vector<float>& ret);
 
   // convenience always-returning functions, with defaults
   float Get(const string& param, float defaultRet);

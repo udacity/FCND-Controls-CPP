@@ -43,7 +43,7 @@ public:
     _arrowEnd = end;
   }
 
-  shared_ptr<QuadDynamics> quad;
+  vector<shared_ptr<QuadDynamics> > quads;
   void VisualizeQuadCopter(shared_ptr<QuadDynamics> quad);
 
   shared_ptr<GraphManager> graph;
@@ -99,8 +99,7 @@ protected:
 
 	Timer _timeSinceLastPaint;
 
-	// helper drawing functions
-	void DrawMarkers(vector<V3F>& markers);
+  void Draw(shared_ptr<QuadDynamics> quad);
 	
 
 public:

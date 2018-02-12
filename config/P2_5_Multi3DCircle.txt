@@ -6,8 +6,8 @@ INCLUDE QuadPhysicalParams.txt
 Sim.RunMode = Repeat
 Sim.EndTime = 5
 Sim.Vehicle1=Quad1
-Sim.Vehicle1=Quad2
-Sim.Vehicle1=Quad3
+Sim.Vehicle2=Quad2
+Sim.Vehicle3=Quad3
 
 Quad.SimMode = Full3D
 

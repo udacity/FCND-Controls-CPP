@@ -14,8 +14,7 @@
 #endif
 
 using SLR::Quaternion;
-
-
+class Trajectory;
 
 class BaseDynamics : public DataSource
 {
@@ -55,7 +54,9 @@ public:
   bool Initialized() const {return _initialized;}
 
   void ResetState(V3F pos=V3F(), V3F vel=V3F(), Quaternion<float> att=Quaternion<float>(), V3F omega=V3F());
-  
+
+  shared_ptr<Trajectory> _followed_traj;
+
 protected:
   string _name;
 
@@ -66,7 +67,7 @@ protected:
   int _vehicleType;
 
   // vehicle geometry and mass properties
-  double M; // veh mass, kg
+  float M; // veh mass, kg
   double Ixx,Iyy,Izz;
   double xMin,yMin,bottom,xMax,yMax,top;
   bool _initialized;

@@ -8,12 +8,12 @@
 
 # Simulated quadcopter physical parameters
 
-[Sim] 
+[Quad]
 # mass [Kg]
 Mass = 0.5
 
 # distance from vehicle origin to motors [m]
-L = 0.14
+L = 0.17
 
 # offset center-of-mass to vehicle body origin [m]
 cx = 0

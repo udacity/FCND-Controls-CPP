@@ -5,6 +5,7 @@
 #include "BaseController.h"
 #include <matrix/math.hpp>
 #include "Math/LowPassFilter.h"
+#include "Drawing/ColorUtils.h"
 
 class QuadDynamics;
 typedef shared_ptr<QuadDynamics> QuadcopterHandle;
@@ -12,9 +13,11 @@ typedef shared_ptr<QuadDynamics> QuadcopterHandle;
 class QuadDynamics : public BaseDynamics
 {
 public:
-	static QuadcopterHandle Create(string name)
+	static QuadcopterHandle Create(string name, int cnt=0)
 	{
 		QuadcopterHandle ret(new QuadDynamics(name));
+    float hue = (float)cnt*30.f;
+    ret->color = HSVtoRGB(hue + 15.f, 1, 1);
 		return ret;
 	}
 
@@ -60,19 +63,20 @@ public:
 	float GetArmLength() const { return L; }
 
   ControllerHandle controller;
+  
+  friend class Visualizer_GLUT;
 
 protected:
   matrix::Vector<float, 4> motorCmdsN;
   matrix::Vector<float, 4> motorCmdsOld;
-
 
 	// useful matrices/vectors that are recomputed from the state at each timestep
 	double YPR[3];
 
   //////////////////////////////////////////////////////////////////
   // vehicle geometry and mass properties
-  double cx;
-  double cy;
+  float cx;
+  float cy;
   float L; // distance from body z axis to the prop
 
   // properties of the prop/motor system as modeled
@@ -87,4 +91,6 @@ protected:
 
 	V3F _rawGyro;
   float _lastPosFollowErr;
+
+  V3F color;  
 };

@@ -33,7 +33,7 @@ public:
   {
     V3F desiredVel = (position_cmd - position) * V3F(Kp_pos_xy, Kp_pos_xy, Kp_pos_z);
     desiredVel += velocity_ff;
-    desiredVel.z = CONSTRAIN(desiredVel.z, -3.f, 4.f);
+    desiredVel.z = CONSTRAIN(desiredVel.z, -10.f, 3.f);
 
     // TODO: constrain velocity in other ways?
 
@@ -41,7 +41,7 @@ public:
     V3F desAcc = (desiredVel - velocity) * V3F(Kp_vel_xy, Kp_vel_xy, Kp_vel_z) + acceleration_ff;
 
     // TODO: params to constrain acceleration?
-    desAcc.z = CONSTRAIN(desAcc.z, -3.f, 6.f);
+    desAcc.z = CONSTRAIN(desAcc.z, -10.f, 3.f);
     desAcc.constrain(-8, 8);
 
     return desAcc;

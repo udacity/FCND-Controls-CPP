@@ -99,7 +99,7 @@ public:
 
     char buf[100];
     sprintf_s(buf, 100, "t_set = %.3lf", _lastTimeAboveThresh);
-    DrawStrokeText(buf, _lastTimeAboveThresh + (maxX - minX)*.05f , minY + (maxY - minY) / 10.f, 0, 1.2f, (maxX - minX) / 2.f, (maxY - minY) / 2.f);
+    DrawStrokeText(buf, _lastTimeAboveThresh + (maxX - minX)*.05f , minY + (maxY - minY) / 2.f, 0, 1.2f, (maxX - minX) / 2.f, (maxY - minY) / 2.f);
   }
 
   bool _triggered;

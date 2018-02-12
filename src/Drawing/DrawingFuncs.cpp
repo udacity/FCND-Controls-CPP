@@ -71,9 +71,9 @@ void GLCross(const V3F& center, const V3F& dims, bool gl_begin_line)
 
 }
 
-const float armL = .14f;    // .17 for hummingbird
-const float propR = .07f;   // .1 for hummingbird
-const float motorR = .01f; // .03 for hummingbird
+const float armL = .17f;    // .17 for hummingbird
+const float propR = .1f;   // .1 for hummingbird
+const float motorR = .02f; // .03 for hummingbird
 
 void DrawQuarterX3D(bool front, V3D markingColor, V3D bodyColor, double alpha, GLUquadricObj *glQuadric)
 {	
@@ -147,12 +147,16 @@ void DrawQuarterX3D_TransparentPart(double alpha, GLUquadricObj *glQuadric)
 	glDisable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  glPolygonOffset(1.f, 1.f);
 	gluDisk(glQuadric,0, propR,24,3);
 	
+  glDisable(GL_POLYGON_OFFSET_FILL);
 	//glRotatef(180,1,0,0);
 	//gluDisk(q,0,.1,24,3);
 
-	// line highlight
+	// line highlight  
+
 	glColor4d(.4,.4,.4,alpha);
 	glBegin(GL_LINES);
 	for(int i=0;i<24;i++)
@@ -236,6 +240,80 @@ void DrawX3D(V3D markingColor, V3D bodyColor, double alpha, bool solidPart, bool
 }
 
 
+void OpenGLDrawer::DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F centerOffset, float centerScale)
+{
+  glPushMatrix();
+
+  // STRANGE: have to enable GL_SMOOTH here for it to work. something is switching the shade model back to flat.
+  glShadeModel(GL_SMOOTH);
+
+  glTranslated(pos[0], pos[1], pos[2]);
+
+  V3D ypr = att.ToEulerYPR();
+
+  glRotated(ypr[0] / M_PI * 180.0, 0, 0, 1);
+  glRotated(ypr[1] / M_PI * 180.0, 0, 1, 0);
+  glRotated(ypr[2] / M_PI * 180.0, 1, 0, 0);
+
+  glRotatef(45, 0, 0, 1);
+  glRotatef(180, 1, 0, 0);
+
+  V3D bodyColor = V3D(.7, .7, 1);
+
+  bool cleanup = (_glQuadric == NULL);
+  if (_glQuadric == NULL)
+  {
+    _glQuadric = gluNewQuadric();
+  }
+  float alpha = 1;
+  if (1)
+  {
+    // center -- a box.
+    glPushMatrix();
+    glRotatef(45, 0, 0, 1);
+    glTranslated(centerOffset.x, centerOffset.y, centerOffset.z);
+    glScalef(centerScale, centerScale, centerScale);
+    
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(1.f, 1.f);
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glColor4d(bodyColor[0], bodyColor[1], bodyColor[2], alpha);
+    GLCube(V3F(), V3F(.07f, .07f, .04f));
+    glDisable(GL_POLYGON_OFFSET_FILL);
+
+    glPolygonMode(GL_FRONT, GL_LINE);
+    glColor4d(.1,.1,.1, alpha);
+    GLCube(V3F(), V3F(.07f, .07f, .04f),1);
+    glPopMatrix();
+    glPolygonMode(GL_FRONT, GL_FILL);
+
+    DrawQuarterX3D(true, color, bodyColor*.8, alpha, _glQuadric);
+    glRotatef(90, 0, 0, 1);
+    DrawQuarterX3D(true, color, bodyColor*.8, alpha, _glQuadric);
+    glRotatef(90, 0, 0, 1);
+    DrawQuarterX3D(false, V3D(), bodyColor*.8, alpha, _glQuadric);
+    glRotatef(90, 0, 0, 1);
+    DrawQuarterX3D(false, V3D(), bodyColor*.8, alpha, _glQuadric);
+  }
+  if (1)
+  {
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+    glRotatef(90, 0, 0, 1);
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+    glRotatef(90, 0, 0, 1);
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+    glRotatef(90, 0, 0, 1);
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+  }
+  if (cleanup)
+  {
+    gluDeleteQuadric(_glQuadric);
+  }
+
+  glPolygonMode(GL_FRONT, GL_FILL);
+
+  glPopMatrix();
+}
 
 void OpenGLDrawer::DrawQuadrotor(V3F pos, Quaternion<float> att, V3F color, double alpha, bool noWireframe, float scale)
 {	

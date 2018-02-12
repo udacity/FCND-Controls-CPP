@@ -51,21 +51,21 @@ int QuadDynamics::Initialize()
   ParamsHandle config = SimpleConfig::GetInstance();
 	
   // PARAMETERS
-  M = config->Get("Sim.Mass", 1.f);
-  L = config->Get("Sim.L", 0.1f); // dist from center to thrust
-  cx = config->Get("Sim.cx", 0.f);
-  cy = config->Get("Sim.cy", 0.f);
+  M = config->Get(_name+".Mass", 1.f);
+  L = config->Get(_name + ".L", 0.1f); // dist from center to thrust
+  cx = config->Get(_name + ".cx", 0.f);
+  cy = config->Get(_name + ".cy", 0.f);
 
   // Moments of inertia
-  Ixx = config->Get("Sim.Ixx", 0.001f);
-  Iyy = config->Get("Sim.Iyy", 0.001f);
-  Izz = config->Get("Sim.Izz", 0.002f);;
+  Ixx = config->Get(_name + ".Ixx", 0.001f);
+  Iyy = config->Get(_name + ".Iyy", 0.001f);
+  Izz = config->Get(_name + ".Izz", 0.002f);;
 
   // motor dynamics (up and down taus)
-  tauaUp = config->Get("Sim.tauaUp", 0.01f);
-  tauaDown = config->Get("Sim.tauaDown", 0.02f);
+  tauaUp = config->Get(_name + ".tauaUp", 0.01f);
+  tauaDown = config->Get(_name + ".tauaDown", 0.02f);
 
-  kappa = config->Get("Sim.kappa", 0.01f);
+  kappa = config->Get(_name + ".kappa", 0.01f);
 
   gyroNoiseInt = config->Get("Sim.gyroNoiseInt", 0.f);
   rotDisturbanceInt = config->Get("Sim.rotDisturbanceInt", 0.f);
@@ -73,15 +73,18 @@ int QuadDynamics::Initialize()
   rotDisturbanceBW = config->Get("Sim.rotDisturbanceBW", 0.f);
   xyzDisturbanceBW = config->Get("Sim.xyzDisturbanceBW", 0.f);
 
-  minMotorThrust = config->Get("Sim.minMotorThrust", .1f);
-  maxMotorThrust = config->Get("Sim.maxMotorThrust", 4.5f);
+  minMotorThrust = config->Get(_name + "minMotorThrust", .1f);
+  maxMotorThrust = config->Get(_name + ".maxMotorThrust", 4.5f);
 
   ResetState(V3F());
 
   string controllerType = config->Get(_name + ".ControllerType", "CascadedController");
   string controllerConfig = config->Get(_name + ".ControllerConfig", "Default");
 
+  V3F trajOffset = config->Get(_name + ".TrajectoryOffset", V3F());
+
   controller = CreateController(controllerType, controllerConfig);
+  controller->SetTrajectoryOffset(trajOffset);
   if (config->Get(controllerConfig + ".UseIdealEstimator", 0) == 1)
   {
     updateIdealStateCallback = MakeDelegate(controller.get(), &BaseController::OverrideEstimates);
@@ -96,6 +99,13 @@ int QuadDynamics::Initialize()
     config->Get(_name + ".InitialOmega", V3F()));
 
   _initialized = true;
+
+  // Initialise the trajectory log
+  //string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", "");
+  _followed_traj.reset(new Trajectory());
+  //followed_traj->SetLogFile(followedTrajFile);
+  followedTrajectoryCallback = MakeDelegate(_followed_traj.get(), &Trajectory::AddTrajectoryPoint);
+
   return 1;
 }
 

@@ -30,7 +30,7 @@ public:
   void OnSensor_GPS(V3D LLA); 
   void OnSensor_Magnetometer(V3F);
 
-  TrajectoryPoint GetNextTrajectoryPoint(float sim_time);
+  TrajectoryPoint GetNextTrajectoryPoint(float mission_time);
 
   // Allows the simulator to provide perfect state data to the controller
   void OverrideEstimates(V3F pos, V3F vel, Quaternion<float> attitude, V3F omega);
@@ -38,6 +38,8 @@ public:
   // Access functions for graphing variables
   virtual bool GetData(const string& name, float& ret) const;
   virtual vector<string> GetFields() const;
+
+  void SetTrajectoryOffset(V3F trajOffset) { _trajectoryOffset = trajOffset; }
 
   // system parameters params
   float M; // mass
@@ -64,4 +66,6 @@ public:
   Trajectory trajectory;
   TrajectoryPoint curTrajPoint;
   string _config;
+
+  V3F _trajectoryOffset;
 };

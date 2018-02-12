@@ -217,6 +217,28 @@ bool SimpleConfig::GetV3F(const string& param, V3F& ret)
   }
 }
 
+bool SimpleConfig::GetFloatVector(const string& param, vector<float>& ret)
+{
+  auto i = _params.find(ToUpper(param));
+  if (i == _params.end()) return false;
+  string s = i->second;
+  vector<string> spl = SLR::Split(s, ',');
+  ret.clear();
+  for (unsigned i = 0; i < s.size(); i++)
+  {
+    try
+    {
+      float tmp = std::stof(spl[i]);
+      ret.push_back(tmp);
+    }
+    catch (...)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 
 float SimpleConfig::Get(const string& param, float defaultRet)
 {

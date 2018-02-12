@@ -10,7 +10,7 @@ UseIdealEstimator=1
 
 # Physical properties
 Mass = 0.5
-L = 0.14
+L = 0.17
 Ixx = 0.0023
 Iyy = 0.0023
 Izz = 0.0046
@@ -25,8 +25,8 @@ PGain_Vel_XY = 8
 PGain_Vel_Z = 12
 
 # Bank control gains
-PGain_Bank = 15
+PGain_Bank = 20
 PGain_Yaw = 1
 
 # Angle rate gains
-PGain_Omega = 60, 100, 20
+PGain_Omega = 60, 60, 20

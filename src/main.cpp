@@ -18,9 +18,7 @@ bool paused = false;
 void PrintHelpText();
 void ProcessConfigCommands(shared_ptr<Visualizer_GLUT> vis);
 
-
-QuadcopterHandle quad;
-shared_ptr<Trajectory> followed_traj;
+vector<QuadcopterHandle> quads;
 
 shared_ptr<Visualizer_GLUT> visualizer;
 shared_ptr<GraphManager> grapher;
@@ -35,6 +33,8 @@ string flightMode;
 
 void OnTimer(int v);
 
+vector<QuadcopterHandle> CreateVehicles();
+
 int main(int argcp, char **argv)
 {
   PrintHelpText();
@@ -47,22 +47,14 @@ int main(int argcp, char **argv)
   grapher.reset(new GraphManager(false));
 
   // create a quadcopter to simulate
-  quad = QuadDynamics::Create("Quad");
-
-  // Initialise the trajectory log
-  string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", "");
-  followed_traj.reset(new Trajectory());
-  followed_traj->SetLogFile(followedTrajFile);
-  quad->followedTrajectoryCallback = MakeDelegate(followed_traj.get(), &Trajectory::AddTrajectoryPoint);
-
-  grapher->RegisterDataSource(quad);
+  quads = CreateVehicles();
+  
   grapher->RegisterDataSource(visualizer);
 
   visualizer->InitializeMenu(grapher->GetGraphableStrings());
 
-  visualizer->quad = quad;
+  visualizer->quads = quads;
   visualizer->graph = grapher;
-  visualizer->followed_traj = followed_traj;
 
   ProcessConfigCommands(visualizer);
   
@@ -84,12 +76,10 @@ void ResetSimulation()
   
   flightMode = config->Get("Quad.SimMode","Full3D");
   
-  // Reset the followed trajectory
-  followed_traj->Clear();
-  string followedTrajFile = string("../config/") + config->Get("Sim.LoggedStateFile", "");
-  followed_traj->SetLogFile(followedTrajFile);
-  
-  quad->Reset();
+  for (unsigned i = 0; i<quads.size(); i++)
+  {
+    quads[i]->Reset();
+  }
   grapher->Clear();
 }
 
@@ -110,7 +100,10 @@ void OnTimer(int)
   // main loop
   if (!paused)
   {
-    quad->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+    for(unsigned i=0;i<quads.size();i++)
+    {
+      quads[i]->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+    }
     grapher->UpdateData(simulationTime);
     simulationTime += dtSim;
   }
@@ -119,13 +112,42 @@ void OnTimer(int)
   
   if (lastDraw.ElapsedSeconds() > 0.030)
   {
-    visualizer->SetArrow(quad->Position() - force, quad->Position());
+    if (quads.size() > 0)
+    {
+      visualizer->SetArrow(quads[0]->Position() - force, quads[0]->Position());
+    }
     visualizer->Update();
     grapher->DrawUpdate();
     lastDraw.Reset();
   }
   
   glutTimerFunc(5,&OnTimer,0);
+}
+
+vector<QuadcopterHandle> CreateVehicles()
+{
+  vector<QuadcopterHandle> ret;
+
+  ParamsHandle config = SimpleConfig::GetInstance();
+  int i = 1;
+  while (1)
+  {
+    char buf[100];
+    sprintf_s(buf, 100, "Sim.Vehicle%d", i);
+    if (config->Exists(buf))
+    {
+      QuadcopterHandle q = QuadDynamics::Create(config->Get(buf, "Quad"),ret.size());
+      grapher->RegisterDataSource(q);
+      ret.push_back(q);
+    }
+    else
+    {
+      break;
+    }
+    i++;
+  }
+  return ret;
+
 }
 
 void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)

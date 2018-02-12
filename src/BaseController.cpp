@@ -66,9 +66,11 @@ void BaseController::OverrideEstimates(V3F pos, V3F vel, Quaternion<float> attit
   estVel = vel;
 }
 
-TrajectoryPoint BaseController::GetNextTrajectoryPoint(float sim_time)
+TrajectoryPoint BaseController::GetNextTrajectoryPoint(float mission_time)
 {
-  return trajectory.NextTrajectoryPoint(sim_time);
+  TrajectoryPoint pt = trajectory.NextTrajectoryPoint(mission_time);
+  pt.position += _trajectoryOffset;
+  return pt;  
 }
 
 // Access functions for graphing variables

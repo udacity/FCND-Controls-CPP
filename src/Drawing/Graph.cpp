@@ -348,7 +348,7 @@ void Graph::Draw()
   for (unsigned int i = 0; i < _series.size(); i++)
   {
     glColor3f(_series[i]._color[0], _series[i]._color[1], _series[i]._color[2]);
-    DrawStrokeText(ToLower(_series[i]._yName).c_str(), .4f, .9f - i * .09f, 0, 1.5f);
+    DrawStrokeText(ToLower(_series[i]._yName).c_str(), .3f, .9f - i * .105f, 0, 1.5f);
   }
 
 }

@@ -325,6 +325,34 @@ SLR::LineD Visualizer_GLUT::ScreenToPickVector(double x, double y)
   return SLR::LineD(_camera.FilteredPos(),_camera.FilteredPos()+(ray-_camera.FilteredPos()).norm()*50);
 }
 
+void Visualizer_GLUT::Draw(shared_ptr<QuadDynamics> quad)
+{
+  SetupLights(_glDraw);
+  // enable color tracking
+  //glDisable(GL_COLOR_MATERIAL);
+  // set material properties which will be assigned by glColor
+  glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+  if (quad)
+  {
+    VisualizeQuadCopter(quad);
+
+    if (quad->controller)
+    {
+      VisualizeTrajectory(quad->controller->trajectory, true, V3F(0, 1, 0));
+    }
+  }
+
+  _glDraw->SetLighting(false);
+  
+  glDisable(GL_LINE_SMOOTH);
+  if (quad && quad->_followed_traj)
+  {
+    VisualizeTrajectory(*(quad->_followed_traj).get(), false, V3F(1, 1, .5f));
+  }
+
+}
+
 void Visualizer_GLUT::Paint()
 {
   _draw_dt_ms = (float)_lastDraw.Seconds() * 1000.f;
@@ -378,16 +406,11 @@ void Visualizer_GLUT::Paint()
 	glGetDoublev(GL_PROJECTION_MATRIX,projMatrix);
 	glGetIntegerv(GL_VIEWPORT,viewport);
 
-	SetupLights(_glDraw);
+  SetupLights(_glDraw);
 
-  if (quad)
+  for (unsigned i = 0; i < quads.size(); i++)
   {
-    VisualizeQuadCopter(quad);
-
-    if (quad->controller)
-    {
-      VisualizeTrajectory(quad->controller->trajectory, true, V3F(0, 1, 0));
-    }
+    Draw(quads[i]);
   }
 
 	// enable color tracking
@@ -401,11 +424,7 @@ void Visualizer_GLUT::Paint()
 	{
 		glCallList(_volumeCallList);
 	}
-
-  if (followed_traj)
-  {
-    VisualizeTrajectory(*followed_traj.get(), false, V3F(1,1,.5f));
-  }
+  
 
   // disable lights and fancy 3d effects for 2d drawing
 	_glDraw->SetLighting(false);
@@ -449,12 +468,12 @@ void Visualizer_GLUT::Paint()
 
 void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
 {
-  _glDraw->DrawQuadrotor(quad->Position(), quad->Attitude(), V3F(1, 0, 0));
+  _glDraw->DrawQuadrotor2(quad->Position(), quad->Attitude(), quad->color, V3F(quad->cx,quad->cy,0), quad->M/0.5f);
 
   if (showPropCommands)
   {
     V3D pos = quad->Position();
-    V3D fl = quad->GetArmLength() / sqrtf(2) * quad->Attitude().Rotate_BtoI(V3F(1, 1, 0)); // TODO double check!
+    V3D fl = quad->GetArmLength() / sqrtf(2) * quad->Attitude().Rotate_BtoI(V3F(1, 1, 0)); 
     V3D fr = quad->GetArmLength() / sqrtf(2) * quad->Attitude().Rotate_BtoI(V3F(1, -1, 0));
     V3D down = fl.cross(fr).norm();
     const float maxThrust = 4.5f;
@@ -622,12 +641,6 @@ GLuint Visualizer_GLUT::MakeVolumeCallList()
 
 	glColor3d(.2,.2,.2);
 
-	glEnable(GL_LINE_SMOOTH);
-	//glDepthMask(GL_FALSE);
-	glBegin(GL_LINES);
-	
-	glEnd();
-	glDisable(GL_LINE_SMOOTH);
 	//glDepthMask(GL_TRUE);
 	_glDraw->SetLighting(true);
 
