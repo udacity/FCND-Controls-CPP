@@ -153,6 +153,6 @@ void GraphManager::AddGraph(string path)
 {
   if (path.find("AddGraph.") == 0)
   {
-    graph->AddSeries(path.substr(9));
+    graph->AddItem(path.substr(9));
   }
 }

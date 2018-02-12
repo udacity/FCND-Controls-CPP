@@ -7,6 +7,7 @@ using namespace std;
 
 class QuadDynamics;
 class DataSource;
+class AbsThreshold;
 
 class Graph
 {
@@ -17,7 +18,9 @@ public:
   void Update(double time, std::vector<shared_ptr<DataSource> >& sources);
 
   void Draw();
+  void AddItem(string path);
   void AddSeries(string path, bool autoColor = true, V3F color = V3F());
+  void AddAbsThreshold(string path);
   bool IsSeriesPlotted(string path);
   void RemoveAllSeries();
 
@@ -36,6 +39,8 @@ public:
       y.reset();
     }
   };
+
+  shared_ptr<AbsThreshold> _absThreshold;
 
   void DrawSeries(Series& s);
   

@@ -4,7 +4,7 @@ INCLUDE QuadPhysicalParams.txt
 
 # simulation setup
 Sim.RunMode = Repeat
-Sim.EndTime = 10
+Sim.EndTime = 3
 Sim.Vehicle1=Quad
 
 Quad.SimMode = Full3D
@@ -25,7 +25,7 @@ Quad.InitialOmega=0,0,0
 # graphing commands
 Commands.1=AddGraph.Quad.Pos.X
 Commands.2=AddGraph.Quad.Pos.Y
-Commands.2=AddGraph.Quad.Pos.Z
+Commands.3=AddGraph.AbsThreshold(Quad.Pos.X,0.1,0.5)
 
 INCLUDE ControllerParams.txt
 

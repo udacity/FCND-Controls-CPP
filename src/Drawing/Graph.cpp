@@ -1,10 +1,11 @@
 #include "Common.h"
 #include "Graph.h"
-#include "../Drawing/DrawingFuncs.h"
-#include "../Utility/SimpleConfig.h"
-#include "../Utility/StringUtils.h"
-#include "../DataSource.h"
+#include "Drawing/DrawingFuncs.h"
+#include "Utility/SimpleConfig.h"
+#include "Utility/StringUtils.h"
+#include "DataSource.h"
 #include "ColorUtils.h"
+#include "Drawing/AbsThreshold.h"
 
 using namespace SLR;
 
@@ -21,6 +22,39 @@ Graph::Series::Series()
   : x(MAX_POINTS, 0), y(MAX_POINTS, 0)
 {
 
+}
+
+void Graph::AddItem(string path)
+{
+  if (path.find("AbsThreshold(") != string::npos)
+  {
+    AddAbsThreshold(path.substr(12));
+  }
+  else
+  {
+    AddSeries(path);
+  }
+}
+
+void Graph::AddAbsThreshold(string path)
+{
+  path = SLR::Trim(path);
+  if (path.length() < 4 || path[0] != '(' || path[path.length() - 1] != ')')
+  {
+    SLR_WARNING1("Malformed AddThreshold command (%s)", path.c_str());
+    return;
+  }
+  path = path.substr(1, path.length() - 2);
+
+  vector<string> args = SLR::Split(path, ',');
+
+  if (args.size()!=3 || args[0]=="" || args[1]=="" || args[2]=="")
+  {
+    SLR_WARNING1("Malformed AddThreshold command (%s)", path.c_str());
+    return;
+  }
+  
+  _absThreshold.reset(new AbsThreshold(args[0], (float)atof(args[1].c_str()), (float)atof(args[2].c_str())));
 }
 
 void Graph::AddSeries(string path, bool autoColor, V3F color)
@@ -43,7 +77,7 @@ void Graph::AddSeries(string path, bool autoColor, V3F color)
   if (autoColor)
   {
     float hue = ((float)_series.size())*30.f;
-    newSeries._color = HSVtoRGB(hue, 1, 1);
+    newSeries._color = HSVtoRGB(hue + 15.f , 1, 1);
   }
   _series.push_back(newSeries);
 }
@@ -53,6 +87,7 @@ bool Graph::IsSeriesPlotted(string path)
   // Loop through the series vector and check if the field already exists there
   for (unsigned int i = 0; i < _series.size(); i++)
   {
+
     if (!SLR::ToUpper(path).compare(SLR::ToUpper(_series.at(i)._yName)))
     {
       return true;
@@ -103,6 +138,11 @@ void Graph::Reset()
 
 void Graph::Clear()
 {
+  if (_absThreshold)
+  {
+    _absThreshold->Reset();
+  }
+
   if (_series.empty())
   {
     return;
@@ -127,10 +167,13 @@ void Graph::Update(double time, std::vector<shared_ptr<DataSource> >& sources)
         _series[i].y.push(tmp);
         break;
       }
-    }
-    
+    } 
   }
-  
+
+  if (_absThreshold)
+  {
+    _absThreshold->Update(time,sources);
+  }
 }
 
 void GetRange(FixedQueue<float>& f, float& low, float& high)
@@ -279,6 +322,11 @@ void Graph::Draw()
   }
 
   glEnd(); // GL_LINES
+
+  if (_absThreshold)
+  {
+    _absThreshold->Draw(lowX, highX, lowY, highY);
+  }
 
   for (unsigned int i = 0; i < _series.size(); i++)
   {

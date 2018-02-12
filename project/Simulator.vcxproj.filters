@@ -172,5 +172,8 @@
     <ClInclude Include="..\src\AttitudeController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Drawing\AbsThreshold.h">
+      <Filter>Drawing</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

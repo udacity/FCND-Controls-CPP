@@ -41,6 +41,7 @@
     <ClInclude Include="..\src\BaseController.h" />
     <ClInclude Include="..\src\Common.h" />
     <ClInclude Include="..\src\DataSource.h" />
+    <ClInclude Include="..\src\Drawing\AbsThreshold.h" />
     <ClInclude Include="..\src\Drawing\ColorUtils.h" />
     <ClInclude Include="..\src\Drawing\DrawingFuncs.h" />
     <ClInclude Include="..\src\Drawing\GLUTMenu.h" />

@@ -5,9 +5,9 @@ INCLUDE QuadPhysicalParams.txt
 # simulation setup
 Sim.RunMode = Repeat
 Sim.EndTime = 1
-Sim.Vehicle1=Quad
+Sim.Vehicle1 = Quad
 
-Quad.SimMode = AttitudeOnly
+Quad.SimMode = Full3D
 
 # Controller selection
 Quad.ControllerType = AttitudeController
@@ -19,11 +19,12 @@ Controller.Trajectory=0,0,-1
 # initial conditions
 Quad.InitialPos=0,0,-1
 Quad.InitialVel=0,0,0
-Quad.InitialYPR=0,0,1
+Quad.InitialYPR=0,0,.5
 Quad.InitialOmega=0,0,0
 
 # graphing commands
 Commands.1=AddGraph.Quad.Roll
 Commands.2=AddGraph.Quad.Omega.X
+Commands.3=AddGraph.AbsThreshold(Quad.Roll,0.05,0.1)
 
 INCLUDE ControllerParams.txt

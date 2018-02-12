@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace SLR
 {
 // helper function -- trimming
@@ -65,6 +67,30 @@ inline std::string RightOf(const std::string& s, char c)
   const auto i = s.find_first_of(c);
   if (i == std::string::npos) return "";
   return s.substr(i + 1);
+}
+
+inline std::vector<string> Split(const char* str, char c = ' ')
+{
+  std::vector<std::string> result;
+
+  do
+  {
+    const char *begin = str;
+
+    while (*str != c && *str)
+    {
+      str++;
+    }
+
+    result.push_back(std::string(begin, str));
+  } while (0 != *str++);
+
+  return result;
+}
+
+inline std::vector<std::string> Split(std::string s, char c = ' ')
+{
+  return Split(s.c_str(), c);
 }
 
 } // namespace SLR
