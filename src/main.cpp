@@ -136,12 +136,12 @@ vector<QuadcopterHandle> CreateVehicles()
     sprintf_s(buf, 100, "Sim.Vehicle%d", i);
     if (config->Exists(buf))
     {
-      QuadcopterHandle q = QuadDynamics::Create(config->Get(buf, "Quad"),ret.size());
+      QuadcopterHandle q = QuadDynamics::Create(config->Get(buf, "Quad"), (int)ret.size());
       grapher->RegisterDataSource(q);
       ret.push_back(q);
     }
     else
-    {
+    {		
       break;
     }
     i++;
