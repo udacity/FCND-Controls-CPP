@@ -154,8 +154,8 @@ void Visualizer_GLUT::Reset()
 	// default settings here..
 	_drawVolumeBoundaries = true;
 	// default background colors
-	_bgColorBottomLeft = _bgColorBottomRight = V3F(.4f,.4f,.5f);			
-	_bgColorTopLeft = _bgColorTopRight = V3F(.7f,.7f,.8f);
+	_bgColorBottomLeft = _bgColorBottomRight = V3F(.8f,.8f,.85f);			
+	_bgColorTopLeft = _bgColorTopRight = V3F(.6f,.8f,.9f);
 
 	_refLoc = V3D(3, .9, .3);
 
@@ -348,7 +348,8 @@ void Visualizer_GLUT::Draw(shared_ptr<QuadDynamics> quad)
   glDisable(GL_LINE_SMOOTH);
   if (quad && quad->_followed_traj)
   {
-    VisualizeTrajectory(*(quad->_followed_traj).get(), false, (quad->color.norm()+V3F(2,2,2))/3.f);
+    glLineWidth(1.5);
+    VisualizeTrajectory(*(quad->_followed_traj).get(), false, (quad->color)*1.3f);
   }
 
 }
@@ -408,10 +409,7 @@ void Visualizer_GLUT::Paint()
 
   SetupLights(_glDraw);
 
-  for (unsigned i = 0; i < quads.size(); i++)
-  {
-    Draw(quads[i]);
-  }
+  
 
 	// enable color tracking
 	glEnable(GL_COLOR_MATERIAL);
@@ -424,6 +422,11 @@ void Visualizer_GLUT::Paint()
 	{
 		glCallList(_volumeCallList);
 	}
+
+  for (unsigned i = 0; i < quads.size(); i++)
+  {
+    Draw(quads[i]);
+  }
   
 
   // disable lights and fancy 3d effects for 2d drawing
