@@ -43,6 +43,16 @@
 
 /* Begin PBXFileReference section */
 		DB076C8A202A34C500386052 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		DB31989A2033402F008ACD56 /* AttitudeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttitudeController.h; sourceTree = "<group>"; };
+		DB31989D20334078008ACD56 /* P2_3_MultiHover.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_3_MultiHover.txt; path = ../config/P2_3_MultiHover.txt; sourceTree = "<group>"; };
+		DB31989E20334078008ACD56 /* Simulation.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Simulation.txt; path = ../config/Simulation.txt; sourceTree = "<group>"; };
+		DB31989F20334078008ACD56 /* ControllerParams.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ControllerParams.txt; path = ../config/ControllerParams.txt; sourceTree = "<group>"; };
+		DB3198A020334078008ACD56 /* P2_5_Multi3DCircle.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_5_Multi3DCircle.txt; path = ../config/P2_5_Multi3DCircle.txt; sourceTree = "<group>"; };
+		DB3198A120334078008ACD56 /* Config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Config.txt; path = ../config/Config.txt; sourceTree = "<group>"; };
+		DB3198A220334078008ACD56 /* P2_2_3DHover.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_2_3DHover.txt; path = ../config/P2_2_3DHover.txt; sourceTree = "<group>"; };
+		DB3198A320334078008ACD56 /* QuadPhysicalParams.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = QuadPhysicalParams.txt; path = ../config/QuadPhysicalParams.txt; sourceTree = "<group>"; };
+		DB3198A420334078008ACD56 /* P2_1_Attitude.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_1_Attitude.txt; path = ../config/P2_1_Attitude.txt; sourceTree = "<group>"; };
+		DB3198A520334078008ACD56 /* P2_4_3DCircle.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_4_3DCircle.txt; path = ../config/P2_4_3DCircle.txt; sourceTree = "<group>"; };
 		DB49FADE202A039100DED4E6 /* FCND-CPPSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "FCND-CPPSim"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB49FB21202A060F00DED4E6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		DB49FB35202A0CC600DED4E6 /* BaseController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseController.cpp; sourceTree = "<group>"; };
@@ -77,8 +87,6 @@
 		DB49FB54202A0CC600DED4E6 /* V3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V3D.h; sourceTree = "<group>"; };
 		DB49FB55202A0CC600DED4E6 /* V3F.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V3F.h; sourceTree = "<group>"; };
 		DB49FB56202A0CC600DED4E6 /* V4D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V4D.h; sourceTree = "<group>"; };
-		DB49FB57202A0CC600DED4E6 /* SandboxController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SandboxController.h; sourceTree = "<group>"; };
-		DB49FB58202A0CC600DED4E6 /* SimpleAttitudeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleAttitudeController.h; sourceTree = "<group>"; };
 		DB49FB5A202A0CC600DED4E6 /* BaseDynamics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseDynamics.cpp; sourceTree = "<group>"; };
 		DB49FB5B202A0CC600DED4E6 /* BaseDynamics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseDynamics.h; sourceTree = "<group>"; };
 		DB49FB5C202A0CC600DED4E6 /* opticalflow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opticalflow.cpp; sourceTree = "<group>"; };
@@ -117,9 +125,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DB31989C2033405F008ACD56 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				DB3198A120334078008ACD56 /* Config.txt */,
+				DB31989F20334078008ACD56 /* ControllerParams.txt */,
+				DB3198A420334078008ACD56 /* P2_1_Attitude.txt */,
+				DB3198A220334078008ACD56 /* P2_2_3DHover.txt */,
+				DB31989D20334078008ACD56 /* P2_3_MultiHover.txt */,
+				DB3198A520334078008ACD56 /* P2_4_3DCircle.txt */,
+				DB3198A020334078008ACD56 /* P2_5_Multi3DCircle.txt */,
+				DB3198A320334078008ACD56 /* QuadPhysicalParams.txt */,
+				DB31989E20334078008ACD56 /* Simulation.txt */,
+			);
+			name = config;
+			sourceTree = "<group>";
+		};
 		DB49FAD5202A039100DED4E6 = {
 			isa = PBXGroup;
 			children = (
+				DB31989C2033405F008ACD56 /* config */,
 				DB49FB34202A0CC600DED4E6 /* src */,
 				DB49FADF202A039100DED4E6 /* Products */,
 				DB49FB20202A060F00DED4E6 /* Frameworks */,
@@ -146,6 +171,7 @@
 		DB49FB34202A0CC600DED4E6 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				DB31989A2033402F008ACD56 /* AttitudeController.h */,
 				DB49FB35202A0CC600DED4E6 /* BaseController.cpp */,
 				DB49FB36202A0CC600DED4E6 /* BaseController.h */,
 				DB49FB37202A0CC600DED4E6 /* Common.h */,
@@ -155,8 +181,6 @@
 				DB49FB47202A0CC600DED4E6 /* FullCascadedController.h */,
 				DB49FB48202A0CC600DED4E6 /* main.cpp */,
 				DB49FB49202A0CC600DED4E6 /* Math */,
-				DB49FB57202A0CC600DED4E6 /* SandboxController.h */,
-				DB49FB58202A0CC600DED4E6 /* SimpleAttitudeController.h */,
 				DB49FB59202A0CC600DED4E6 /* Simulation */,
 				DB49FB64202A0CC600DED4E6 /* Trajectory.cpp */,
 				DB49FB65202A0CC600DED4E6 /* Trajectory.h */,
