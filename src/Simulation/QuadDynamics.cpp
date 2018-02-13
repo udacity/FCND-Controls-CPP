@@ -76,9 +76,11 @@ int QuadDynamics::Initialize()
   minMotorThrust = config->Get(_name + "minMotorThrust", .1f);
   maxMotorThrust = config->Get(_name + ".maxMotorThrust", 4.5f);
 
+  randomMotorForceMag = config->Get(_name + ".randomMotorForceMag", 0.f);
+
   ResetState(V3F());
 
-  string controllerType = config->Get(_name + ".ControllerType", "CascadedController");
+  string controllerType = config->Get(_name + ".ControllerType", "FullCascadedController");
   string controllerConfig = config->Get(_name + ".ControllerConfig", "Default");
 
   V3F trajOffset = config->Get(_name + ".TrajectoryOffset", V3F());
@@ -173,14 +175,14 @@ void QuadDynamics::Run(double dt, double simulationTime, int &idum, V3F external
     }
 
     const double simStep = MIN(controllerUpdateInterval - timeSinceLastControllerUpdate, remainingTimeToSimulate);
-    Dynamics(simStep, externalForceInGlobalFrame, externalMomentInBodyFrame, flightMode);
+    Dynamics(simStep, externalForceInGlobalFrame, externalMomentInBodyFrame, flightMode, idum);
     timeSinceLastControllerUpdate += simStep;
     remainingTimeToSimulate -= simStep;
   }
 }
 
 
-void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, string flight_mode)
+void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, string flight_mode, int& idum)
 {
   // NED/FRD reference frame
   matrix::Vector<float,3> ext_moment;
@@ -192,7 +194,7 @@ void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, 
   for (int i = 0; i < 4; i++)
   {
 		curCmd.desiredThrustsN[i] = CONSTRAIN(curCmd.desiredThrustsN[i], minMotorThrust, maxMotorThrust);
-    motorCmdsN(i) = curCmd.desiredThrustsN[i];
+    motorCmdsN(i) = curCmd.desiredThrustsN[i] + randomMotorForceMag * ran1_inRange(-1.f, 1.f, idum);
   }
 
   // Prop dynamics, props cannot change thrusts in a non continuous manner

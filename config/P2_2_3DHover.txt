@@ -14,10 +14,10 @@ Quad.ControllerType = FullCascadedController
 Quad.ControllerConfig = Controller
 
 # reference trajectory (just the starting position)
-Controller.Trajectory=0,0,-1
+Controller.Trajectory=-1,0,-1
 
 # initial conditions
-Quad.InitialPos=1,0,-.5
+Quad.InitialPos=0,0,-1
 Quad.InitialVel=0,0,0
 Quad.InitialYPR=0,0,0
 Quad.InitialOmega=0,0,0

@@ -31,7 +31,7 @@ public:
                   string flightMode = "Full3D");
 	virtual void SetCommands(const VehicleCommand& cmd);	// update commands in the simulator coming from a command2 packet
 
-  virtual void Dynamics(double dt, V3F external_force, V3F external_moment, string flight_mode);
+  virtual void Dynamics(double dt, V3F external_force, V3F external_moment, string flight_mode, int& idum);
 
 	double GetRotDistInt() {return rotDisturbanceInt;};
 	double GetXyzDistInt() {return xyzDisturbanceInt;};
@@ -86,6 +86,8 @@ protected:
 
 	double xyzDisturbanceInt, xyzDisturbanceBW, rotDisturbanceInt, rotDisturbanceBW, gyroNoiseInt;
 	V3D xyzDisturbance, rotDisturbance;
+
+  float randomMotorForceMag;
 
   double controllerUpdateInterval, timeSinceLastControllerUpdate;
 

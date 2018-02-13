@@ -29,3 +29,6 @@ rotDisturbanceInt = 0.00001
 xyzDisturbanceInt = 0.00001
 rotDisturbanceBW = 2
 xyzDisturbanceBW = 2
+
+[Quad] 
+randomMotorForceMag = .25
