@@ -51,8 +51,8 @@ int QuadDynamics::Initialize()
   ParamsHandle config = SimpleConfig::GetInstance();
 	
   // PARAMETERS
-  M = config->Get(_name+".Mass", 1.f);
-  L = config->Get(_name + ".L", 0.1f); // dist from center to thrust
+  M = config->Get(_name+".Mass", .5f);
+  L = config->Get(_name + ".L", 0.17f); // dist from center to thrust
   cx = config->Get(_name + ".cx", 0.f);
   cy = config->Get(_name + ".cy", 0.f);
 
@@ -84,11 +84,18 @@ int QuadDynamics::Initialize()
   V3F trajOffset = config->Get(_name + ".TrajectoryOffset", V3F());
 
   controller = CreateController(controllerType, controllerConfig);
-  controller->SetTrajectoryOffset(trajOffset);
-  if (config->Get(controllerConfig + ".UseIdealEstimator", 0) == 1)
+  if (controller)
   {
-    updateIdealStateCallback = MakeDelegate(controller.get(), &BaseController::OverrideEstimates);
-  }  
+    controller->SetTrajectoryOffset(trajOffset);
+    if (config->Get(controllerConfig + ".UseIdealEstimator", 0) == 1)
+    {
+      updateIdealStateCallback = MakeDelegate(controller.get(), &BaseController::OverrideEstimates);
+    }
+  }
+  else
+  {
+    SLR_WARNING1("Failed to create controller for %s", _name.c_str());
+  }
 
   _lastPosFollowErr = 0;
 
