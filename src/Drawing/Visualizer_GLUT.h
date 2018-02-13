@@ -49,7 +49,7 @@ public:
   shared_ptr<GraphManager> graph;
 
   shared_ptr<Trajectory> followed_traj;
-  void VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, V3F pointColor=V3F(.1f,.2f,1), V3F curPointColor=V3F(1,0,0));
+  void VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, V3F pointColor=V3F(.1f,.2f,1), V3F curPointColor=V3F(1,0,0), V3F offset=V3F());
 
   void InitializeMenu(const vector<string>& strings);
   GLUTMenu _menu;

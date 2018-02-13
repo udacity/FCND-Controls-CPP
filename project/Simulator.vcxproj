@@ -58,7 +58,6 @@
     <ClInclude Include="..\src\Math\V3F.h" />
     <ClInclude Include="..\src\Math\V4D.h" />
     <ClInclude Include="..\src\OnboardControls.h" />
-    <ClInclude Include="..\src\SandboxController.h" />
     <ClInclude Include="..\src\Simulation\BaseDynamics.h" />
     <ClInclude Include="..\src\Simulation\QuadDynamics.h" />
     <ClInclude Include="..\src\Simulation\Simulator.h" />

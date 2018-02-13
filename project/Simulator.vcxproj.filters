@@ -163,17 +163,10 @@
     <ClInclude Include="..\src\BaseController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\FullCascadedController.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\SandboxController.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AttitudeController.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Drawing\AbsThreshold.h">
       <Filter>Drawing</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\FullCascadedController.h" />
+    <ClInclude Include="..\src\AttitudeController.h" />
   </ItemGroup>
 </Project>

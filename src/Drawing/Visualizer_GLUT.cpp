@@ -339,7 +339,7 @@ void Visualizer_GLUT::Draw(shared_ptr<QuadDynamics> quad)
 
     if (quad->controller)
     {
-      VisualizeTrajectory(quad->controller->trajectory, true, V3F(0, 1, 0));
+      VisualizeTrajectory(quad->controller->trajectory, true, V3F(0,1,1), V3F(.1f, .2f, 1), quad->color, quad->controller->_trajectoryOffset);
     }
   }
 
@@ -348,7 +348,7 @@ void Visualizer_GLUT::Draw(shared_ptr<QuadDynamics> quad)
   glDisable(GL_LINE_SMOOTH);
   if (quad && quad->_followed_traj)
   {
-    VisualizeTrajectory(*(quad->_followed_traj).get(), false, V3F(1, 1, .5f));
+    VisualizeTrajectory(*(quad->_followed_traj).get(), false, (quad->color.norm()+V3F(2,2,2))/3.f);
   }
 
 }
@@ -468,7 +468,7 @@ void Visualizer_GLUT::Paint()
 
 void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
 {
-  _glDraw->DrawQuadrotor2(quad->Position(), quad->Attitude(), quad->color, V3F(quad->cx,quad->cy,0), quad->M/0.5f);
+  _glDraw->DrawQuadrotor2(quad->Position(), quad->Attitude(), quad->color, V3F(quad->cx,quad->cy,0), quad->M/0.5f, quad->L);
 
   if (showPropCommands)
   {
@@ -486,7 +486,7 @@ void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
   }
 }
 
-void Visualizer_GLUT::VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, V3F pointColor, V3F curPointColor)
+void Visualizer_GLUT::VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, V3F pointColor, V3F curPointColor, V3F offset)
 {
   if (showTrajectory)
   {
@@ -495,7 +495,7 @@ void Visualizer_GLUT::VisualizeTrajectory(const Trajectory& traj, bool drawPoint
     glBegin(GL_LINE_STRIP);
     for(unsigned int i=0; i<traj.traj.n_meas(); i++)
     {
-      glVertex3fv(traj.traj[i].position.getArray());
+      glVertex3fv((traj.traj[i].position+offset).getArray());
     }
     glEnd();
 
@@ -505,19 +505,21 @@ void Visualizer_GLUT::VisualizeTrajectory(const Trajectory& traj, bool drawPoint
       // Draw the desired trajectory points as spheres
       for (unsigned int i = 0; i < traj.traj.n_meas(); i++)
       {
-        V3F pos = traj.traj[i].position;
+        V3F pos = traj.traj[i].position + offset;
+        float r = 0.01f;
         // Draw the current trajectory point in a different colour
         if (i == (unsigned)traj.GetCurTrajectoryPoint())
         {
-          glColor4d(curPointColor[0], curPointColor[1], curPointColor[2], 1);
+          glColor4f(curPointColor[0], curPointColor[1], curPointColor[2], 1);
+          r = 0.03f;
         }
         else
         {
-          glColor4d(pointColor[0], pointColor[1], pointColor[2], 1);
+          glColor4f(pointColor[0], pointColor[1], pointColor[2], 1);
         }
         glPushMatrix();
         glTranslatef(pos.x, pos.y, pos.z);
-        gluSphere(_glDraw->Quadric(), 0.02, 8, 8);
+        gluSphere(_glDraw->Quadric(), r, 6, 6);
         glPopMatrix();
       }
     }

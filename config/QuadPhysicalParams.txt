@@ -9,7 +9,7 @@
 # Simulated quadcopter physical parameters
 
 [Quad]
-# mass [Kg]
+# mass [kg]
 Mass = 0.5
 
 # distance from vehicle origin to motors [m]
@@ -29,7 +29,7 @@ tauaUp = 0.01
 tauaDown = 0.02
 
 # motor min/max thrust [N]
-minMotorThrust = .1
+minMotorThrust = 0.1
 maxMotorThrust = 4.5
 
 # ratio between thrust [N] and torque due to drag [N m]

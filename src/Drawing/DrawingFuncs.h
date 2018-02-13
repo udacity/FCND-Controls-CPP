@@ -15,9 +15,9 @@
 void GLCube(V3F center, V3F dims, int cnt=3);
 void GLRectangle(V3F center, V3F normal, V3F up, float width, float height, int numX, int numY);
 void DrawX3D(V3D markingColor, V3D bodyColor=V3D(.2,.2,.2), double alpha=1, bool solidPart=true, bool transPart=true, GLUquadricObj *glQuadric=NULL);
-void DrawQuarterX3D(bool front, V3D markingColor, V3D bodyColor, double alpha, GLUquadricObj *glQuadric);
+void DrawQuarterX3D(bool front, V3D markingColor, V3D bodyColor, double alpha, GLUquadricObj *glQuadric, float armLength);
 void GLCross(const V3F& center, const V3F& dims, bool gl_begin_line=true);
-void DrawQuarterX3D_TransparentPart(double alpha, GLUquadricObj *glQuadric);
+void DrawQuarterX3D_TransparentPart(double alpha, GLUquadricObj *glQuadric, float armLength);
 void DrawStrokeText(const char* str, float x, float y, float z, float lineWidth, float scaleX=1, float scaleY=1);
 
 using SLR::Quaternion;
@@ -36,8 +36,7 @@ public:
   void PopLighting();
   void SetLighting(bool enable);
 
-  void DrawQuadrotor(V3F pos, Quaternion<float> att, V3F color, double alpha = 1, bool noWireframe = false, float scale = 1);
-  void DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F centerOffset, float centerScale);
+  void DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F centerOffset, float centerScale, float armLength);
 
   void DrawArrow(double len, double r1, double r2, double arrowLen);
   void DrawArrow(V3D from, V3D to, V3D color);

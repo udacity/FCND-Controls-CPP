@@ -71,11 +71,11 @@ void GLCross(const V3F& center, const V3F& dims, bool gl_begin_line)
 
 }
 
-const float armL = .17f;    // .17 for hummingbird
+
 const float propR = .1f;   // .1 for hummingbird
 const float motorR = .02f; // .03 for hummingbird
 
-void DrawQuarterX3D(bool front, V3D markingColor, V3D bodyColor, double alpha, GLUquadricObj *glQuadric)
+void DrawQuarterX3D(bool front, V3D markingColor, V3D bodyColor, double alpha, GLUquadricObj *glQuadric, float armL)
 {	
 	if(front)
 	{
@@ -132,7 +132,7 @@ void DrawQuarterX3D(bool front, V3D markingColor, V3D bodyColor, double alpha, G
 	glPopMatrix();
 }
 
-void DrawQuarterX3D_TransparentPart(double alpha, GLUquadricObj *glQuadric)
+void DrawQuarterX3D_TransparentPart(double alpha, GLUquadricObj *glQuadric, float armL)
 {
 	glPushMatrix();
 	glTranslated(armL,0,.005);
@@ -201,6 +201,8 @@ void DrawStrokeText(const char* str, float x, float y, float z, float lineWidth,
 
 void DrawX3D(V3D markingColor, V3D bodyColor, double alpha, bool solidPart, bool transPart, GLUquadricObj *glQuadric)
 {	
+  const float armL = .17f;    // .17 for hummingbird
+
 	bool cleanup = (glQuadric==NULL);
 	if(glQuadric==NULL)
 	{
@@ -215,23 +217,23 @@ void DrawX3D(V3D markingColor, V3D bodyColor, double alpha, bool solidPart, bool
 		GLCube(V3F(),V3F(.07f,.07f,.04f));
 		glPopMatrix();
 
-		DrawQuarterX3D(true, markingColor,bodyColor*.8,alpha,glQuadric);
+		DrawQuarterX3D(true, markingColor,bodyColor*.8,alpha,glQuadric, armL);
 		glRotatef(90,0,0,1);
-    DrawQuarterX3D(true, markingColor, bodyColor*.8, alpha, glQuadric);
+    DrawQuarterX3D(true, markingColor, bodyColor*.8, alpha, glQuadric, armL);
 		glRotatef(90,0,0,1);
-		DrawQuarterX3D(false,V3D(),bodyColor*.8,alpha,glQuadric);
+		DrawQuarterX3D(false,V3D(),bodyColor*.8,alpha,glQuadric, armL);
 		glRotatef(90,0,0,1);
-		DrawQuarterX3D(false,V3D(),bodyColor*.8,alpha,glQuadric);
+		DrawQuarterX3D(false,V3D(),bodyColor*.8,alpha,glQuadric, armL);
 	}
 	if(transPart)
 	{
-		DrawQuarterX3D_TransparentPart(alpha,glQuadric);
+		DrawQuarterX3D_TransparentPart(alpha,glQuadric, armL);
 		glRotatef(90,0,0,1);
-		DrawQuarterX3D_TransparentPart(alpha,glQuadric);
+		DrawQuarterX3D_TransparentPart(alpha,glQuadric, armL);
 		glRotatef(90,0,0,1);
-		DrawQuarterX3D_TransparentPart(alpha,glQuadric);
+		DrawQuarterX3D_TransparentPart(alpha,glQuadric, armL);
 		glRotatef(90,0,0,1);
-		DrawQuarterX3D_TransparentPart(alpha,glQuadric);
+		DrawQuarterX3D_TransparentPart(alpha,glQuadric, armL);
 	}
 	if(cleanup)
 	{
@@ -240,7 +242,7 @@ void DrawX3D(V3D markingColor, V3D bodyColor, double alpha, bool solidPart, bool
 }
 
 
-void OpenGLDrawer::DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F centerOffset, float centerScale)
+void OpenGLDrawer::DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F centerOffset, float centerScale, float armL)
 {
   glPushMatrix();
 
@@ -287,23 +289,23 @@ void OpenGLDrawer::DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F
     glPopMatrix();
     glPolygonMode(GL_FRONT, GL_FILL);
 
-    DrawQuarterX3D(true, color, bodyColor*.8, alpha, _glQuadric);
+    DrawQuarterX3D(true, color, bodyColor*.8, alpha, _glQuadric, armL);
     glRotatef(90, 0, 0, 1);
-    DrawQuarterX3D(true, color, bodyColor*.8, alpha, _glQuadric);
+    DrawQuarterX3D(true, color, bodyColor*.8, alpha, _glQuadric, armL);
     glRotatef(90, 0, 0, 1);
-    DrawQuarterX3D(false, V3D(), bodyColor*.8, alpha, _glQuadric);
+    DrawQuarterX3D(false, V3D(), bodyColor*.8, alpha, _glQuadric, armL);
     glRotatef(90, 0, 0, 1);
-    DrawQuarterX3D(false, V3D(), bodyColor*.8, alpha, _glQuadric);
+    DrawQuarterX3D(false, V3D(), bodyColor*.8, alpha, _glQuadric, armL);
   }
   if (1)
   {
-    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric, armL);
     glRotatef(90, 0, 0, 1);
-    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric, armL);
     glRotatef(90, 0, 0, 1);
-    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric, armL);
     glRotatef(90, 0, 0, 1);
-    DrawQuarterX3D_TransparentPart(alpha, _glQuadric);
+    DrawQuarterX3D_TransparentPart(alpha, _glQuadric, armL);
   }
   if (cleanup)
   {
@@ -313,59 +315,6 @@ void OpenGLDrawer::DrawQuadrotor2(V3F pos, Quaternion<float> att, V3F color, V3F
   glPolygonMode(GL_FRONT, GL_FILL);
 
   glPopMatrix();
-}
-
-void OpenGLDrawer::DrawQuadrotor(V3F pos, Quaternion<float> att, V3F color, double alpha, bool noWireframe, float scale)
-{	
-	glPushMatrix();
-	
-  // STRANGE: have to enable GL_SMOOTH here for it to work. something is switching the shade model back to flat.
-	glShadeModel( GL_SMOOTH );
-
-	glTranslated(pos[0],pos[1],pos[2]);
-
-  V3D ypr =  att.ToEulerYPR();
-
-	glRotated(ypr[0]/M_PI*180.0,0,0,1);
-	glRotated(ypr[1]/M_PI*180.0,0,1,0);
-	glRotated(ypr[2]/M_PI*180.0,1,0,0);
-
-  glScalef(scale,scale,scale);
-
-  glRotatef(45, 0, 0, 1);
-  glRotatef(180, 1, 0, 0);
-
-	V3D bodyColor = V3D(.7,.7,.7);
-
-	if(alpha<1 && !noWireframe)
-	{	
-		glEnable( GL_POLYGON_OFFSET_FILL );  
-		glPolygonOffset( 1.f, 1.f );
-		glPolygonMode(GL_FRONT,GL_FILL);
-		DrawX3D(color,bodyColor,MAX(alpha,.2),true,false,_glQuadric);
-		glDisable( GL_POLYGON_OFFSET_FILL );  
-
-		glPolygonMode(GL_FRONT,GL_LINE);
-		DrawX3D(color,bodyColor,MIN(.2,1.0-alpha),true,false,_glQuadric);
-
-		glEnable( GL_POLYGON_OFFSET_FILL );  
-		glPolygonOffset( 1.f, 1.f );
-		glPolygonMode(GL_FRONT,GL_FILL);
-		DrawX3D(color,bodyColor,MAX(alpha,.2),false,true,_glQuadric);
-		glDisable( GL_POLYGON_OFFSET_FILL );  
-
-		glPolygonMode(GL_FRONT,GL_LINE);
-		DrawX3D(color,bodyColor,MIN(.2,1.0-alpha),false,true,_glQuadric);
-	}
-	else
-	{
-		DrawX3D(color,bodyColor,alpha,true,true,_glQuadric);
-	}
-	
-	glPolygonMode(GL_FRONT,GL_FILL);
-	
-	glPopMatrix();
-
 }
 
 void glCircle(float radius, int numSegments)
