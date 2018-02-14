@@ -22,7 +22,7 @@ public:
 
   void RegisterDataSource(shared_ptr<DataSource> src);
   
-  shared_ptr<Graph> graph;
+  shared_ptr<Graph> graph1, graph2;
   std::vector<shared_ptr<DataSource> > _sources;
 
   std::vector<std::string> GetGraphableStrings();

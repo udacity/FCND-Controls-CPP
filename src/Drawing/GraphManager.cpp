@@ -46,31 +46,39 @@ GraphManager::GraphManager(bool own_window)
     InitPaint();
   }
 
-  graph.reset(new Graph("Graph1"));
+  graph1.reset(new Graph("Graph1"));
+  graph2.reset(new Graph("Graph1"));
 }
 
 GraphManager::~GraphManager()
 {
-  graph.reset();
+  graph1.reset();
+  graph2.reset();
   Sleep(100);
   _g_GraphManager = NULL;
 }
 
 void GraphManager::Reset()
 {
-  graph->Reset();
+  graph1->Reset();
+  graph2->Reset();
 }
 
 void GraphManager::Clear()
 {
-  graph->Clear();
+  graph1->Clear();
+  graph2->Clear();
 }
 
 void GraphManager::UpdateData(double time)
 {
-  if (graph)
+  if (graph1)
   {
-    graph->Update(time, _sources);
+    graph1->Update(time, _sources);
+  }
+  if (graph2)
+  {
+    graph2->Update(time, _sources);
   }
 }
 
@@ -104,22 +112,50 @@ void GraphManager::Paint()
   }
   else
   {
-    if (graph->_series.size())
-    {
-      // Draw black background
-      glColor3f(0, 0, 0);
-      glBegin(GL_QUADS);
-      glVertex2f(-1, 1);
-      glVertex2f(1, 1);
-      glVertex2f(1, -1);
-      glVertex2f(-1, -1);
-      glEnd();
-    }
+
   }
 
-  if (graph)
+  if (graph1 && graph1->_series.size())
   {
-    graph->Draw();
+    glPushMatrix();
+    if (graph2 && graph2->_series.size())
+    {
+      glTranslatef(0, .55f, 0);
+    }
+    else
+    {
+      glTranslatef(0, -.5f, 0);
+    }
+    glScalef(1, .5f, 1);
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex2f(-1, 1);
+    glVertex2f(1, 1);
+    glVertex2f(1, -1);
+    glVertex2f(-1, -1);
+    glEnd();
+
+    graph1->Draw();
+    glPopMatrix();
+  }
+
+  if (graph2 && graph2->_series.size())
+  {
+    glPushMatrix();
+    glTranslatef(0, -.5f, 0);
+    glScalef(1, .5f, 1);
+
+    glColor3f(0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex2f(-1, 1);
+    glVertex2f(1, 1);
+    glVertex2f(1, -1);
+    glVertex2f(-1, -1);
+    glEnd();
+
+    graph2->Draw();
+    glPopMatrix();
   }
 
   glFlush();  // Render now
@@ -143,7 +179,8 @@ vector<string> GraphManager::GetGraphableStrings()
     vector<string> s = (*i)->GetFields();
     for (auto j = s.begin(); j != s.end(); j++)
     {
-      ret.push_back("AddGraph."+*j);
+      ret.push_back("AddGraph1."+*j);
+      ret.push_back("AddGraph2." + *j);
     }
   }
   return ret;
@@ -151,8 +188,12 @@ vector<string> GraphManager::GetGraphableStrings()
 
 void GraphManager::AddGraph(string path)
 {
-  if (path.find("AddGraph.") == 0)
+  if (path.find("AddGraph1.") == 0)
   {
-    graph->AddItem(path.substr(9));
+    graph1->AddItem(path.substr(10));
+  }
+  if (path.find("AddGraph2.") == 0)
+  {
+    graph2->AddItem(path.substr(10));
   }
 }

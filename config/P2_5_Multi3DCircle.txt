@@ -24,12 +24,11 @@ Quad.InitialYPR=0,0,0
 Quad.InitialOmega=0,0,0
 
 # graphing commands
-Commands.1=AddGraph.Quad1.PosFollowErr
-Commands.2=AddGraph.Quad2.PosFollowErr
+Commands.1=AddGraph1.Quad1.PosFollowErr
+Commands.2=AddGraph1.Quad2.PosFollowErr
 Commands.3=Toggle.Trajectory
 
-INCLUDE ControllerParams.txt
-
+INCLUDE Controller.txt
 INCLUDE Simulation.txt
 
 # Vehicle-specific config

@@ -17,16 +17,16 @@ Izz = 0.0046
 kappa = 0.016
 
 # Position control gains
-PGain_Pos_XY = 2
+PGain_Pos_XY = 3
 PGain_Pos_Z = 3
 
 # Velocity control gains
-PGain_Vel_XY = 8
+PGain_Vel_XY = 12
 PGain_Vel_Z = 12
 
 # Bank control gains
 PGain_Bank = 20
-PGain_Yaw = 1
+PGain_Yaw = 0
 
 # Angle rate gains
-PGain_Omega = 60, 60, 20
+PGain_Omega = 80, 60, 10

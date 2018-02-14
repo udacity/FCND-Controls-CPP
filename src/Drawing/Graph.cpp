@@ -298,16 +298,22 @@ void Graph::Draw()
   glScalef(2.f / (highX - lowX), 2.f / (highY - lowY), 1.f);
   glTranslatef(-(highX + lowX) / 2.f, -(highY + lowY) / 2.f, 0.f);
 
-  glColor3f(0.3f, 0.3f, 0.3f);
-
-  glLineWidth(1);
-  glBegin(GL_LINES);
+  
   // y=0 line
+  
+  glLineWidth(1);
+  glBegin(GL_LINES);  
+  glColor3f(.5f, .5f, .5f);
   if (0 > lowY && 0 < highY)
   {
     glVertex2f(lowX, 0);
     glVertex2f(highX, 0);
   }
+  glEnd();
+  
+
+  glLineWidth(1);
+  glBegin(GL_LINES);
 
   // grid
   glColor3f(0.1f, 0.1f, 0.1f);
@@ -316,7 +322,7 @@ void Graph::Draw()
   string tickYFormat = GetValueFormat(lowY, highY, &tickYDelta, &tickYLow, &tickYHigh);
   for (float y = tickYLow; y <= tickYHigh; y += tickYDelta)
   {
-    if (y < lowY || y> highY) continue;
+    if (y < lowY || y> highY || y==0) continue;
     glVertex2f(lowX, y);
     glVertex2f(highX, y);
   }
@@ -337,10 +343,10 @@ void Graph::Draw()
   glColor3f(.9f,.9f,.9f);
   for (float y = tickYLow; y <= tickYHigh; y += tickYDelta)
   {
-    if (y < (lowY + (highY-lowY)*.03f) || y> (highY - (highY - lowY)*.03f)) continue;
+    if (y < (lowY + (highY-lowY)*.05f) || y> (highY - (highY - lowY)*.05f)) continue;
     char buf[100];
     sprintf_s(buf, 100, tickYFormat.c_str(), y);
-    DrawStrokeText(buf, lowX + .01f*(highX-lowX), y, 0, 1.2f,(highX-lowX)/3.f, (highY - lowY)/3.f);
+    DrawStrokeText(buf, lowX + .01f*(highX-lowX), y, 0, 1.2f,(highX-lowX)/3.f, (highY - lowY)/3.f*2.f);
   }
   
   glPopMatrix();
@@ -348,7 +354,6 @@ void Graph::Draw()
   for (unsigned int i = 0; i < _series.size(); i++)
   {
     glColor3f(_series[i]._color[0], _series[i]._color[1], _series[i]._color[2]);
-    DrawStrokeText(ToLower(_series[i]._yName).c_str(), .3f, .9f - i * .105f, 0, 1.5f);
+    DrawStrokeText(ToLower(_series[i]._yName).c_str(), .3f, .8f - i * .205f, 0, 1.5f, 1.f, 2.f);
   }
-
 }

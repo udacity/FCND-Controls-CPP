@@ -24,6 +24,7 @@ shared_ptr<Visualizer_GLUT> visualizer;
 shared_ptr<GraphManager> grapher;
 
 float dtSim = 0.001f;
+const int NUM_SIM_STEPS_PER_TIMER = 5;
 Timer lastDraw;
 V3F force, moment;
 
@@ -69,6 +70,8 @@ void ResetSimulation()
 {
   ParamsHandle config = SimpleConfig::GetInstance();
 
+  randomNumCarry = 0;
+
   receivedResetRequest = false;
   simulationTime = 0;
   config->Reset();
@@ -100,12 +103,15 @@ void OnTimer(int)
   // main loop
   if (!paused)
   {
-    for(unsigned i=0;i<quads.size();i++)
+    for (int i = 0; i < NUM_SIM_STEPS_PER_TIMER; i++)
     {
-      quads[i]->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+      for (unsigned i = 0; i < quads.size(); i++)
+      {
+        quads[i]->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+      }
+      simulationTime += dtSim;
     }
     grapher->UpdateData(simulationTime);
-    simulationTime += dtSim;
   }
   
   KeyboardInteraction(force, visualizer);
@@ -197,7 +203,8 @@ void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
 
   if (visualizer->IsKeyDown('c') || visualizer->IsKeyDown('C'))
   {
-    visualizer->graph->graph->RemoveAllSeries();
+    visualizer->graph->graph1->RemoveAllSeries();
+    visualizer->graph->graph2->RemoveAllSeries();
   }
 
   if (visualizer->IsKeyDown('r') || visualizer->IsKeyDown('R'))
