@@ -113,11 +113,7 @@ Visualizer_GLUT::Visualizer_GLUT(int *argcp, char **argv)
   _g_viz = this;
   _mouseLeftDown = _mouseRightDown = false;
 
-	showPropCommands = false;
-
-  showTrajectory = false;
-
-  paused = false;
+  Reset();
 
   initializeGL(argcp, argv);
 }
@@ -151,6 +147,10 @@ bool Visualizer_GLUT::IsSpecialKeyDown(int specialKey)
 
 void Visualizer_GLUT::Reset()
 {
+  showPropCommands = false;
+  showTrajectory = false;
+  paused = false;
+
 	// default settings here..
 	_drawVolumeBoundaries = true;
 	// default background colors
@@ -162,7 +162,6 @@ void Visualizer_GLUT::Reset()
 	_camera.Reset();
 
 	_doubleClickTimer = Timer::InvalidTimer();
-
 
 	GLuint tmp = _volumeCallList;
 	_volumeCallList = MakeVolumeCallList();
@@ -658,10 +657,22 @@ void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
   vector<string> tmp = strings;
   tmp.push_back("Toggle.Trajectory");
   tmp.push_back("Toggle.Thrusts");
+
+  FILE* f = fopen("../config/Scenarios.txt","r");
+  char buf[512]; buf[511] = 0;
+  while (f && fgets(buf, 510, f))
+  {
+    string trimmed = SLR::Trim(string(buf));
+    tmp.push_back(string("Scenario.") + trimmed);
+  }
+  fclose(f);
+
   glutSetWindow(_glutWindowNum);
   _menu.CreateMenu(tmp);
   _menu.OnMenu = MakeDelegate(this, &Visualizer_GLUT::OnMenu);
 }
+
+void LoadScenario(string scenarioFile);
 
 void Visualizer_GLUT::OnMenu(string cmd)
 {
@@ -672,6 +683,11 @@ void Visualizer_GLUT::OnMenu(string cmd)
   else if (cmd == "Toggle.Thrusts")
   {
     showPropCommands = !showPropCommands;
+  }
+  else if (cmd.find("Scenario.")!=string::npos)
+  {
+    string name = string("../config/")+cmd.substr(9)+".txt";
+    LoadScenario(name);
   }
   else
   {

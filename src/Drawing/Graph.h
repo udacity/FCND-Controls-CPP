@@ -22,7 +22,7 @@ public:
   void AddSeries(string path, bool autoColor = true, V3F color = V3F());
   void AddAbsThreshold(string path);
   bool IsSeriesPlotted(string path);
-  void RemoveAllSeries();
+  void RemoveAllElements();
 
 
   struct Series

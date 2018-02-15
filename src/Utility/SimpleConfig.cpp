@@ -15,7 +15,7 @@ shared_ptr<SimpleConfig> SimpleConfig::s_config;
 
 SimpleConfig::SimpleConfig()
 {
-	Reset();
+	Reset("");
 }
 
 ParamsHandle SimpleConfig::GetInstance()
@@ -27,14 +27,15 @@ ParamsHandle SimpleConfig::GetInstance()
 	return s_config;
 }
 
-void SimpleConfig::Reset()
+void SimpleConfig::Reset(string rootParam)
 {
-	// todo: go to the right directory
-	// load all the files in the directory?
-	_params.clear();
-  ReadFile("../config/Config.txt");
-
-  
+  // todo: go to the right directory
+  // load all the files in the directory?
+  _params.clear();
+  if (rootParam != "")
+  {
+    ReadFile(rootParam);
+  }
 }
 
 void SimpleConfig::ReadFile(const string& filename, int depth)

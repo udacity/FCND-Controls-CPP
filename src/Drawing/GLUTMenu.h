@@ -35,4 +35,7 @@ protected:
   GLUTMenu::MenuEntry StringListToMenuTree(const vector<string>& strings);
   void AddMenuEntry(const string& entry, const string& fullCommand, GLUTMenu::MenuEntry& top);
   void CreateGLUTMenus(MenuEntry& top);
+  void RemoveGLUTMenus(MenuEntry& top);
+
+  MenuEntry menuTree;
 };

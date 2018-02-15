@@ -97,9 +97,10 @@ bool Graph::IsSeriesPlotted(string path)
   return false;
 }
 
-void Graph::RemoveAllSeries()
+void Graph::RemoveAllElements()
 {
   _series.clear();
+  _absThreshold.reset();
 }
 
 void Graph::Reset()

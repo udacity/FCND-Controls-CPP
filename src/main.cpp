@@ -17,6 +17,8 @@ bool receivedResetRequest = true;
 bool paused = false;
 void PrintHelpText();
 void ProcessConfigCommands(shared_ptr<Visualizer_GLUT> vis);
+void LoadScenario(string scenarioFile);
+void ResetSimulation();
 
 vector<QuadcopterHandle> quads;
 
@@ -35,6 +37,8 @@ string flightMode;
 void OnTimer(int v);
 
 vector<QuadcopterHandle> CreateVehicles();
+string _scenarioFile="../config/1_Intro.txt";
+
 
 int main(int argcp, char **argv)
 {
@@ -47,23 +51,57 @@ int main(int argcp, char **argv)
   visualizer.reset(new Visualizer_GLUT(&argcp, argv));
   grapher.reset(new GraphManager(false));
 
-  // create a quadcopter to simulate
-  quads = CreateVehicles();
-  
-  grapher->RegisterDataSource(visualizer);
+  // re-load last opened scenario
+  FILE *f = fopen("../config/LastScenario.txt", "r");
+  if (f)
+  {
+    char buf[100]; buf[99] = 0;
+    fgets(buf, 99, f);
+    _scenarioFile = SLR::Trim(buf);
+    fclose(f);
+  }
 
-  visualizer->InitializeMenu(grapher->GetGraphableStrings());
-
-  visualizer->quads = quads;
-  visualizer->graph = grapher;
-
-  ProcessConfigCommands(visualizer);
-  
+  LoadScenario(_scenarioFile);
+ 
   glutTimerFunc(1,&OnTimer,0);
   
   glutMainLoop();
 
   return 0;
+}
+
+
+
+void LoadScenario(string scenarioFile)
+{
+  FILE *f = fopen("../config/LastScenario.txt","w");
+  if(f)
+  {
+    fprintf(f, "%s", scenarioFile.c_str());
+    fclose(f);
+  }
+
+  ParamsHandle config = SimpleConfig::GetInstance();
+  _scenarioFile = scenarioFile;
+  config->Reset(scenarioFile);
+
+  grapher->_sources.clear();
+  grapher->graph1->RemoveAllElements();
+  grapher->graph2->RemoveAllElements();
+
+  grapher->RegisterDataSource(visualizer);
+
+  // create a quadcopter to simulate
+  quads = CreateVehicles();
+
+  visualizer->Reset();
+  visualizer->InitializeMenu(grapher->GetGraphableStrings());
+  visualizer->quads = quads;
+  visualizer->graph = grapher;
+
+  ProcessConfigCommands(visualizer);
+
+  ResetSimulation();
 }
 
 void ResetSimulation()
@@ -74,7 +112,7 @@ void ResetSimulation()
 
   receivedResetRequest = false;
   simulationTime = 0;
-  config->Reset();
+  config->Reset(_scenarioFile);
   dtSim = config->Get("Sim.Timestep", 0.005f);
   
   flightMode = config->Get("Quad.SimMode","Full3D");
@@ -203,8 +241,8 @@ void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
 
   if (visualizer->IsKeyDown('c') || visualizer->IsKeyDown('C'))
   {
-    visualizer->graph->graph1->RemoveAllSeries();
-    visualizer->graph->graph2->RemoveAllSeries();
+    visualizer->graph->graph1->RemoveAllElements();
+    visualizer->graph->graph2->RemoveAllElements();
   }
 
   if (visualizer->IsKeyDown('r') || visualizer->IsKeyDown('R'))

@@ -115,6 +115,8 @@ public:
 
   void OnMainTimer();
 
+  FastDelegate1<string> menuCallback;
+
 protected:
 	V3D _doubleClickMousePoint;
 	Timer _doubleClickTimer;

@@ -18,7 +18,7 @@ class SimpleConfig
 
 public:
 	static ParamsHandle GetInstance();
-	void Reset();
+	void Reset(string rootParam);
   
   bool Exists(const string& param);
   bool GetFloat(const string& param, float& ret);
