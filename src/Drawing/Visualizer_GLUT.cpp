@@ -348,7 +348,7 @@ void Visualizer_GLUT::Draw(shared_ptr<QuadDynamics> quad)
   if (quad && quad->_followed_traj)
   {
     glLineWidth(1.5);
-    VisualizeTrajectory(*(quad->_followed_traj).get(), false, (quad->color)*1.3f);
+    VisualizeTrajectory(*(quad->_followed_traj).get(), false, quad->color);
   }
 
 }
@@ -470,6 +470,8 @@ void Visualizer_GLUT::Paint()
 
 void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
 {
+  glLineWidth(1);
+  glEnable(GL_LINE_SMOOTH);
   _glDraw->DrawQuadrotor2(quad->Position(), quad->Attitude(), quad->color, V3F(quad->cx,quad->cy,0), quad->M/0.5f, quad->L);
 
   if (showPropCommands)
@@ -557,12 +559,12 @@ void Visualizer_GLUT::OnMouseMove(int x, int y)
 	int dx = x - lastPosX;
 	int dy = y - lastPosY;
 
-  if (_mouseLeftDown && IsKeyDown('x'))
+  if (_mouseLeftDown && (IsKeyDown('x') || IsKeyDown('X')))
 	{
 		_camera.PanLeft(-dx/20.0);
 		_camera.PanUp(-dy/20.0);
 	}
-  else if(_mouseLeftDown && IsKeyDown('z'))
+  else if(_mouseLeftDown && (IsKeyDown('z') || IsKeyDown('Z')))
 	{
 		_camera.DollyIn(-dy/10.0);
 	}

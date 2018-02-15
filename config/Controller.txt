@@ -26,7 +26,7 @@ PGain_Vel_Z = 12
 
 # Bank control gains
 PGain_Bank = 20
-PGain_Yaw = 0
+PGain_Yaw = 5
 
 # Angle rate gains
-PGain_Omega = 80, 60, 10
+PGain_Omega = 80, 80, 10
