@@ -28,10 +28,10 @@ INCLUDE Simulation.txt
 
 # make sure the controller is off
 [QuadControlParams]
-PGain_Pos_XY = 0
-PGain_Pos_Z = 0
-PGain_Vel_XY = 0
-PGain_Vel_Z = 0
-PGain_Bank = 0
-PGain_Yaw = 0
-PGain_Omega = 0,0,0
+Kp_pos_xy = 0
+Kp_pos_z = 0
+Kp_vel_xy = 0
+Kp_vel_z = 0
+Kp_bank = 0
+Kp_yaw = 0
+Kp_pqr = 0,0,0

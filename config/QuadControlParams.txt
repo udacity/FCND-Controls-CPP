@@ -15,18 +15,27 @@ Ixx = 0.0023
 Iyy = 0.0023
 Izz = 0.0046
 kappa = 0.016
+minMotorThrust = .1
+maxMotorThrust = 4.5
 
 # Position control gains
-PGain_Pos_XY = 3
-PGain_Pos_Z = 3
+Kp_pos_xy = 3
+Kp_pos_z = 3
 
 # Velocity control gains
-PGain_Vel_XY = 12
-PGain_Vel_Z = 12
+Kp_vel_xy = 12
+Kp_vel_z = 12
 
-# Bank control gains
-PGain_Bank = 20
-PGain_Yaw = 5
+# Angle control gains
+Kp_bank = 15
+Kp_yaw = 3
 
 # Angle rate gains
-PGain_Omega = 80, 80, 20
+Kp_pqr = 70, 70, 15
+
+# limits
+maxAscentRate = 5
+maxDescentRate = 2
+maxSpeedXY = 5
+maxHorizAccel = 12
+maxTiltAngle = .7

@@ -50,7 +50,7 @@
     <ClInclude Include="..\src\Drawing\Visualizer_GLUT.h" />
     <ClInclude Include="..\src\Math\Angles.h" />
     <ClInclude Include="..\src\Math\Geometry.h" />
-    <ClInclude Include="..\src\Math\Mat3x3D.h" />
+    <ClInclude Include="..\src\Math\Mat3x3F.h" />
     <ClInclude Include="..\src\Math\Quaternion.h" />
     <ClInclude Include="..\src\Math\Random.h" />
     <ClInclude Include="..\src\Math\V3D.h" />

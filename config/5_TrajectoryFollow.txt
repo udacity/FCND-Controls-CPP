@@ -25,11 +25,11 @@ INCLUDE Simulation.txt
 
 # Vehicle-specific config
 [Quad1:Quad]
-InitialPos=-2,1,-1
+InitialPos=0,1,-1
 TrajectoryOffset = 0,1.5,0
 
 [Quad2:Quad]
-InitialPos=-2,-1,-1
+InitialPos=0,-1,-1
 TrajectoryOffset=0,-1.5,0
 ControlConfig = QuadControlParamsFF
 

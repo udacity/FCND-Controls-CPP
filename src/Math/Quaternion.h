@@ -6,7 +6,7 @@
 #include "Constants.h"
 #include "V3D.h"
 #include "V3F.h"
-#include "Mat3x3D.h"
+#include "Mat3x3F.h"
 #include "V4D.h"
 
 namespace SLR{
@@ -159,7 +159,7 @@ public:
 	T& operator[](uint8_t i){return _q[i];}
   const T& operator[](uint8_t i) const{return _q[i];}
 
-  static Quaternion FromRotmatrix(Mat3x3D Rotmat) 
+  static Quaternion FromRotmatrix(Mat3x3F Rotmat) 
   {	
 	  Quaternion q;
 	  q[0] = 0.5f*sqrt(1 + (T)Rotmat[0] + (T)Rotmat[4] + (T)Rotmat[8]);
@@ -169,18 +169,18 @@ public:
 	  return q;
   };  
 
-  Mat3x3D RotationMatrix_IwrtB(void) const
+  Mat3x3F RotationMatrix_IwrtB(void) const
   {
 		//transformation matrix of inertial w.r.t. the body -- v_I = RotationMatrix_IwrtB*v_B
-    V3D qvec = V3D(_q[1],_q[2],_q[3]);
-    Mat3x3D Sk_q =  Mat3x3D::SkewSymmetric(qvec);// Build the skew symmetric matrix of the imaginary part of quaternion
-    return Mat3x3D::Ident()*(_q[0]*_q[0] - qvec.magSq()) + Mat3x3D::OuterProduct(qvec,qvec)*2  + Sk_q*2*_q[0];
+    V3F qvec = V3F(_q[1],_q[2],_q[3]);
+    Mat3x3F Sk_q =  Mat3x3F::SkewSymmetric(qvec);// Build the skew symmetric matrix of the imaginary part of quaternion
+    return Mat3x3F::Ident()*(_q[0]*_q[0] - qvec.magSq()) + Mat3x3F::OuterProduct(qvec,qvec)*2  + Sk_q*2*_q[0];
   };
 
-  Mat3x3D RotationMatrix_BwrtI(void) const
+  Mat3x3F RotationMatrix_BwrtI(void) const
   {
 		//transformation matrix of body w.r.t. inertial		
-    Mat3x3D temp = RotationMatrix_IwrtB();
+    Mat3x3F temp = RotationMatrix_IwrtB();
     temp.Transpose();
     return temp;
   };

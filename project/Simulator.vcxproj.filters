@@ -77,9 +77,6 @@
     <ClCompile Include="..\src\QuadControl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Math\Mat3x3D.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Math\Quaternion.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -168,5 +165,8 @@
       <Filter>Drawing</Filter>
     </ClInclude>
     <ClInclude Include="..\src\QuadControl.h" />
+    <ClInclude Include="..\src\Math\Mat3x3F.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
