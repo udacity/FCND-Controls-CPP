@@ -106,16 +106,14 @@ Visualizer_GLUT::Visualizer_GLUT(int *argcp, char **argv)
 	_volumeCallList = 0;
 
 	_cameraTrackingMode = "Independent";
-
-	//Reset();
-
+	
 	_objectSelected = false;
   _g_viz = this;
   _mouseLeftDown = _mouseRightDown = false;
 
-  Reset();
-
   initializeGL(argcp, argv);
+  
+  Reset();
 }
 
 Visualizer_GLUT::~Visualizer_GLUT()
