@@ -23,6 +23,8 @@ public:
 
   std::map<int, string> _menuMap;
 
+  bool IsActive();
+
 protected:
   struct MenuEntry
   {

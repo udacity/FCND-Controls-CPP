@@ -133,5 +133,7 @@ protected:
   
   // mouse
   int lastPosX, lastPosY;
+  
+  string _delayedScenarioLoader;
 };
 

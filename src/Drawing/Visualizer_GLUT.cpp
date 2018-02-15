@@ -25,7 +25,7 @@
 
 using namespace SLR;
 
-
+void LoadScenario(string scenarioFile);
 Visualizer_GLUT* _g_viz = NULL;
 
 ///////////////////////////////////////////////
@@ -466,6 +466,12 @@ void Visualizer_GLUT::Paint()
   //glutSwapBuffers();
   
   _last_draw_time_ms = (float)t.Seconds()*1000.f;
+
+  if (_delayedScenarioLoader != "")
+  {
+    LoadScenario(_delayedScenarioLoader);
+    _delayedScenarioLoader = "";
+  }
 }
 
 void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
@@ -674,8 +680,6 @@ void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
   _menu.OnMenu = MakeDelegate(this, &Visualizer_GLUT::OnMenu);
 }
 
-void LoadScenario(string scenarioFile);
-
 void Visualizer_GLUT::OnMenu(string cmd)
 {
   if (cmd == "Toggle.Trajectory")
@@ -689,7 +693,7 @@ void Visualizer_GLUT::OnMenu(string cmd)
   else if (cmd.find("Scenario.")!=string::npos)
   {
     string name = string("../config/")+cmd.substr(9)+".txt";
-    LoadScenario(name);
+    _delayedScenarioLoader = name;
   }
   else
   {
