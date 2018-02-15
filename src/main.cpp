@@ -31,7 +31,7 @@ Timer lastDraw;
 V3F force, moment;
 
 float simulationTime=0;
-int randomNumCarry=0;
+int randomNumCarry=-1;
 string flightMode;
 
 void OnTimer(int v);
@@ -108,7 +108,7 @@ void ResetSimulation()
 {
   ParamsHandle config = SimpleConfig::GetInstance();
 
-  randomNumCarry = 0;
+  randomNumCarry = -1;
 
   receivedResetRequest = false;
   simulationTime = 0;
