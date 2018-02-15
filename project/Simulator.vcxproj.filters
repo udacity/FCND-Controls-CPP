@@ -74,6 +74,7 @@
     <ClCompile Include="..\src\Simulation\BaseDynamics.cpp">
       <Filter>Simulation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\QuadControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Math\Mat3x3D.h">
@@ -166,7 +167,6 @@
     <ClInclude Include="..\src\Drawing\AbsThreshold.h">
       <Filter>Drawing</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\FullCascadedController.h" />
-    <ClInclude Include="..\src\AttitudeController.h" />
+    <ClInclude Include="..\src\QuadControl.h" />
   </ItemGroup>
 </Project>

@@ -8,11 +8,11 @@ Sim.EndTime = 1
 Sim.Vehicle1 = Quad
 
 # Controller selection
-Quad.ControllerType = AttitudeController
-Quad.ControllerConfig = Controller
+Quad.ControlType = QuadControl
+Quad.ControlConfig = QuadControlParams
 
 # reference trajectory (just the starting position)
-Controller.Trajectory=0,0,-1
+QuadControlParams.Trajectory=0,0,-1
 
 # initial conditions
 Quad.InitialPos=0,0,-1
@@ -23,5 +23,15 @@ Quad.InitialOmega=0,0,0
 # graphing commands
 Commands.1=AddGraph.Quad.Pos.Z
 
-INCLUDE Controller.txt
+INCLUDE QuadControlParams.txt
 INCLUDE Simulation.txt
+
+# make sure the controller is off
+[QuadControlParams]
+PGain_Pos_XY = 0
+PGain_Pos_Z = 0
+PGain_Vel_XY = 0
+PGain_Vel_Z = 0
+PGain_Bank = 0
+PGain_Yaw = 0
+PGain_Omega = 0,0,0

@@ -80,16 +80,14 @@ int QuadDynamics::Initialize()
 
   ResetState(V3F());
 
-  string controllerType = config->Get(_name + ".ControllerType", "FullCascadedController");
-  string controllerConfig = config->Get(_name + ".ControllerConfig", "Default");
-
   V3F trajOffset = config->Get(_name + ".TrajectoryOffset", V3F());
 
-  controller = CreateController(controllerType, controllerConfig);
+  string controlConfig = config->Get(_name + ".ControlConfig", "ControlParams");
+  controller = CreateController(config->Get(_name + ".ControlType", "QuadControl") , controlConfig);
   if (controller)
   {
     controller->SetTrajectoryOffset(trajOffset);
-    if (config->Get(controllerConfig + ".UseIdealEstimator", 0) == 1)
+    if (config->Get(controlConfig + ".UseIdealEstimator", 0) == 1)
     {
       updateIdealStateCallback = MakeDelegate(controller.get(), &BaseController::OverrideEstimates);
     }

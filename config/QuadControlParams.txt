@@ -4,7 +4,7 @@
 # X=Y sets X to Y. Y may be a string, float, or list of 3 floats
 ############################################################################
 
-[Controller] 
+[QuadControlParams] 
 
 UseIdealEstimator=1
 
@@ -29,4 +29,4 @@ PGain_Bank = 20
 PGain_Yaw = 5
 
 # Angle rate gains
-PGain_Omega = 80, 80, 10
+PGain_Omega = 80, 80, 20

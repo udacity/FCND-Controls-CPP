@@ -1,20 +1,14 @@
 #pragma once
 
-#include "AttitudeController.h"
-#include "FullCascadedController.h"
+#include "QuadControl.h"
 
 inline ControllerHandle CreateController(string controllerType, string config)
 {
   ControllerHandle ret;
 
-  if (controllerType == "AttitudeController")
+  if (controllerType == "QuadControl")
   {
-    ret.reset(new AttitudeController(config));
-  }
-
-  else if (controllerType == "FullCascadedController")
-  {
-    ret.reset(new FullCascadedController (config));
+    ret.reset(new QuadControl(config));
   }
   
   return ret;

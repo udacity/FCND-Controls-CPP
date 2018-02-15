@@ -28,6 +28,7 @@
     <ClCompile Include="..\src\Drawing\Visualizer_GLUT.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Math\Random.cpp" />
+    <ClCompile Include="..\src\QuadControl.cpp" />
     <ClCompile Include="..\src\Simulation\BaseDynamics.cpp" />
     <ClCompile Include="..\src\Simulation\QuadDynamics.cpp" />
     <ClCompile Include="..\src\Simulation\Simulator.cpp" />
@@ -37,7 +38,6 @@
     <ClCompile Include="..\src\Utility\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\AttitudeController.h" />
     <ClInclude Include="..\src\BaseController.h" />
     <ClInclude Include="..\src\Common.h" />
     <ClInclude Include="..\src\DataSource.h" />
@@ -48,7 +48,6 @@
     <ClInclude Include="..\src\Drawing\Graph.h" />
     <ClInclude Include="..\src\Drawing\GraphManager.h" />
     <ClInclude Include="..\src\Drawing\Visualizer_GLUT.h" />
-    <ClInclude Include="..\src\FullCascadedController.h" />
     <ClInclude Include="..\src\Math\Angles.h" />
     <ClInclude Include="..\src\Math\Geometry.h" />
     <ClInclude Include="..\src\Math\Mat3x3D.h" />
@@ -58,6 +57,7 @@
     <ClInclude Include="..\src\Math\V3F.h" />
     <ClInclude Include="..\src\Math\V4D.h" />
     <ClInclude Include="..\src\OnboardControls.h" />
+    <ClInclude Include="..\src\QuadControl.h" />
     <ClInclude Include="..\src\Simulation\BaseDynamics.h" />
     <ClInclude Include="..\src\Simulation\QuadDynamics.h" />
     <ClInclude Include="..\src\Simulation\Simulator.h" />

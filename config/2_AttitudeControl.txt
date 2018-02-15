@@ -1,4 +1,4 @@
-# Attitude-only control.
+# Attitude control
 
 INCLUDE QuadPhysicalParams.txt
 
@@ -8,23 +8,30 @@ Sim.EndTime = 1
 Sim.Vehicle1 = Quad
 
 # Controller selection
-Quad.ControllerType = AttitudeController
-Quad.ControllerConfig = Controller
+Quad.ControlType = QuadControl
+Quad.ControlConfig = QuadControlParams
 
 # reference trajectory (just the starting position)
-Controller.Trajectory=0,0,-1
+QuadControlParams.Trajectory=0,0,-1
 
 # initial conditions
 Quad.InitialPos=0,0,-1
 Quad.InitialVel=0,0,0
 Quad.InitialYPR=0,0,0
-Quad.InitialOmega=20,0,0
+Quad.InitialOmega=30,0,0
 
 # graphing commands
 Commands.1=AddGraph1.Quad.Roll
-Commands.2=AddGraph1.AbsThreshold(Quad.Roll,0.02,0.1)
+Commands.2=AddGraph1.AbsThreshold(Quad.Roll,0.04,0.1)
 Commands.3=AddGraph2.Quad.Omega.X
 Commands.4=AddGraph2.AbsThreshold(Quad.Omega.X,3,0.1)
 
-INCLUDE Controller.txt
+INCLUDE QuadControlParams.txt
 INCLUDE Simulation.txt
+
+# make sure position control is turned off here
+[QuadControlParams]
+PGain_Pos_XY = 0
+PGain_Pos_Z = 0
+PGain_Vel_XY = 0
+PGain_Vel_Z = 0
