@@ -4,8 +4,9 @@ INCLUDE QuadPhysicalParams.txt
 
 # simulation setup
 Sim.RunMode = Repeat
-Sim.EndTime = 3
-Sim.Vehicle1 = Quad
+Sim.EndTime = 2
+Sim.Vehicle1 = Quad1
+Sim.Vehicle2 = Quad2
 
 # Controller selection
 Quad.ControlType = QuadControl
@@ -15,15 +16,26 @@ Quad.ControlConfig = QuadControlParams
 QuadControlParams.Trajectory=0,0,-1
 
 # initial conditions
-Quad.InitialPos=-0.5,0,-1
+Quad.InitialPos=0.5,0,-1
 Quad.InitialVel=0,0,0
 Quad.InitialYPR=0,0,0
 Quad.InitialOmega=0,0,0
 
 # graphing commands
-Commands.1=AddGraph1.Quad.Pos.X
-Commands.2=AddGraph1.Quad.Pos.Y
-Commands.3=AddGraph1.AbsThreshold(Quad.Pos.X,0.05,0.5)
+Commands.1=AddGraph1.Quad1.Pos.X
+Commands.2=AddGraph1.AbsThreshold(Quad1.Pos.X,0.05,0.5)
+Commands.3=AddGraph1.Quad2.Pos.X
+Commands.4=AddGraph2.Quad1.Yaw
+Commands.5=AddGraph2.Quad2.Yaw
 
 INCLUDE QuadControlParams.txt
 INCLUDE Simulation.txt
+
+[Quad1:Quad]
+InitialPos=0.5,1,-1
+TrajectoryOffset=0,1,0
+
+[Quad2:Quad]
+InitialPos=0.5,-1,-1
+InitialYPR=.7,0,0
+TrajectoryOffset=0,-1,0
