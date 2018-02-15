@@ -273,9 +273,9 @@ float QuadControl::YawControl(float yaw_cmd, float yaw)
   //  - use fmodf(foo,b) to constrain float foo to range [0,b]
   //  - use the yaw control gain parameter Kp_yaw
 
+  float yaw_rate_cmd=0;
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 
-  return 0;
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
@@ -291,9 +291,11 @@ float QuadControl::YawControl(float yaw_cmd, float yaw)
   {
     yaw_error += 2.f * F_PI;
   }
-  return yaw_error * Kp_yaw;
+  yaw_rate_cmd = yaw_error * Kp_yaw;
 
   //////////////////////////////// END SOLUTION ///////////////////////////////
+  
+  return yaw_rate_cmd;
 
 }
 

@@ -27,6 +27,7 @@
 		DB49FB81202A0CC700DED4E6 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB49FB67202A0CC600DED4E6 /* Camera.cpp */; };
 		DB49FB82202A0CC700DED4E6 /* SimpleConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB49FB6C202A0CC600DED4E6 /* SimpleConfig.cpp */; };
 		DB49FB83202A0CC700DED4E6 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB49FB6F202A0CC600DED4E6 /* Timer.cpp */; };
+		DBD204F32036369000E0F55A /* QuadControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBD204F22036369000E0F55A /* QuadControl.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,16 +44,8 @@
 
 /* Begin PBXFileReference section */
 		DB076C8A202A34C500386052 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		DB31989A2033402F008ACD56 /* AttitudeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttitudeController.h; sourceTree = "<group>"; };
-		DB31989D20334078008ACD56 /* P2_3_MultiHover.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_3_MultiHover.txt; path = ../config/P2_3_MultiHover.txt; sourceTree = "<group>"; };
 		DB31989E20334078008ACD56 /* Simulation.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Simulation.txt; path = ../config/Simulation.txt; sourceTree = "<group>"; };
-		DB31989F20334078008ACD56 /* ControllerParams.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ControllerParams.txt; path = ../config/ControllerParams.txt; sourceTree = "<group>"; };
-		DB3198A020334078008ACD56 /* P2_5_Multi3DCircle.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_5_Multi3DCircle.txt; path = ../config/P2_5_Multi3DCircle.txt; sourceTree = "<group>"; };
-		DB3198A120334078008ACD56 /* Config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Config.txt; path = ../config/Config.txt; sourceTree = "<group>"; };
-		DB3198A220334078008ACD56 /* P2_2_3DHover.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_2_3DHover.txt; path = ../config/P2_2_3DHover.txt; sourceTree = "<group>"; };
 		DB3198A320334078008ACD56 /* QuadPhysicalParams.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = QuadPhysicalParams.txt; path = ../config/QuadPhysicalParams.txt; sourceTree = "<group>"; };
-		DB3198A420334078008ACD56 /* P2_1_Attitude.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_1_Attitude.txt; path = ../config/P2_1_Attitude.txt; sourceTree = "<group>"; };
-		DB3198A520334078008ACD56 /* P2_4_3DCircle.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = P2_4_3DCircle.txt; path = ../config/P2_4_3DCircle.txt; sourceTree = "<group>"; };
 		DB49FADE202A039100DED4E6 /* FCND-CPPSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "FCND-CPPSim"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB49FB21202A060F00DED4E6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		DB49FB35202A0CC600DED4E6 /* BaseController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseController.cpp; sourceTree = "<group>"; };
@@ -72,7 +65,6 @@
 		DB49FB44202A0CC600DED4E6 /* GraphManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphManager.h; sourceTree = "<group>"; };
 		DB49FB45202A0CC600DED4E6 /* Visualizer_GLUT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = Visualizer_GLUT.cpp; sourceTree = "<group>"; tabWidth = 2; };
 		DB49FB46202A0CC600DED4E6 /* Visualizer_GLUT.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = Visualizer_GLUT.h; sourceTree = "<group>"; tabWidth = 2; };
-		DB49FB47202A0CC600DED4E6 /* FullCascadedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullCascadedController.h; sourceTree = "<group>"; };
 		DB49FB48202A0CC600DED4E6 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; tabWidth = 2; };
 		DB49FB4A202A0CC600DED4E6 /* Angles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Angles.h; sourceTree = "<group>"; };
 		DB49FB4B202A0CC600DED4E6 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -110,6 +102,15 @@
 		DB49FB6F202A0CC600DED4E6 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
 		DB49FB70202A0CC600DED4E6 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		DB49FB71202A0CC600DED4E6 /* VehicleDatatypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VehicleDatatypes.h; sourceTree = "<group>"; };
+		DBD204F12036369000E0F55A /* QuadControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuadControl.h; sourceTree = "<group>"; };
+		DBD204F22036369000E0F55A /* QuadControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QuadControl.cpp; sourceTree = "<group>"; };
+		DBD204F4203636AA00E0F55A /* 2_AttitudeControl.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 2_AttitudeControl.txt; path = ../config/2_AttitudeControl.txt; sourceTree = "<group>"; };
+		DBD204F5203636AA00E0F55A /* Scenarios.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Scenarios.txt; path = ../config/Scenarios.txt; sourceTree = "<group>"; };
+		DBD204F6203636AA00E0F55A /* 3_PositionControl.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 3_PositionControl.txt; path = ../config/3_PositionControl.txt; sourceTree = "<group>"; };
+		DBD204F7203636AA00E0F55A /* 4_Nonidealities.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 4_Nonidealities.txt; path = ../config/4_Nonidealities.txt; sourceTree = "<group>"; };
+		DBD204F8203636AA00E0F55A /* 5_TrajectoryFollow.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 5_TrajectoryFollow.txt; path = ../config/5_TrajectoryFollow.txt; sourceTree = "<group>"; };
+		DBD204F9203636AA00E0F55A /* QuadControlParams.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = QuadControlParams.txt; path = ../config/QuadControlParams.txt; sourceTree = "<group>"; };
+		DBD204FA203636AA00E0F55A /* 1_Intro.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 1_Intro.txt; path = ../config/1_Intro.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,13 +129,13 @@
 		DB31989C2033405F008ACD56 /* config */ = {
 			isa = PBXGroup;
 			children = (
-				DB3198A120334078008ACD56 /* Config.txt */,
-				DB31989F20334078008ACD56 /* ControllerParams.txt */,
-				DB3198A420334078008ACD56 /* P2_1_Attitude.txt */,
-				DB3198A220334078008ACD56 /* P2_2_3DHover.txt */,
-				DB31989D20334078008ACD56 /* P2_3_MultiHover.txt */,
-				DB3198A520334078008ACD56 /* P2_4_3DCircle.txt */,
-				DB3198A020334078008ACD56 /* P2_5_Multi3DCircle.txt */,
+				DBD204FA203636AA00E0F55A /* 1_Intro.txt */,
+				DBD204F4203636AA00E0F55A /* 2_AttitudeControl.txt */,
+				DBD204F6203636AA00E0F55A /* 3_PositionControl.txt */,
+				DBD204F7203636AA00E0F55A /* 4_Nonidealities.txt */,
+				DBD204F8203636AA00E0F55A /* 5_TrajectoryFollow.txt */,
+				DBD204F9203636AA00E0F55A /* QuadControlParams.txt */,
+				DBD204F5203636AA00E0F55A /* Scenarios.txt */,
 				DB3198A320334078008ACD56 /* QuadPhysicalParams.txt */,
 				DB31989E20334078008ACD56 /* Simulation.txt */,
 			);
@@ -171,14 +172,14 @@
 		DB49FB34202A0CC600DED4E6 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				DB31989A2033402F008ACD56 /* AttitudeController.h */,
+				DBD204F22036369000E0F55A /* QuadControl.cpp */,
+				DBD204F12036369000E0F55A /* QuadControl.h */,
 				DB49FB35202A0CC600DED4E6 /* BaseController.cpp */,
 				DB49FB36202A0CC600DED4E6 /* BaseController.h */,
 				DB49FB37202A0CC600DED4E6 /* Common.h */,
 				DB49FB38202A0CC600DED4E6 /* ControllerFactory.h */,
 				DB49FB39202A0CC600DED4E6 /* DataSource.h */,
 				DB49FB3A202A0CC600DED4E6 /* Drawing */,
-				DB49FB47202A0CC600DED4E6 /* FullCascadedController.h */,
 				DB49FB48202A0CC600DED4E6 /* main.cpp */,
 				DB49FB49202A0CC600DED4E6 /* Math */,
 				DB49FB59202A0CC600DED4E6 /* Simulation */,
@@ -337,6 +338,7 @@
 				DB49FB73202A0CC700DED4E6 /* ColorUtils.cpp in Sources */,
 				DB49FB82202A0CC700DED4E6 /* SimpleConfig.cpp in Sources */,
 				DB49FB83202A0CC700DED4E6 /* Timer.cpp in Sources */,
+				DBD204F32036369000E0F55A /* QuadControl.cpp in Sources */,
 				DB49FB79202A0CC700DED4E6 /* main.cpp in Sources */,
 				DB49FB76202A0CC700DED4E6 /* Graph.cpp in Sources */,
 			);
