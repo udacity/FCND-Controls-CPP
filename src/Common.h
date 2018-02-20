@@ -195,12 +195,8 @@ using boost::static_pointer_cast;
 #define TR1 boost
 #endif
 
+#include <winsock2.h> 
 #include <Windows.h>
-//#include "Network/UDPClient.h"		// this is here only to #include ws2 before windows.h
-
-
-
-
 
 
 #else

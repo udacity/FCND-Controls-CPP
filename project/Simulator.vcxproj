@@ -28,6 +28,8 @@
     <ClCompile Include="..\src\Drawing\Visualizer_GLUT.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Math\Random.cpp" />
+    <ClCompile Include="..\src\MavlinkNode\MavlinkNode.cpp" />
+    <ClCompile Include="..\src\MavlinkNode\PracticalSocket.cpp" />
     <ClCompile Include="..\src\QuadControl.cpp" />
     <ClCompile Include="..\src\Simulation\BaseDynamics.cpp" />
     <ClCompile Include="..\src\Simulation\QuadDynamics.cpp" />
@@ -56,6 +58,9 @@
     <ClInclude Include="..\src\Math\V3D.h" />
     <ClInclude Include="..\src\Math\V3F.h" />
     <ClInclude Include="..\src\Math\V4D.h" />
+    <ClInclude Include="..\src\MavlinkNode\MavlinkNode.h" />
+    <ClInclude Include="..\src\MavlinkNode\PracticalSocket.h" />
+    <ClInclude Include="..\src\MavlinkNode\UDPPacket.h" />
     <ClInclude Include="..\src\OnboardControls.h" />
     <ClInclude Include="..\src\QuadControl.h" />
     <ClInclude Include="..\src\Simulation\BaseDynamics.h" />
