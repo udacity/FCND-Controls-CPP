@@ -8,6 +8,7 @@
 #include "Utility/SimpleConfig.h"
 #include "Utility/StringUtils.h"
 #include "Drawing/GraphManager.h"
+#include "MavlinkNode/MavlinkTranslation.h"
 
 using SLR::Quaternion;
 using SLR::ToUpper;
@@ -39,6 +40,8 @@ void OnTimer(int v);
 vector<QuadcopterHandle> CreateVehicles();
 string _scenarioFile="../config/1_Intro.txt";
 
+#include "MavlinkNode/MavlinkNode.h"
+shared_ptr<MavlinkNode> mlNode;
 
 int main(int argcp, char **argv)
 {
@@ -100,6 +103,12 @@ void LoadScenario(string scenarioFile)
   visualizer->graph = grapher;
 
   ProcessConfigCommands(visualizer);
+
+  mlNode.reset();
+  if(config->Get("Mavlink.Enable",0)!=0)
+  { 
+    mlNode.reset(new MavlinkNode());
+  }
 
   ResetSimulation();
 }
@@ -163,6 +172,16 @@ void OnTimer(int)
     visualizer->Update();
     grapher->DrawUpdate();
     lastDraw.Reset();
+
+    // temporarily here
+    if (mlNode)
+    {
+      mlNode->Send(MakeMavlinkPacket_Heartbeat());
+      mlNode->Send(MakeMavlinkPacket_Status());
+      mlNode->Send(MakeMavlinkPacket_LocalPose(simulationTime, quads[0]->Position(), quads[0]->Velocity()));
+      mlNode->Send(MakeMavlinkPacket_Attitude(simulationTime, quads[0]->Attitude(), quads[0]->Omega()));
+    }
+    
   }
   
   glutTimerFunc(5,&OnTimer,0);

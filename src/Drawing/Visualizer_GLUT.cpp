@@ -673,6 +673,17 @@ void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
   }
   fclose(f);
 
+  f = fopen("../config/X_Scenarios.txt", "r");
+  while (f && fgets(buf, 510, f))
+  {
+    string trimmed = SLR::Trim(string(buf));
+    tmp.push_back(string("Scenario.") + trimmed);
+  }
+  if (f)
+  {
+    fclose(f);
+  }
+
   glutSetWindow(_glutWindowNum);
   _menu.CreateMenu(tmp);
   _menu.OnMenu = MakeDelegate(this, &Visualizer_GLUT::OnMenu);
