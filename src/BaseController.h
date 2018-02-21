@@ -40,6 +40,7 @@ public:
   virtual vector<string> GetFields() const;
 
   void SetTrajectoryOffset(V3F trajOffset) { _trajectoryOffset = trajOffset; }
+  void SetTrajTimeOffset(float timeOffset) { _trajectoryTimeOffset = timeOffset; }
 
   // system parameters params
   float M; // mass
@@ -68,4 +69,5 @@ public:
   string _config;
 
   V3F _trajectoryOffset;
+  float _trajectoryTimeOffset;
 };

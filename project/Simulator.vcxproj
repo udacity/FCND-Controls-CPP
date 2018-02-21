@@ -27,6 +27,7 @@
     <ClCompile Include="..\src\Drawing\GraphManager.cpp" />
     <ClCompile Include="..\src\Drawing\Visualizer_GLUT.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Math\Geometry.cpp" />
     <ClCompile Include="..\src\Math\Random.cpp" />
     <ClCompile Include="..\src\MavlinkNode\MavlinkNode.cpp" />
     <ClCompile Include="..\src\MavlinkNode\MavlinkTranslation.cpp" />

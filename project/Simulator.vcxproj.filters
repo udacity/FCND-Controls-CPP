@@ -87,6 +87,9 @@
     <ClCompile Include="..\src\MavlinkNode\MavlinkTranslation.cpp">
       <Filter>MavlinkNode</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Math\Geometry.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Math\Quaternion.h">

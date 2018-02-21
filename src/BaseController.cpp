@@ -68,7 +68,7 @@ void BaseController::OverrideEstimates(V3F pos, V3F vel, Quaternion<float> attit
 
 TrajectoryPoint BaseController::GetNextTrajectoryPoint(float mission_time)
 {
-  TrajectoryPoint pt = trajectory.NextTrajectoryPoint(mission_time);
+  TrajectoryPoint pt = trajectory.NextTrajectoryPoint(mission_time + _trajectoryTimeOffset);
   pt.position += _trajectoryOffset;
   return pt;  
 }

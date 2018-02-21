@@ -33,7 +33,6 @@ V3F force, moment;
 
 float simulationTime=0;
 int randomNumCarry=-1;
-string flightMode;
 
 void OnTimer(int v);
 
@@ -124,8 +123,6 @@ void ResetSimulation()
   config->Reset(_scenarioFile);
   dtSim = config->Get("Sim.Timestep", 0.005f);
   
-  flightMode = config->Get("Quad.SimMode","Full3D");
-  
   for (unsigned i = 0; i<quads.size(); i++)
   {
     quads[i]->Reset();
@@ -154,7 +151,7 @@ void OnTimer(int)
     {
       for (unsigned i = 0; i < quads.size(); i++)
       {
-        quads[i]->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+        quads[i]->Run(dtSim, simulationTime, randomNumCarry, force, moment);
       }
       simulationTime += dtSim;
     }

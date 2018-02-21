@@ -32,3 +32,4 @@ xyzDisturbanceBW = 2
 
 [Quad] 
 randomMotorForceMag = .25
+trajectoryLogStepTime = .05
