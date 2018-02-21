@@ -9,7 +9,11 @@ MavlinkNode::MavlinkNode(string myIP)
 
 	_running = true;
 
+#ifdef _WIN32
 	_thread = CreateThread(NULL,NULL,RxThread,this,NULL,NULL);
+#else
+	pthread_create(&_thread, NULL, RxThread, this);
+#endif
 
 	_packet.data = new unsigned char[MAX_UDP_PACKET_SIZE];
 }
@@ -17,15 +21,24 @@ MavlinkNode::MavlinkNode(string myIP)
 MavlinkNode::~MavlinkNode()
 {
 	_running = false;
+#ifdef _WIN32
 	if(WaitForSingleObject(_thread,100)!=WAIT_OBJECT_0)
 	{
 		TerminateThread(_thread,10);
 	}
+#else
+	_socket.shutdown();
+	//pthread_cancel(_thread);
+	pthread_join(_thread, NULL);
+#endif
 	delete [] _packet.data;
 }
 
-
+#ifdef _WIN32
 DWORD WINAPI MavlinkNode::RxThread(LPVOID param)
+#else
+void* MavlinkNode::RxThread(void* param)
+#endif
 {
 	int numRead;
 	string srcAddr;

@@ -25,8 +25,14 @@
 
 using namespace std;
 
+#ifndef _WIN32
+#include <sys/socket.h> // shutdown()
+#endif
+
 // MSVS warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+#ifdef _MSC_VER //  visual studio
 #pragma warning(disable: 4290) 
+#endif
 
 /**
  *   Signals a problem with the execution of a socket call.
@@ -72,6 +78,13 @@ public:
    *   @exception SocketException thrown if fetch fails
    */
   string getLocalAddress() throw(SocketException);
+
+#ifndef _WIN32
+  void shutdown()
+  {
+    ::shutdown(sockDesc,SHUT_RDWR);
+  }
+#endif
 
   /**
    *   Get the local port

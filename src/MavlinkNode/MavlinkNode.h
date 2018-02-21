@@ -16,10 +16,14 @@ typedef FastDelegate2<mavlink_message_t, const UDPPacket&> MavlinkNodeCallback;
 class MavlinkNode
 {
 public:
-  MavlinkNode::MavlinkNode(string myIP="127.0.0.1");
+	MavlinkNode(string myIP="127.0.0.1");
 	~MavlinkNode();
 
+#ifdef _WIN32
 	static DWORD WINAPI RxThread(LPVOID param);
+#else
+	static void* RxThread(void* param);
+#endif
 
 	void SetCallback(MavlinkNodeCallback callback, void* arg)
   {
@@ -45,7 +49,11 @@ private:
 	unsigned int _doubleCnt;
 
 	UDPSocket _socket;
+#ifdef _WIN32
 	HANDLE _thread;
+#else
+	pthread_t _thread;
+#endif
 	UDPPacket _packet;
 	bool _running;
 };

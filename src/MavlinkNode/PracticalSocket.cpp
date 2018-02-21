@@ -50,8 +50,11 @@ static bool initialized = false;
 
 // SocketException Code
 
+
+#ifdef _MSC_VER //  visual studio
 #pragma warning(push)
 #pragma warning(disable: 4996)
+#endif
 
 SocketException::SocketException(const string &message, bool inclSysMsg)
   throw() : userMessage(message) {
@@ -60,7 +63,10 @@ SocketException::SocketException(const string &message, bool inclSysMsg)
     userMessage.append(strerror(errno));
   }
 }
+
+#ifdef _MSC_VER //  visual studio
 #pragma warning(pop)
+#endif
 
 SocketException::~SocketException() throw() {
 }
@@ -300,11 +306,20 @@ UDPSocket::UDPSocket(unsigned short localPort)  throw(SocketException) :
   setBroadcast();
 }
 
+#ifndef _WIN32
+typedef unsigned long DWORD;
+#endif
+
 UDPSocket::UDPSocket(const string &localAddress, unsigned short localPort) 
      throw(SocketException) : CommunicatingSocket(SOCK_DGRAM, IPPROTO_UDP) {
 	// always allow addr reuse
 	DWORD val = 1;
-	if (setsockopt(sockDesc, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(val)) == SOCKET_ERROR) {
+#ifdef _WIN32
+	if (setsockopt(sockDesc, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(val)) == SOCKET_ERROR)
+#else
+	if (setsockopt(sockDesc, SOL_SOCKET, SO_REUSEADDR, (char*)&val, sizeof(val)) == -1)
+#endif
+	{
 		fprintf(stderr,"ERROR(UDPClient): error setting reuse address\n");
 	}
   _myAddr = localAddress;
@@ -373,14 +388,15 @@ void UDPSocket::setMulticastTTL(unsigned char multicastTTL) throw(SocketExceptio
   }
 }
 
-void UDPSocket::joinGroup(const string &multicastGroup) throw(SocketException) {
+void UDPSocket::joinGroup(const string &multicastGroup) throw(SocketException)
+{
+#ifdef _WIN32
   struct ip_mreq multicastRequest;
 
   multicastRequest.imr_multiaddr.s_addr = inet_addr(multicastGroup.c_str());
   //multicastRequest.imr_interface.s_addr = htonl(INADDR_ANY);
   multicastRequest.imr_interface.s_addr = inet_addr(_myAddr.c_str());
 
-#ifdef WIN32
   int loopback = TRUE;
 	if (setsockopt(sockDesc, IPPROTO_IP, IP_MULTICAST_LOOP, (char *)&loopback, sizeof(loopback)) == SOCKET_ERROR) {
 		int err = WSAGetLastError();
@@ -392,9 +408,9 @@ void UDPSocket::joinGroup(const string &multicastGroup) throw(SocketException) {
                  sizeof(multicastRequest)) < 0) {
     int err = WSAGetLastError();
     cerr << "SOCKET ERROR: " << err << endl;
-#endif
     throw SocketException("Multicast group join failed (setsockopt())", true);
   }
+#endif
 }
 
 void UDPSocket::leaveGroup(const string &multicastGroup) throw(SocketException) {

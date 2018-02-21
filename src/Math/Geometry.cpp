@@ -79,16 +79,16 @@ V3D LineD::ClosestPt(const LineD& l) const
   double d = u.dot(w);
   double e = v.dot(w);
   double D = a*c - b*b;       // always >= 0
-  double sc, tc;
+  double sc;//, tc;
 
   // compute the line parameters of the two closest points
   if (D < 1e-15) {         // the lines are almost parallel
     sc = 0.0;
-    tc = (b>c ? d/b : e/c);   // use the largest denominator
+    //tc = (b>c ? d/b : e/c);   // use the largest denominator
   }
   else {
     sc = (b*e - c*d) / D;
-    tc = (a*e - b*d) / D;
+    //tc = (a*e - b*d) / D;
   }
 
   return _a+u*sc;
