@@ -4,7 +4,6 @@
 #include "Utility/SimpleConfig.h"
 
 #include "Utility/StringUtils.h"
-#include "Simulation/BaseDynamics.h"
 #include "Trajectory.h"
 #include "BaseController.h"
 #include "Math/Mat3x3F.h"
@@ -14,6 +13,7 @@ void QuadControl::Init()
 {
   BaseController::Init();
     
+#ifndef __PX4_NUTTX
   ParamsHandle config = SimpleConfig::GetInstance();
    
   // Load parameters (default to 0)
@@ -37,6 +37,10 @@ void QuadControl::Init()
 
   min_motor_thrust = config->Get(_config + ".minMotorThrust", 0);
   max_motor_thrust = config->Get(_config + ".maxMotorThrust", 100);
+#else
+  //TODO
+
+#endif
 }
 
 VehicleCommand QuadControl::GenerateMotorCommands(float desCollectiveThrust, V3F desMoment)

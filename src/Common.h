@@ -10,9 +10,7 @@
 #include <sys/timeb.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <iostream>
 #include <string.h>
-using std::cerr;
 
 #define SLR_ERROR0(A) SLR::PrintError(__FUNCTION__,__LINE__,A)
 #define SLR_ERROR1(A,B) SLR::PrintError(__FUNCTION__,__LINE__,A,B)
@@ -122,8 +120,8 @@ namespace SLR {
 
     // push everything out to stderr
     sprintf_s(buf3, 2047, "%s%s\n", buf, buf2);
-    cerr.write(buf3, strlen(buf3));
-    cerr.flush();
+    fprintf(stderr,"%s",buf3);
+    fflush(stderr);
   }
 
   inline void PrintWarning(const char* funcName, const int lineNum, const char* format, ...)
@@ -153,8 +151,8 @@ namespace SLR {
 
     // push everything out to stderr
     sprintf_s(buf3, 2047, "%s%s\n", buf, buf2);
-    cerr.write(buf3, strlen(buf3));
-    cerr.flush();
+    fprintf(stderr,"%s",buf3);
+    fflush(stderr);
   }
 
 

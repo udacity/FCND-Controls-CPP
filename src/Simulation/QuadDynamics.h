@@ -6,6 +6,8 @@
 #include <matrix/math.hpp>
 #include "Math/LowPassFilter.h"
 #include "Drawing/ColorUtils.h"
+#include "Utility/FastDelegate.h"
+using namespace fastdelegate;
 
 class QuadDynamics;
 typedef shared_ptr<QuadDynamics> QuadcopterHandle;

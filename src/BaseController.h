@@ -2,10 +2,8 @@
 
 #include <vector>
 #include "DataSource.h"
-#include "Utility/FastDelegate.h"
 #include "VehicleDatatypes.h"
 #include "Trajectory.h"
-using namespace fastdelegate;
 using namespace SLR;
 using namespace std;
 
@@ -71,3 +69,4 @@ public:
   V3F _trajectoryOffset;
   float _trajectoryTimeOffset;
 };
+

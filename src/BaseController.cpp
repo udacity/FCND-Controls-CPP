@@ -2,8 +2,6 @@
 #include "BaseController.h"
 #include "Utility/SimpleConfig.h"
 #include "Utility/StringUtils.h"
-#include "Utility/FastDelegate.h"
-using namespace fastdelegate;
 using namespace SLR;
 
 BaseController::BaseController(string config)

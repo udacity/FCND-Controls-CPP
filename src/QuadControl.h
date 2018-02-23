@@ -3,7 +3,6 @@
 #include "Utility/SimpleConfig.h"
 
 #include "Utility/StringUtils.h"
-#include "Simulation/BaseDynamics.h"
 #include "Trajectory.h"
 #include "BaseController.h"
 

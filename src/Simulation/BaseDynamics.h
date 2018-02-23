@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Common.h"
-#include "Utility/Mutex.h"
 #include "Math/Quaternion.h"
 #include "VehicleDatatypes.h"
 #include "DataSource.h"
@@ -73,8 +72,8 @@ protected:
 
   // vehicle geometry and mass properties
   float M; // veh mass, kg
-  double Ixx,Iyy,Izz;
-  double xMin,yMin,bottom,xMax,yMax,top;
+  float Ixx,Iyy,Izz;
+  float xMin,yMin,bottom,xMax,yMax,top;
   bool _initialized;
 
   float _lastTrajPointTime;
