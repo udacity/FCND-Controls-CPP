@@ -7,10 +7,13 @@
 
 #include <string>
 #include <time.h>
-#include <sys/timeb.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+
+#ifndef __PX4_NUTTX
+#include <sys/timeb.h>
+#endif
 
 #define SLR_ERROR0(A) SLR::PrintError(__FUNCTION__,__LINE__,A)
 #define SLR_ERROR1(A,B) SLR::PrintError(__FUNCTION__,__LINE__,A,B)
@@ -47,9 +50,9 @@
 #endif
 
 namespace SLR {
-  inline std::string FullTimestamp()
+  inline void TimestampString(char* buf, int cnt, const char* format="%y.%m.%d.%H.%M.%S")
   {
-    char buf[512];
+#ifndef __PX4_NUTTX
     // timestamp
     struct tm   newTime;
     time_t      szClock;
@@ -59,59 +62,33 @@ namespace SLR {
     _ftime(&tstruct);
     localtime_s(&newTime, &szClock);
 #else
+    // linux and apple
     timeb tstruct;
     ftime(&tstruct);
     localtime_r(&szClock,&newTime);
 #endif
-    strftime(buf, 511, "%y.%m.%d.%H.%M.%S", &newTime);
-    sprintf_s(buf, 511, "%s.%03d", buf, tstruct.millitm);
-    return buf;
-  }
+    strftime(buf, cnt, format, &newTime);
+    sprintf_s(buf, cnt, "%s.%03d", buf, tstruct.millitm);
+#else
+    if(cnt>0)
+    {
+      buf[0]=0;
+    }
 
-  inline std::string NiceHMSTimestamp()
-  {
-    char buf[512];
-    // timestamp
-    struct tm   newTime;
-    time_t      szClock;
-    time(&szClock);
-#ifdef _WIN32
-    _timeb tstruct;
-    _ftime(&tstruct);
-    localtime_s(&newTime, &szClock);
-#else
-    timeb tstruct;
-    ftime(&tstruct);
-    localtime_r(&szClock,&newTime);
 #endif
-    strftime(buf, 511, "%H.%M.%S", &newTime);
-    sprintf_s(buf, 511, "%s.%03d", buf, tstruct.millitm);
-    return buf;
   }
 
   inline void PrintError(const char* funcName, const int lineNum, const char* format, ...)
   {
+    char tsBuf[100]; tsBuf[99]=0;
     char buf[512]; buf[511] = 0;
     char buf2[2048]; buf2[2047] = 0;
     char buf3[2560]; buf3[2559] = 0;
 
-    // timestamp
-    struct tm   newTime;
-    time_t      szClock;
-    time(&szClock);
-#ifdef _WIN32
-    _timeb tstruct;
-    _ftime(&tstruct);
-    localtime_s(&newTime, &szClock);
-#else
-    timeb tstruct;
-    ftime(&tstruct);
-    localtime_r(&szClock,&newTime);
-#endif
-    strftime(buf, 511, "%d-%H.%M.%S", &newTime);
+    TimestampString(tsBuf,99,"%d-%H.%M.%S");
 
     // error location
-    sprintf_s(buf, 511, "%s.%03d ERR %s(%d) : ", buf, tstruct.millitm, funcName, lineNum);
+    sprintf_s(buf, 511, "%s ERR %s(%d) : ", tsBuf, funcName, lineNum);
 
     va_list args;
     va_start(args, format);
@@ -126,23 +103,15 @@ namespace SLR {
 
   inline void PrintWarning(const char* funcName, const int lineNum, const char* format, ...)
   {
+    char tsBuf[100]; tsBuf[99]=0;
     char buf[512]; buf[511] = 0;
     char buf2[2048]; buf2[2047] = 0;
     char buf3[2560]; buf3[2559] = 0;
 
-    // timestamp
-    struct tm   newTime;
-    time_t      szClock;
-    time(&szClock);
-#ifdef _WIN32
-    localtime_s(&newTime, &szClock);
-#else
-    localtime_r(&szClock,&newTime);
-#endif
-    strftime(buf, 511, "%d-%H.%M.%S", &newTime);
+    TimestampString(tsBuf,99,"%d-%H.%M.%S");
 
     // error location
-    sprintf_s(buf, 511, "%s WRN %s(%d) : ", buf, funcName, lineNum);
+    sprintf_s(buf, 511, "%s WRN %s(%d) : ", tsBuf, funcName, lineNum);
 
     va_list args;
     va_start(args, format);
@@ -213,9 +182,11 @@ using std::shared_ptr;
 using std::weak_ptr;
 using std::placeholders::_1;
 
+#ifndef __PX4_NUTTX
 #include <cmath>
 inline bool _isnan(const double& v){return std::isnan(v);}
 inline bool _isnan(const float& v){return std::isnan(v);}
+#endif
 
 #endif // #ifdef _WIN32
 
