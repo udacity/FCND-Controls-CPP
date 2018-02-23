@@ -8,6 +8,10 @@
 #include "BaseController.h"
 #include "Math/Mat3x3F.h"
 
+#ifdef __PX4_NUTTX
+#include <systemlib/param/param.h>
+#endif
+
 
 void QuadControl::Init()
 {
@@ -39,6 +43,10 @@ void QuadControl::Init()
   max_motor_thrust = config->Get(_config + ".maxMotorThrust", 100);
 #else
   //TODO
+  param_get(param_find("MC_PITCH_P"), &Kp_bank);
+  param_get(param_find("MC_YAW_P"), &Kp_yaw);
+
+
 
 #endif
 }

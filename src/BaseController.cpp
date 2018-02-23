@@ -1,6 +1,8 @@
 #include "Common.h"
 #include "BaseController.h"
+#ifndef __PX4_NUTTX
 #include "Utility/SimpleConfig.h"
+#endif
 #include "Utility/StringUtils.h"
 using namespace SLR;
 
@@ -12,6 +14,7 @@ BaseController::BaseController(string config)
 
 void BaseController::Init()
 {
+#ifndef __PX4_NUTTX
   ParamsHandle config = SimpleConfig::GetInstance();
 
   optFlowX = 0;
@@ -31,6 +34,10 @@ void BaseController::Init()
     tmp.position = config->Get(_config + ".Trajectory", V3F());
     trajectory.AddTrajectoryPoint(tmp);
   }
+#else
+
+
+#endif
 }
 
 void BaseController::Reset()

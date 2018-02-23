@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Utility/SimpleConfig.h"
 
 #include "Utility/StringUtils.h"
 #include "Trajectory.h"
