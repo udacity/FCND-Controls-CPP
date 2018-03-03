@@ -13,7 +13,7 @@ public:
   virtual void Init();
 
   // returns a desired acceleration in global frame
-  V3F HorizontalControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F accelCmd);
+  V3F LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F accelCmd);
 
   virtual VehicleCommand RunControl(float dt, float sim_time);
 
@@ -26,7 +26,7 @@ public:
   V3F BodyRateControl(V3F pqrCmd, V3F pqr);
 
   // returns a desired roll and pitch rate 
-  V3F ReducedAttitudeControl(V3F accelCmd, Quaternion<float> attitude, float collThrustCmd);
+  V3F RollPitchControl(V3F accelCmd, Quaternion<float> attitude, float collThrustCmd);
 
   float AltitudeControl(float posZCmd, float velZCmd, float posZ, float velZ, Quaternion<float> attitude, float accelZCmd);
 

@@ -127,7 +127,7 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
 }
 
 // returns a desired roll and pitch rate 
-V3F QuadControl::ReducedAttitudeControl(V3F accelCmd, Quaternion<float> attitude, float collThrustCmd)
+V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, float collThrustCmd)
 {
   // Calculate a desired pitch and roll angle rates based on a desired global
   //   lateral acceleration, the current attitude of the quad, and desired
@@ -216,7 +216,7 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 }
 
 // returns a desired acceleration in global frame
-V3F QuadControl::HorizontalControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F accelCmd)
+V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F accelCmd)
 {
   // Calculate a desired horizontal acceleration based on 
   //  desired lateral position/velocity/acceleration and current pose
@@ -314,9 +314,9 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
   float thrustMargin = .1f*(maxMotorThrust - minMotorThrust);
   collThrustCmd = CONSTRAIN(collThrustCmd, (minMotorThrust+ thrustMargin)*4.f, (maxMotorThrust-thrustMargin)*4.f);
   
-  V3F desAcc = HorizontalControl(curTrajPoint.position, curTrajPoint.velocity, estPos, estVel, curTrajPoint.accel);
+  V3F desAcc = LateralPositionControl(curTrajPoint.position, curTrajPoint.velocity, estPos, estVel, curTrajPoint.accel);
   
-  V3F desOmega = ReducedAttitudeControl(desAcc, estAtt, collThrustCmd);
+  V3F desOmega = RollPitchControl(desAcc, estAtt, collThrustCmd);
   desOmega.z = YawControl(curTrajPoint.attitude.Yaw(), estAtt.Yaw());
 
   V3F desMoment = BodyRateControl(desOmega, estOmega);
