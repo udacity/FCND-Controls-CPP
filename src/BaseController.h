@@ -43,7 +43,7 @@ public:
   void SetTrajTimeOffset(float timeOffset) { _trajectoryTimeOffset = timeOffset; }
 
   // system parameters params
-  float M; // mass
+  float mass; // mass
   float L; // length of arm from centre of quadrocopter to motor
   float Ixx, Iyy, Izz; // mass moment of inertia / second moment of inertia
   float kappa; // torque (Nm) produced by motor per N of thrust produced

@@ -19,7 +19,7 @@ void BaseController::Init()
 
   optFlowX = 0;
   optFlowY = 0;
-  M = config->Get(_config+".Mass", 1.f);
+  mass = config->Get(_config+".Mass", 1.f);
   L = config->Get(_config+".L", 0.1f);
   Ixx = config->Get(_config+".Ixx", 0.001f);
   Iyy = config->Get(_config + ".Iyy", 0.001f);
