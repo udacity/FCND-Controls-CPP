@@ -99,8 +99,8 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
 {
   // Calculate a desired 3-axis moment given a desired and current body rate
   // INPUTS: 
-  //   body_rate_cmd: desired body rates [rad/s]
-  //   body_rate: current or estimated body rates [rad/s]
+  //   pqrCmd: desired body rates [rad/s]
+  //   pqr: current or estimated body rates [rad/s]
   // OUTPUT:
   //   return a V3F containing the desired moments for each of the 3 axes
 
@@ -133,17 +133,17 @@ V3F QuadControl::ReducedAttitudeControl(V3F accelCmd, Quaternion<float> attitude
   //   lateral acceleration, the current attitude of the quad, and desired
   //   collective thrust command
   // INPUTS: 
-  //   desAccel: desired acceleration in global XY coordinates [m/s2]
+  //   accelCmd: desired acceleration in global XY coordinates [m/s2]
   //   attitude: current or estimated attitude of the vehicle
-  //   desCollectiveThrust: desired collective thrust of the quad [N]
+  //   collThrustCmd: desired collective thrust of the quad [N]
   // OUTPUT:
   //   return a V3F containing the desired pitch and roll rates. The Z
-  //     element of the V3F can be left at its default value (0)
+  //     element of the V3F should be left at its default value (0)
 
   // HINTS: 
   //  - we already provide rotation matrix R: to get element R[1,2] (python) use R(1,2) (C++)
   //  - you'll need the roll/pitch gain kpBank
-  //  - desCollectiveThrust is a force! You'll likely want to convert it to acceleration first
+  //  - collThrustCmd is a force in Newtons! You'll likely want to convert it to acceleration first
 
   V3F pqrCmd;
   Mat3x3F R = attitude.RotationMatrix_IwrtB();
@@ -187,7 +187,7 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
   // HINTS: 
   //  - we already provide rotation matrix R: to get element R[1,2] (python) use R(1,2) (C++)
   //  - you'll need the gain parameters kpPosZ and kpVelZ
-  //  - max_ascent_rate and max_descent_rate are maximum vertical speeds. Note they're both >=0!
+  //  - maxAscentRate and maxDescentRate are maximum vertical speeds. Note they're both >=0!
   //  - make sure to return a force, not an acceleration
   //  - remember that for an upright quad in NED, thrust should be HIGHER if the desired Z acceleration is LOWER
 
@@ -221,19 +221,19 @@ V3F QuadControl::HorizontalControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F
   // Calculate a desired horizontal acceleration based on 
   //  desired lateral position/velocity/acceleration and current pose
   // INPUTS: 
-  //   position_cmd: desired position, in NED [m]
-  //   velocity_ff: desired velocity, in NED [m/s]
-  //   position: current position, NED [m]
-  //   velocity: current velocity, NED [m/s]
-  //   acceleration_ff: desired acceleration, NED [m/s2]
+  //   posCmd: desired position, in NED [m]
+  //   velCmd: desired velocity, in NED [m/s]
+  //   pos: current position, NED [m]
+  //   vel: current velocity, NED [m/s]
+  //   accelCmd: desired acceleration, NED [m/s2]
   // OUTPUT:
   //   return a V3F with desired horizontal accelerations. 
   //     the Z component should be 0
   // HINTS: 
   //  - use fmodf(foo,b) to constrain float foo to range [0,b]
-  //  - use the gain parameters Kp_pos_xy and Kp_vel_xy
+  //  - use the gain parameters kpPosXY and kpVelXY
   //  - make sure you cap the horizontal velocity and acceleration
-  //    to max_speed_xy and max_horiz_accel
+  //    to maxSpeedXY and maxAccelXY
 
   // make sure we don't have any incoming z-component
   accelCmd.z = 0;
@@ -269,15 +269,15 @@ V3F QuadControl::HorizontalControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F
 // returns desired yaw rate
 float QuadControl::YawControl(float yawCmd, float yaw)
 {
-  // Calculate a desired yaw rate to control yaw to yaw_cmd
+  // Calculate a desired yaw rate to control yaw to yawCmd
   // INPUTS: 
-  //   yaw_cmd: commanded yaw [rad]
+  //   yawCmd: commanded yaw [rad]
   //   yaw: current yaw [rad]
   // OUTPUT:
   //   return a desired yaw rate [rad/s]
   // HINTS: 
   //  - use fmodf(foo,b) to constrain float foo to range [0,b]
-  //  - use the yaw control gain parameter Kp_yaw
+  //  - use the yaw control gain parameter kpYaw
 
   float yawRateCmd=0;
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
@@ -304,22 +304,22 @@ float QuadControl::YawControl(float yawCmd, float yaw)
   return yawRateCmd;
 }
 
-VehicleCommand QuadControl::RunControl(float dt, float sim_time)
+VehicleCommand QuadControl::RunControl(float dt, float simTime)
 {
-  curTrajPoint = GetNextTrajectoryPoint(sim_time);
+  curTrajPoint = GetNextTrajectoryPoint(simTime);
 
-  float desCollThrust = AltitudeControl(curTrajPoint.position.z, curTrajPoint.velocity.z, estPos.z, estVel.z, estAtt, curTrajPoint.accel.z);
+  float collThrustCmd = AltitudeControl(curTrajPoint.position.z, curTrajPoint.velocity.z, estPos.z, estVel.z, estAtt, curTrajPoint.accel.z);
 
   // reserve some thrust margin for angle control
   float thrustMargin = .1f*(maxMotorThrust - minMotorThrust);
-  desCollThrust = CONSTRAIN(desCollThrust, (minMotorThrust+ thrustMargin)*4.f, (maxMotorThrust-thrustMargin)*4.f);
+  collThrustCmd = CONSTRAIN(collThrustCmd, (minMotorThrust+ thrustMargin)*4.f, (maxMotorThrust-thrustMargin)*4.f);
   
   V3F desAcc = HorizontalControl(curTrajPoint.position, curTrajPoint.velocity, estPos, estVel, curTrajPoint.accel);
   
-  V3F desOmega = ReducedAttitudeControl(desAcc, estAtt, desCollThrust);
+  V3F desOmega = ReducedAttitudeControl(desAcc, estAtt, collThrustCmd);
   desOmega.z = YawControl(curTrajPoint.attitude.Yaw(), estAtt.Yaw());
 
   V3F desMoment = BodyRateControl(desOmega, estOmega);
 
-  return GenerateMotorCommands(desCollThrust, desMoment);
+  return GenerateMotorCommands(collThrustCmd, desMoment);
 }
