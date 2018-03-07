@@ -160,7 +160,12 @@ In this part, we will explore some of the non-idealities and robustness of a con
 
 Now that we have all the working parts of a controller, you will put it all together and test it's performance once again on a trajectory.  For this simulation, you will use `Scenario 5`.  This scenario has two quadcopters:
  - the orange one is following `traj/FigureEight.txt`
- - the other one is following `traj/FigureEightFF.txt`
+ - the other one is following `traj/FigureEightFF.txt` - for now this is the same trajectory.  For those interested in seeing how you might be able to improve the performance of your drone by adjusting how the trajectory is defined, check out **Extra Challenge 1** below!
+
+How well is your drone able to follow the trajectory?  It is able to hold to the path fairly well?
+
+
+### Extra Challenge 1 (Optional) ###
 
 You will notice that initially these two trajectories are the same. Let's work on improving some performance of the trajectory itself.
 
@@ -169,7 +174,8 @@ You will notice that initially these two trajectories are the same. Let's work o
 2. Generate a new `FigureEightFF.txt` that has velocity terms
 Did the velocity-specified trajectory make a difference? Why?
 
-#### Extra Challenge ####
+
+### Extra Challenge 2 (Optional) ###
 
 For flying a trajectory, is there a way to provide even more information for even better tracking?
 
