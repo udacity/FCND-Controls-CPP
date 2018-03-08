@@ -7,7 +7,6 @@ http://studios.cla.umn.edu/tutorials/cameraterms.pdf
 */
 #ifdef _WIN32
 #define  WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include <GL/gl.h>
 #pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "glu32.lib")

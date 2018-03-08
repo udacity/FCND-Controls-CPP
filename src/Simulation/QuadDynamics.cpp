@@ -48,6 +48,9 @@ int QuadDynamics::Initialize()
 	
   _vehicleType = VEHICLE_TYPE_QUAD;
 
+  _lastTrajPointTime = 0;
+  _trajLogStepTime = 0;
+
   ParamsHandle config = SimpleConfig::GetInstance();
 	
   // PARAMETERS
@@ -78,14 +81,20 @@ int QuadDynamics::Initialize()
 
   randomMotorForceMag = config->Get(_name + ".randomMotorForceMag", 0.f);
 
+  _trajLogStepTime = config->Get(_name + ".trajectoryLogStepTime", 0.f);
+
+  _flightMode = config->Get(_name+".SimMode", "Full3D");
+
   ResetState(V3F());
 
   V3F trajOffset = config->Get(_name + ".TrajectoryOffset", V3F());
+  float trajTimeOffset = config->Get(_name + ".TrajectoryTimeOffset", 0);
 
   string controlConfig = config->Get(_name + ".ControlConfig", "ControlParams");
   controller = CreateController(config->Get(_name + ".ControlType", "QuadControl") , controlConfig);
   if (controller)
   {
+    controller->SetTrajTimeOffset(trajTimeOffset);
     controller->SetTrajectoryOffset(trajOffset);
     if (config->Get(controlConfig + ".UseIdealEstimator", 0) == 1)
     {
@@ -117,7 +126,7 @@ int QuadDynamics::Initialize()
 }
 
 
-void QuadDynamics::Run(double dt, double simulationTime, int &idum, V3F externalForceInGlobalFrame, V3F externalMomentInBodyFrame, string flightMode)
+void QuadDynamics::Run(float dt, float simulationTime, int &idum, V3F externalForceInGlobalFrame, V3F externalMomentInBodyFrame)
 {
 	if (dt <= 0 || dt>0.05 || _isnan(dt))
 	{
@@ -173,14 +182,14 @@ void QuadDynamics::Run(double dt, double simulationTime, int &idum, V3F external
     }
 
     const double simStep = MIN(controllerUpdateInterval - timeSinceLastControllerUpdate, remainingTimeToSimulate);
-    Dynamics(simStep, externalForceInGlobalFrame, externalMomentInBodyFrame, flightMode, idum);
+    Dynamics(simStep, simulationTime, externalForceInGlobalFrame, externalMomentInBodyFrame, idum);
     timeSinceLastControllerUpdate += simStep;
     remainingTimeToSimulate -= simStep;
   }
 }
 
 
-void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, string flight_mode, int& idum)
+void QuadDynamics::Dynamics(float dt, float simTime, V3F external_force, V3F external_moment, int& idum)
 {
   // NED/FRD reference frame
   matrix::Vector<float,3> ext_moment;
@@ -260,14 +269,16 @@ void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, 
 
   // Individual Flight Mode kinematic equations
 
-  if(flight_mode == "AttitudeOnly"){
+  if(_flightMode == "AttitudeOnly")
+  {
     // Attitude only - no position changes
     acc = (force_inertial_frame + external_force)/M + gravity;
     vel = vel + acc * dt;
     quat = quat.IntegrateBodyRate_fast(omega.x, omega.y, omega.z, half_dt);
     omega_v = omega_v + inv_inertia * (total_moment - omega_skew*Iw) * dt;
   }
-  if(flight_mode == "PlanarXZ"){
+  if(_flightMode == "PlanarXZ")
+  {
     // Planar XZ
     acc = (force_inertial_frame + external_force)/M + gravity;
     acc.y = 0; // no acceleration in y direction
@@ -281,7 +292,8 @@ void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, 
     omega_v(0) = 0; // Roll is not allowed
     omega_v(2) = 0; // Yaw is also not allowed
   }
-  if(flight_mode == "Full3D"){
+  if(_flightMode == "Full3D")
+  {
     acc = (force_inertial_frame + external_force)/M + gravity;
     vel = vel + acc * dt;
     oldPos = pos;
@@ -300,14 +312,21 @@ void QuadDynamics::Dynamics(double dt, V3F external_force, V3F external_moment, 
 
   if (followedTrajectoryCallback)
   {
-    TrajectoryPoint traj_pt;
-    traj_pt.time = 0; // TODO
-    traj_pt.position = pos;
-    traj_pt.velocity = vel;
-    traj_pt.omega = omega;
-    traj_pt.attitude = quat;
+    if ((simTime - _lastTrajPointTime) > _trajLogStepTime)
+    {
+      _lastTrajPointTime = simTime;
 
-    followedTrajectoryCallback(traj_pt);
+      TrajectoryPoint traj_pt;
+      traj_pt.time = _lastTrajPointTime;
+      traj_pt.position = pos;
+      traj_pt.velocity = vel;
+      traj_pt.omega = omega;
+      traj_pt.attitude = quat;
+
+      followedTrajectoryCallback(traj_pt);
+    }
+
+    
   }
 }
 

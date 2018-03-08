@@ -1,9 +1,9 @@
 #include "Common.h"
 #include "BaseController.h"
+#ifndef __PX4_NUTTX
 #include "Utility/SimpleConfig.h"
+#endif
 #include "Utility/StringUtils.h"
-#include "Utility/FastDelegate.h"
-using namespace fastdelegate;
 using namespace SLR;
 
 BaseController::BaseController(string config)
@@ -14,11 +14,12 @@ BaseController::BaseController(string config)
 
 void BaseController::Init()
 {
+#ifndef __PX4_NUTTX
   ParamsHandle config = SimpleConfig::GetInstance();
 
   optFlowX = 0;
   optFlowY = 0;
-  M = config->Get(_config+".Mass", 1.f);
+  mass = config->Get(_config+".Mass", 1.f);
   L = config->Get(_config+".L", 0.1f);
   Ixx = config->Get(_config+".Ixx", 0.001f);
   Iyy = config->Get(_config + ".Iyy", 0.001f);
@@ -33,6 +34,10 @@ void BaseController::Init()
     tmp.position = config->Get(_config + ".Trajectory", V3F());
     trajectory.AddTrajectoryPoint(tmp);
   }
+#else
+
+
+#endif
 }
 
 void BaseController::Reset()
@@ -68,7 +73,7 @@ void BaseController::OverrideEstimates(V3F pos, V3F vel, Quaternion<float> attit
 
 TrajectoryPoint BaseController::GetNextTrajectoryPoint(float mission_time)
 {
-  TrajectoryPoint pt = trajectory.NextTrajectoryPoint(mission_time);
+  TrajectoryPoint pt = trajectory.NextTrajectoryPoint(mission_time + _trajectoryTimeOffset);
   pt.position += _trajectoryOffset;
   return pt;  
 }

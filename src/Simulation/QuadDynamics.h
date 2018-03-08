@@ -6,6 +6,8 @@
 #include <matrix/math.hpp>
 #include "Math/LowPassFilter.h"
 #include "Drawing/ColorUtils.h"
+#include "Utility/FastDelegate.h"
+using namespace fastdelegate;
 
 class QuadDynamics;
 typedef shared_ptr<QuadDynamics> QuadcopterHandle;
@@ -25,13 +27,13 @@ public:
 	virtual ~QuadDynamics() {}; // destructor
 	virtual int Initialize();
 
-  virtual void Run(double dt, double simulationTime, int &idum,  // updates the simulation
+  virtual void Run(float dt, float simulationTime, int &idum,  // updates the simulation
       V3F externalForceInGlobalFrame = V3F(),    // required to take net forces into account
-      V3F externalMomentInBodyFrame = V3F(),   // required to take net moments into account
-                  string flightMode = "Full3D");
+      V3F externalMomentInBodyFrame = V3F());   // required to take net moments into account
+                  
 	virtual void SetCommands(const VehicleCommand& cmd);	// update commands in the simulator coming from a command2 packet
 
-  virtual void Dynamics(double dt, V3F external_force, V3F external_moment, string flight_mode, int& idum);
+  virtual void Dynamics(float dt, float simTime, V3F external_force, V3F external_moment, int& idum);
 
 	double GetRotDistInt() {return rotDisturbanceInt;};
 	double GetXyzDistInt() {return xyzDisturbanceInt;};
@@ -95,4 +97,5 @@ protected:
   float _lastPosFollowErr;
 
   V3F color;  
+  string _flightMode;
 };

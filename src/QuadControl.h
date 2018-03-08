@@ -1,9 +1,7 @@
 #pragma once
 
-#include "Utility/SimpleConfig.h"
 
 #include "Utility/StringUtils.h"
-#include "Simulation/BaseDynamics.h"
 #include "Trajectory.h"
 #include "BaseController.h"
 
@@ -15,33 +13,35 @@ public:
   virtual void Init();
 
   // returns a desired acceleration in global frame
-  V3F HorizontalControl(V3F position_cmd, V3F velocity_ff, V3F position, V3F velocity, V3F acceleration_ff);
+  V3F LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F accelCmd);
 
   virtual VehicleCommand RunControl(float dt, float sim_time);
 
-  VehicleCommand GenerateMotorCommands(float desCollThrust, V3F desMoment);
+  VehicleCommand GenerateMotorCommands(float collThrustCmd, V3F momentCmd);
 
   // returns desired yaw rate
-  float YawControl(float yaw_cmd, float yaw);
+  float YawControl(float yawCmd, float yaw);
 
   // returns desired moments
-  V3F BodyRateControl(V3F body_rate_cmd, V3F body_rate);
+  V3F BodyRateControl(V3F pqrCmd, V3F pqr);
 
   // returns a desired roll and pitch rate 
-  V3F ReducedAttitudeControl(V3F acceleration_cmd, Quaternion<float> attitude, float desCollectiveThrust);
+  V3F RollPitchControl(V3F accelCmd, Quaternion<float> attitude, float collThrustCmd);
 
-  float AltitudeControl(float desPosZ, float desVelZ, float posZ, float velZ, Quaternion<float> attitude, float accelFF);
+  float AltitudeControl(float posZCmd, float velZCmd, float posZ, float velZ, Quaternion<float> attitude, float accelZCmd);
 
-  // PARAMETERS
-  float Kp_pos_xy, Kp_pos_z;
-  float Kp_vel_xy, Kp_vel_z;
-  float Kp_bank, Kp_yaw;
-  V3F PGain_Omega;
+  // -------------- PARAMETERS --------------
+
+  // controller gains
+  float kpPosXY, kpPosZ;
+  float kpVelXY, kpVelZ;
+  float kpBank, kpYaw;
+  V3F kpPQR;
   
-  float max_ascent_rate, max_descent_rate;
-  float max_speed_xy;
-  float max_horiz_accel;
-  float max_tilt_angle;
-
-  float min_motor_thrust, max_motor_thrust;
+  // limits & saturations
+  float maxAscentRate, maxDescentRate;
+  float maxSpeedXY;
+  float maxAccelXY;
+  float maxTiltAngle;
+  float minMotorThrust, maxMotorThrust;
 };

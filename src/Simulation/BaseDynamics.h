@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Common.h"
-#include "Utility/Mutex.h"
 #include "Math/Quaternion.h"
 #include "VehicleDatatypes.h"
 #include "DataSource.h"
@@ -23,7 +22,12 @@ public:
 	virtual ~BaseDynamics() {}; // destructor
 
 	virtual int Initialize();
-	virtual void Run(double dt, int &idum) {};	// updates the simulation
+
+  virtual void Run(float dt, float simulationTime, int &idum,  // updates the simulation
+    V3F externalForceInGlobalFrame = V3F(),    // required to take net forces into account
+    V3F externalMomentInBodyFrame = V3F())   // required to take net moments into account
+  {}
+
 	virtual void SetCommands(const VehicleCommand& cmd) {};	// update commands in the simulator coming from a command2 packet
 
 	// inheritors have no reason to alter the following functions and therefore no sense demanding that they do
@@ -68,10 +72,12 @@ protected:
 
   // vehicle geometry and mass properties
   float M; // veh mass, kg
-  double Ixx,Iyy,Izz;
-  double xMin,yMin,bottom,xMax,yMax,top;
+  float Ixx,Iyy,Izz;
+  float xMin,yMin,bottom,xMax,yMax,top;
   bool _initialized;
 
+  float _lastTrajPointTime;
+  float _trajLogStepTime;
 };
 
 #ifdef _MSC_VER

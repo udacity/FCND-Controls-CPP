@@ -27,6 +27,7 @@ public:
 	void Reset();
 
   void OnMouseClick(int button, int state, int x, int y);
+  void OnMouseDoubleLClick(int x, int y);
   void OnMouseMove(int x, int y);
   void SetKeyboardFunc(void(*callback)(unsigned char, int, int));
 
@@ -49,7 +50,8 @@ public:
   shared_ptr<GraphManager> graph;
 
   shared_ptr<Trajectory> followed_traj;
-  void VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, V3F pointColor=V3F(.1f,.2f,1), V3F curPointColor=V3F(1,0,0), V3F offset=V3F());
+
+  void VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, float alpha=1, V3F pointColor=V3F(.1f,.2f,1), V3F curPointColor=V3F(1,0,0), V3F offset=V3F(), int style=0);
 
   void InitializeMenu(const vector<string>& strings);
   GLUTMenu _menu;
@@ -100,13 +102,12 @@ protected:
 	Timer _timeSinceLastPaint;
 
   void Draw(shared_ptr<QuadDynamics> quad);
+  void DrawTrajectories(shared_ptr<QuadDynamics> quad);
 	
 
 public:
 	bool showPropCommands;
-
-    bool showTrajectory;
-
+  bool showRefTrajectory, showActualTrajectory;
   bool paused;
 
    // data source functions

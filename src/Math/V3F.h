@@ -68,7 +68,7 @@ public:
 	inline float magSq() const{return (x*x+y*y+z*z);  }
 	inline float magXY() const{return sqrtf(x*x+y*y); }
 
-  inline bool isZero() const{return (x==0.0 && y==0.0 && z==0.0);};
+	inline bool isZero() const{return (x==0.f && y==0.f && z==0.f);};
 
   inline void zero(){x=y=z=0.0;};
 

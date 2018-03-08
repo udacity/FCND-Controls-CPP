@@ -8,6 +8,7 @@
 #include "Utility/SimpleConfig.h"
 #include "Utility/StringUtils.h"
 #include "Drawing/GraphManager.h"
+#include "MavlinkNode/MavlinkTranslation.h"
 
 using SLR::Quaternion;
 using SLR::ToUpper;
@@ -32,13 +33,14 @@ V3F force, moment;
 
 float simulationTime=0;
 int randomNumCarry=-1;
-string flightMode;
 
 void OnTimer(int v);
 
 vector<QuadcopterHandle> CreateVehicles();
 string _scenarioFile="../config/1_Intro.txt";
 
+#include "MavlinkNode/MavlinkNode.h"
+shared_ptr<MavlinkNode> mlNode;
 
 int main(int argcp, char **argv)
 {
@@ -101,6 +103,12 @@ void LoadScenario(string scenarioFile)
 
   ProcessConfigCommands(visualizer);
 
+  mlNode.reset();
+  if(config->Get("Mavlink.Enable",0)!=0)
+  { 
+    mlNode.reset(new MavlinkNode());
+  }
+
   ResetSimulation();
 }
 
@@ -114,8 +122,6 @@ void ResetSimulation()
   simulationTime = 0;
   config->Reset(_scenarioFile);
   dtSim = config->Get("Sim.Timestep", 0.005f);
-  
-  flightMode = config->Get("Quad.SimMode","Full3D");
   
   for (unsigned i = 0; i<quads.size(); i++)
   {
@@ -145,7 +151,7 @@ void OnTimer(int)
     {
       for (unsigned i = 0; i < quads.size(); i++)
       {
-        quads[i]->Run(dtSim, simulationTime, randomNumCarry, force, moment, flightMode);
+        quads[i]->Run(dtSim, simulationTime, randomNumCarry, force, moment);
       }
       simulationTime += dtSim;
     }
@@ -163,6 +169,16 @@ void OnTimer(int)
     visualizer->Update();
     grapher->DrawUpdate();
     lastDraw.Reset();
+
+    // temporarily here
+    if (mlNode)
+    {
+      mlNode->Send(MakeMavlinkPacket_Heartbeat());
+      mlNode->Send(MakeMavlinkPacket_Status());
+      mlNode->Send(MakeMavlinkPacket_LocalPose(simulationTime, quads[0]->Position(), quads[0]->Velocity()));
+      mlNode->Send(MakeMavlinkPacket_Attitude(simulationTime, quads[0]->Attitude(), quads[0]->Omega()));
+    }
+    
   }
   
   glutTimerFunc(5,&OnTimer,0);
