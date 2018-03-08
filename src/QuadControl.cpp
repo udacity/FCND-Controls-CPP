@@ -21,16 +21,16 @@ void QuadControl::Init()
   ParamsHandle config = SimpleConfig::GetInstance();
    
   // Load parameters (default to 0)
-  kpPosXY = config->Get(_config+".Kp_pos_xy", 0);
-  kpPosZ = config->Get(_config + ".Kp_pos_z", 0);
+  kpPosXY = config->Get(_config+".kpPosXY", 0);
+  kpPosZ = config->Get(_config + ".kpPosZ", 0);
      
-  kpVelXY = config->Get(_config + ".Kp_vel_xy", 0);
-  kpVelZ = config->Get(_config + ".Kp_vel_z", 0);
+  kpVelXY = config->Get(_config + ".kpVelXY", 0);
+  kpVelZ = config->Get(_config + ".kpVelZ", 0);
 
-  kpBank = config->Get(_config + ".Kp_bank", 0);
-  kpYaw = config->Get(_config + ".Kp_yaw", 0);
+  kpBank = config->Get(_config + ".kpBank", 0);
+  kpYaw = config->Get(_config + ".kpYaw", 0);
 
-  kpPQR = config->Get(_config + ".Kp_pqr", V3F());
+  kpPQR = config->Get(_config + ".kpPQR", V3F());
 
   maxDescentRate = config->Get(_config + ".maxDescentRate", 100);
   maxAscentRate = config->Get(_config + ".maxAscentRate", 100);
@@ -109,7 +109,7 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
   //  - you'll need parameters for moments of inertia Ixx, Iyy, Izz
   //  - you'll also need the gain parameter kpPQR (it's a V3F)
 
-  V3F moment_cmd;
+  V3F momentCmd;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 
@@ -120,10 +120,10 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
   /////////////////////////////// BEGIN SOLUTION //////////////////////////////
   V3F rate_error = pqrCmd - pqr;
   V3F omega_dot_des = rate_error * kpPQR;
-  moment_cmd = omega_dot_des * V3F(Ixx, Iyy, Izz);
+  momentCmd = omega_dot_des * V3F(Ixx, Iyy, Izz);
   //////////////////////////////// END SOLUTION ///////////////////////////////
 
-  return moment_cmd;
+  return momentCmd;
 }
 
 // returns a desired roll and pitch rate 
