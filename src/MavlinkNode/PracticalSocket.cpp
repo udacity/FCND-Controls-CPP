@@ -28,6 +28,8 @@
   #include <mswsock.h>
   typedef int socklen_t;
   typedef char raw_type;       // Type used for raw data on this platform
+  typedef uint32_t in_addr_t;
+  #define ssize_t size_t
 #pragma comment(lib,"ws2_32.lib")
 #else
   #include <sys/types.h>       // For data types
