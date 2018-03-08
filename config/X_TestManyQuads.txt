@@ -1,0 +1,62 @@
+# Hover at the initial point using full 3D control
+
+INCLUDE QuadPhysicalParams.txt
+
+# simulation setup
+Sim.RunMode = Repeat
+Sim.EndTime = 10
+Sim.Vehicle1 = Quad1
+Sim.Vehicle2 = Quad2
+Sim.Vehicle3 = Quad3
+Sim.Vehicle4 = Quad4
+Sim.Vehicle5 = Quad5
+Sim.Vehicle6 = Quad6
+Sim.Vehicle7 = Quad7
+Sim.Vehicle8 = Quad8
+Sim.Vehicle9 = Quad9
+
+# Controller selection
+Quad.ControlType = QuadControl
+Quad.ControlConfig = QuadControlParams
+
+# reference trajectory
+QuadControlParams.Trajectory=traj/FigureEightFF.txt
+
+# graphing commands
+Commands.1=AddGraph1.Sim.DrawTime
+Commands.2=Toggle.ActualTrajectory
+
+INCLUDE QuadControlParams.txt
+INCLUDE Simulation.txt
+
+[]
+Quad.trajectoryLogStepTime = .025
+
+# Vehicle-specific config
+[Quad1:Quad]
+TrajectoryTimeOffset = 0
+TrajectoryOffset = 0, 0, 0
+[Quad2:Quad]
+TrajectoryTimeOffset = .1
+TrajectoryOffset = .1,0,0
+[Quad3:Quad]
+TrajectoryTimeOffset = .2
+TrajectoryOffset = .2,0,0
+[Quad4:Quad]
+TrajectoryTimeOffset = .3
+TrajectoryOffset = .3,0,0
+[Quad5:Quad]
+TrajectoryTimeOffset = .4
+TrajectoryOffset = .4,0,0
+[Quad6:Quad]
+TrajectoryTimeOffset = .5
+TrajectoryOffset = .5,0,0
+[Quad7:Quad]
+TrajectoryTimeOffset = .6
+TrajectoryOffset = .6,0,0
+[Quad8:Quad]
+TrajectoryTimeOffset = .7
+TrajectoryOffset = .7,0,0
+[Quad9:Quad]
+TrajectoryTimeOffset = .8
+TrajectoryOffset = .8,0,0

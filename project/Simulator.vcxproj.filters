@@ -24,6 +24,9 @@
     <Filter Include="Controllers">
       <UniqueIdentifier>{666f7e33-1df4-4d84-9213-33cbea3f186d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MavlinkNode">
+      <UniqueIdentifier>{82326395-02a1-491a-81e9-94fe51c40cbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -75,6 +78,18 @@
       <Filter>Simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\src\QuadControl.cpp" />
+    <ClCompile Include="..\src\MavlinkNode\PracticalSocket.cpp">
+      <Filter>MavlinkNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MavlinkNode\MavlinkNode.cpp">
+      <Filter>MavlinkNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MavlinkNode\MavlinkTranslation.cpp">
+      <Filter>MavlinkNode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Math\Geometry.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Math\Quaternion.h">
@@ -167,6 +182,18 @@
     <ClInclude Include="..\src\QuadControl.h" />
     <ClInclude Include="..\src\Math\Mat3x3F.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MavlinkNode\PracticalSocket.h">
+      <Filter>MavlinkNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MavlinkNode\UDPPacket.h">
+      <Filter>MavlinkNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MavlinkNode\MavlinkNode.h">
+      <Filter>MavlinkNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MavlinkNode\MavlinkTranslation.h">
+      <Filter>MavlinkNode</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

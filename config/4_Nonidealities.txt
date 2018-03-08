@@ -27,7 +27,8 @@ Quad.InitialOmega=0,0,0
 Commands.1=AddGraph1.Quad1.PosFollowErr
 Commands.2=AddGraph1.Quad2.PosFollowErr
 Commands.3=AddGraph1.Quad3.PosFollowErr
-Commands.4=Toggle.Trajectory
+Commands.4=Toggle.RefTrajectory
+Commands.5=Toggle.ActualTrajectory
 
 INCLUDE QuadControlParams.txt
 INCLUDE Simulation.txt

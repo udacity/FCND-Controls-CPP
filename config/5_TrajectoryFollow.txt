@@ -18,7 +18,8 @@ QuadControlParams.Trajectory=traj/FigureEight.txt
 # graphing commands
 Commands.1=AddGraph1.Quad1.PosFollowErr
 Commands.2=AddGraph1.Quad2.PosFollowErr
-Commands.3=Toggle.Trajectory
+Commands.3=Toggle.RefTrajectory
+Commands.4=Toggle.ActualTrajectory
 
 INCLUDE QuadControlParams.txt
 INCLUDE Simulation.txt

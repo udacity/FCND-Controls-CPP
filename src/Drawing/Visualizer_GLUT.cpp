@@ -146,7 +146,7 @@ bool Visualizer_GLUT::IsSpecialKeyDown(int specialKey)
 void Visualizer_GLUT::Reset()
 {
   showPropCommands = false;
-  showTrajectory = false;
+  showRefTrajectory = showActualTrajectory = false;
   paused = false;
 
 	// default settings here..
@@ -322,6 +322,22 @@ SLR::LineD Visualizer_GLUT::ScreenToPickVector(double x, double y)
   return SLR::LineD(_camera.FilteredPos(),_camera.FilteredPos()+(ray-_camera.FilteredPos()).norm()*50);
 }
 
+void Visualizer_GLUT::DrawTrajectories(shared_ptr<QuadDynamics> quad)
+{
+  if (quad)
+  {
+    if (quad->controller && showRefTrajectory)
+    {
+      VisualizeTrajectory(quad->controller->trajectory, true, V3F(0, 1, 1), 1.f, V3F(.1f, .2f, 1), quad->color, quad->controller->_trajectoryOffset);
+    }
+  }
+
+  if (quad && quad->_followed_traj  && showActualTrajectory)
+  {
+    VisualizeTrajectory(*(quad->_followed_traj).get(), false, quad->color, 1.f, V3F(), V3F(), V3F(), 1);
+  }
+}
+
 void Visualizer_GLUT::Draw(shared_ptr<QuadDynamics> quad)
 {
   SetupLights(_glDraw);
@@ -333,20 +349,6 @@ void Visualizer_GLUT::Draw(shared_ptr<QuadDynamics> quad)
   if (quad)
   {
     VisualizeQuadCopter(quad);
-
-    if (quad->controller)
-    {
-      VisualizeTrajectory(quad->controller->trajectory, true, V3F(0,1,1), V3F(.1f, .2f, 1), quad->color, quad->controller->_trajectoryOffset);
-    }
-  }
-
-  _glDraw->SetLighting(false);
-  
-  glDisable(GL_LINE_SMOOTH);
-  if (quad && quad->_followed_traj)
-  {
-    glLineWidth(1.5);
-    VisualizeTrajectory(*(quad->_followed_traj).get(), false, quad->color);
   }
 
 }
@@ -424,7 +426,10 @@ void Visualizer_GLUT::Paint()
   {
     Draw(quads[i]);
   }
-  
+  for (unsigned i = 0; i < quads.size(); i++)
+  {
+    DrawTrajectories(quads[i]);
+  }
 
   // disable lights and fancy 3d effects for 2d drawing
 	_glDraw->SetLighting(false);
@@ -494,42 +499,85 @@ void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
   }
 }
 
-void Visualizer_GLUT::VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, V3F pointColor, V3F curPointColor, V3F offset)
+void Visualizer_GLUT::VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, float alpha, V3F pointColor, V3F curPointColor, V3F offset, int style)
 {
-  if (showTrajectory)
+  // Draw the desired trajectory line
+  if (style == 0)
   {
-    // Draw the desired trajectory line
-    glColor4d(color[0],color[1],color[2],1);
+    _glDraw->SetLighting(false);
+    glDisable(GL_LINE_SMOOTH);
+    glLineWidth(1.5);
+    glColor4d(color[0], color[1], color[2], alpha);
     glBegin(GL_LINE_STRIP);
-    for(unsigned int i=0; i<traj.traj.n_meas(); i++)
+    for (unsigned int i = 0; i < traj.traj.n_meas(); i++)
     {
-      glVertex3fv((traj.traj[i].position+offset).getArray());
+      glVertex3fv((traj.traj[i].position + offset).getArray());
     }
     glEnd();
-
-    if (drawPoints)
+  }
+  else if (style == 1)
+  {
+    _glDraw->SetLighting(false);
+    glEnable(GL_LINE_SMOOTH);
+    glLineWidth(1);
+    glColor4d(color[0], color[1], color[2], alpha);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDisable(GL_CULL_FACE);
+    glBegin(GL_QUADS);
+    for (unsigned int i = 1; i < traj.traj.n_meas(); i++)
     {
+      V3F p = (traj.traj[i].position + offset);
+      V3F l = traj.traj[i].attitude.Rotate_BtoI(V3F(0, 1, 0)) * 0.1f;
+      glVertex3fv((p+l).getArray());
+      glVertex3fv((p-l).getArray());
+        
+      p = (traj.traj[i-1].position + offset);
+      l = traj.traj[i-1].attitude.Rotate_BtoI(V3F(0, 1, 0)) * 0.1f;
+      glVertex3fv((p - l).getArray());
+      glVertex3fv((p + l).getArray());
+    }
+    glEnd();
+      
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-      // Draw the desired trajectory points as spheres
-      for (unsigned int i = 0; i < traj.traj.n_meas(); i++)
+    glColor4d(color[0], color[1], color[2], .1f);
+    glBegin(GL_QUADS);
+    for (unsigned int i = 1; i < traj.traj.n_meas(); i++)
+    {
+      V3F p = (traj.traj[i].position + offset);
+      V3F l = traj.traj[i].attitude.Rotate_BtoI(V3F(0, 1, 0)) * 0.1f;
+      glVertex3fv((p + l).getArray());
+      glVertex3fv((p - l).getArray());
+
+      p = (traj.traj[i - 1].position + offset);
+      l = traj.traj[i - 1].attitude.Rotate_BtoI(V3F(0, 1, 0)) * 0.1f;
+      glVertex3fv((p - l).getArray());
+      glVertex3fv((p + l).getArray());
+    }
+    glEnd();
+  }
+
+  if (drawPoints)
+  {
+    // Draw the desired trajectory points as spheres
+    for (unsigned int i = 0; i < traj.traj.n_meas(); i++)
+    {
+      V3F pos = traj.traj[i].position + offset;
+      float r = 0.01f;
+      // Draw the current trajectory point in a different colour
+      if (i == (unsigned)traj.GetCurTrajectoryPoint())
       {
-        V3F pos = traj.traj[i].position + offset;
-        float r = 0.01f;
-        // Draw the current trajectory point in a different colour
-        if (i == (unsigned)traj.GetCurTrajectoryPoint())
-        {
-          glColor4f(curPointColor[0], curPointColor[1], curPointColor[2], 1);
-          r = 0.03f;
-        }
-        else
-        {
-          glColor4f(pointColor[0], pointColor[1], pointColor[2], 1);
-        }
-        glPushMatrix();
-        glTranslatef(pos.x, pos.y, pos.z);
-        gluSphere(_glDraw->Quadric(), r, 6, 6);
-        glPopMatrix();
+        glColor4f(curPointColor[0], curPointColor[1], curPointColor[2], 1);
+        r = 0.03f;
       }
+      else
+      {
+        glColor4f(pointColor[0], pointColor[1], pointColor[2], 1);
+      }
+      glPushMatrix();
+      glTranslatef(pos.x, pos.y, pos.z);
+      gluSphere(_glDraw->Quadric(), r, 6, 6);
+      glPopMatrix();
     }
   }
 }
@@ -555,6 +603,34 @@ void Visualizer_GLUT::OnMouseClick(int button, int state, int x, int y)
   if (button == GLUT_MIDDLE_BUTTON)
   {
     _mouseMiddleDown = (state == GLUT_DOWN);
+  }
+
+  if (_mouseLeftDown && _doubleClickTimer.ElapsedSeconds() < .2f)
+  {
+    OnMouseDoubleLClick(x,y);
+  }
+
+  _doubleClickTimer.Reset();
+}
+
+void Visualizer_GLUT::OnMouseDoubleLClick(int x, int y)
+{
+  SLR::LineD line = ScreenToPickVector(x, y);
+  int minDistIndex = -1;
+  double minDist = 1000.0;
+
+  for (unsigned i = 0; i < quads.size(); i++)
+  {
+    if (line.Dist(quads[i]->Position()).mag() < minDist)
+    {
+      minDist = line.Dist(quads[i]->Position()).mag();
+      minDistIndex = i;
+    }
+  }
+
+  if (minDist < .5)
+  {
+    _camera.SetLookAt(quads[minDistIndex]->Position());
   }
 }
 
@@ -661,7 +737,8 @@ GLuint Visualizer_GLUT::MakeVolumeCallList()
 void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
 {
   vector<string> tmp = strings;
-  tmp.push_back("Toggle.Trajectory");
+  tmp.push_back("Toggle.RefTrajectory");
+  tmp.push_back("Toggle.ActualTrajectory");
   tmp.push_back("Toggle.Thrusts");
 
   FILE* f = fopen("../config/Scenarios.txt","r");
@@ -673,6 +750,17 @@ void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
   }
   fclose(f);
 
+  f = fopen("../config/X_Scenarios.txt", "r");
+  while (f && fgets(buf, 510, f))
+  {
+    string trimmed = SLR::Trim(string(buf));
+    tmp.push_back(string("Scenario.") + trimmed);
+  }
+  if (f)
+  {
+    fclose(f);
+  }
+
   glutSetWindow(_glutWindowNum);
   _menu.CreateMenu(tmp);
   _menu.OnMenu = MakeDelegate(this, &Visualizer_GLUT::OnMenu);
@@ -680,9 +768,13 @@ void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
 
 void Visualizer_GLUT::OnMenu(string cmd)
 {
-  if (cmd == "Toggle.Trajectory")
+  if (cmd == "Toggle.RefTrajectory")
   {
-    showTrajectory = !showTrajectory;
+    showRefTrajectory = !showRefTrajectory;
+  }
+  else if (cmd == "Toggle.ActualTrajectory")
+  {
+    showActualTrajectory = !showActualTrajectory;
   }
   else if (cmd == "Toggle.Thrusts")
   {

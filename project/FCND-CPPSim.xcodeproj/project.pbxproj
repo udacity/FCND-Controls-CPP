@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		DB076C8B202A34C500386052 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB076C8A202A34C500386052 /* GLUT.framework */; };
+		DB47A220205151FE00F34E67 /* MavlinkNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB47A219205151FD00F34E67 /* MavlinkNode.cpp */; };
+		DB47A221205151FE00F34E67 /* MavlinkTranslation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB47A21E205151FE00F34E67 /* MavlinkTranslation.cpp */; };
+		DB47A222205151FE00F34E67 /* PracticalSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB47A21F205151FE00F34E67 /* PracticalSocket.cpp */; };
+		DB47A225205152DE00F34E67 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB47A224205152DE00F34E67 /* Geometry.cpp */; };
 		DB49FB22202A060F00DED4E6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB49FB21202A060F00DED4E6 /* OpenGL.framework */; };
 		DB49FB72202A0CC700DED4E6 /* BaseController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB49FB35202A0CC600DED4E6 /* BaseController.cpp */; };
 		DB49FB73202A0CC700DED4E6 /* ColorUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB49FB3B202A0CC600DED4E6 /* ColorUtils.cpp */; };
@@ -46,6 +50,15 @@
 		DB076C8A202A34C500386052 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		DB31989E20334078008ACD56 /* Simulation.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Simulation.txt; path = ../config/Simulation.txt; sourceTree = "<group>"; };
 		DB3198A320334078008ACD56 /* QuadPhysicalParams.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = QuadPhysicalParams.txt; path = ../config/QuadPhysicalParams.txt; sourceTree = "<group>"; };
+		DB47A219205151FD00F34E67 /* MavlinkNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MavlinkNode.cpp; path = MavlinkNode/MavlinkNode.cpp; sourceTree = "<group>"; };
+		DB47A21A205151FD00F34E67 /* MavlinkNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MavlinkNode.h; path = MavlinkNode/MavlinkNode.h; sourceTree = "<group>"; };
+		DB47A21B205151FE00F34E67 /* MavlinkTranslation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MavlinkTranslation.h; path = MavlinkNode/MavlinkTranslation.h; sourceTree = "<group>"; };
+		DB47A21C205151FE00F34E67 /* PracticalSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PracticalSocket.h; path = MavlinkNode/PracticalSocket.h; sourceTree = "<group>"; };
+		DB47A21D205151FE00F34E67 /* UDPPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UDPPacket.h; path = MavlinkNode/UDPPacket.h; sourceTree = "<group>"; };
+		DB47A21E205151FE00F34E67 /* MavlinkTranslation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MavlinkTranslation.cpp; path = MavlinkNode/MavlinkTranslation.cpp; sourceTree = "<group>"; };
+		DB47A21F205151FE00F34E67 /* PracticalSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PracticalSocket.cpp; path = MavlinkNode/PracticalSocket.cpp; sourceTree = "<group>"; };
+		DB47A223205152DE00F34E67 /* Mat3x3F.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mat3x3F.h; sourceTree = "<group>"; };
+		DB47A224205152DE00F34E67 /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
 		DB49FADE202A039100DED4E6 /* FCND-CPPSim */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "FCND-CPPSim"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB49FB21202A060F00DED4E6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		DB49FB35202A0CC600DED4E6 /* BaseController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseController.cpp; sourceTree = "<group>"; };
@@ -142,6 +155,20 @@
 			name = config;
 			sourceTree = "<group>";
 		};
+		DB47A218205151CB00F34E67 /* MavlinkNode */ = {
+			isa = PBXGroup;
+			children = (
+				DB47A219205151FD00F34E67 /* MavlinkNode.cpp */,
+				DB47A21A205151FD00F34E67 /* MavlinkNode.h */,
+				DB47A21E205151FE00F34E67 /* MavlinkTranslation.cpp */,
+				DB47A21B205151FE00F34E67 /* MavlinkTranslation.h */,
+				DB47A21F205151FE00F34E67 /* PracticalSocket.cpp */,
+				DB47A21C205151FE00F34E67 /* PracticalSocket.h */,
+				DB47A21D205151FE00F34E67 /* UDPPacket.h */,
+			);
+			name = MavlinkNode;
+			sourceTree = "<group>";
+		};
 		DB49FAD5202A039100DED4E6 = {
 			isa = PBXGroup;
 			children = (
@@ -172,6 +199,7 @@
 		DB49FB34202A0CC600DED4E6 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				DB47A218205151CB00F34E67 /* MavlinkNode */,
 				DBD204F22036369000E0F55A /* QuadControl.cpp */,
 				DBD204F12036369000E0F55A /* QuadControl.h */,
 				DB49FB35202A0CC600DED4E6 /* BaseController.cpp */,
@@ -214,6 +242,8 @@
 		DB49FB49202A0CC600DED4E6 /* Math */ = {
 			isa = PBXGroup;
 			children = (
+				DB47A224205152DE00F34E67 /* Geometry.cpp */,
+				DB47A223205152DE00F34E67 /* Mat3x3F.h */,
 				DB49FB4A202A0CC600DED4E6 /* Angles.h */,
 				DB49FB4B202A0CC600DED4E6 /* Constants.h */,
 				DB49FB4C202A0CC600DED4E6 /* Geometry.h */,
@@ -328,18 +358,22 @@
 				DB49FB72202A0CC700DED4E6 /* BaseController.cpp in Sources */,
 				DB49FB81202A0CC700DED4E6 /* Camera.cpp in Sources */,
 				DB49FB74202A0CC700DED4E6 /* DrawingFuncs.cpp in Sources */,
+				DB47A222205151FE00F34E67 /* PracticalSocket.cpp in Sources */,
 				DB49FB7A202A0CC700DED4E6 /* Random.cpp in Sources */,
 				DB49FB80202A0CC700DED4E6 /* Trajectory.cpp in Sources */,
 				DB49FB7D202A0CC700DED4E6 /* QuadDynamics.cpp in Sources */,
 				DB49FB7C202A0CC700DED4E6 /* opticalflow.cpp in Sources */,
+				DB47A221205151FE00F34E67 /* MavlinkTranslation.cpp in Sources */,
 				DB49FB7B202A0CC700DED4E6 /* BaseDynamics.cpp in Sources */,
 				DB49FB78202A0CC700DED4E6 /* Visualizer_GLUT.cpp in Sources */,
+				DB47A220205151FE00F34E67 /* MavlinkNode.cpp in Sources */,
 				DB49FB75202A0CC700DED4E6 /* GLUTMenu.cpp in Sources */,
 				DB49FB73202A0CC700DED4E6 /* ColorUtils.cpp in Sources */,
 				DB49FB82202A0CC700DED4E6 /* SimpleConfig.cpp in Sources */,
 				DB49FB83202A0CC700DED4E6 /* Timer.cpp in Sources */,
 				DBD204F32036369000E0F55A /* QuadControl.cpp in Sources */,
 				DB49FB79202A0CC700DED4E6 /* main.cpp in Sources */,
+				DB47A225205152DE00F34E67 /* Geometry.cpp in Sources */,
 				DB49FB76202A0CC700DED4E6 /* Graph.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -453,6 +487,7 @@
 		DB49FAE6202A039100DED4E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					../src,
@@ -471,6 +506,7 @@
 		DB49FAE7202A039100DED4E6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					../src/,

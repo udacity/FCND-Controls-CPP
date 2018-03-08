@@ -1,0 +1,6 @@
+# Hover at the initial point using full 3D control
+
+INCLUDE 5_TrajectoryFollow.txt
+
+[]
+Mavlink.Enable=1

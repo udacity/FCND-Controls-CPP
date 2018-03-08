@@ -2,15 +2,15 @@
 
 #include <vector>
 #include "DataSource.h"
-#include "Utility/FastDelegate.h"
 #include "VehicleDatatypes.h"
 #include "Trajectory.h"
-using namespace fastdelegate;
 using namespace SLR;
 using namespace std;
 
+#ifndef __PX4_NUTTX
 class BaseController;
 typedef shared_ptr<BaseController> ControllerHandle;
+#endif
 
 class BaseController : public DataSource
 {
@@ -40,9 +40,10 @@ public:
   virtual vector<string> GetFields() const;
 
   void SetTrajectoryOffset(V3F trajOffset) { _trajectoryOffset = trajOffset; }
+  void SetTrajTimeOffset(float timeOffset) { _trajectoryTimeOffset = timeOffset; }
 
   // system parameters params
-  float M; // mass
+  float mass; // mass
   float L; // length of arm from centre of quadrocopter to motor
   float Ixx, Iyy, Izz; // mass moment of inertia / second moment of inertia
   float kappa; // torque (Nm) produced by motor per N of thrust produced
@@ -68,4 +69,6 @@ public:
   string _config;
 
   V3F _trajectoryOffset;
+  float _trajectoryTimeOffset;
 };
+
