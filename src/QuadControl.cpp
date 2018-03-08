@@ -98,7 +98,7 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
-  return moment_cmd;
+  return momentCmd;
 }
 
 // returns a desired roll and pitch rate 
@@ -129,7 +129,7 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
-  return desOmega;
+  return pqrCmd;
 }
 
 float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, float velZ, Quaternion<float> attitude, float accelZCmd)
@@ -194,7 +194,7 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
-  return accel_cmd;
+  return accelCmd;
 }
 
 // returns desired yaw rate
@@ -216,7 +216,7 @@ float QuadControl::YawControl(float yawCmd, float yaw)
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
-  return yaw_rate_cmd;
+  return yawRateCmd;
 
 }
 
