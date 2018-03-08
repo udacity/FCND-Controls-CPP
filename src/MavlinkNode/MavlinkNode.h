@@ -3,7 +3,16 @@
 #include "PracticalSocket.h"
 #include "Utility/FastDelegate.h"
 #include "UDPPacket.h"
+
+#ifdef __APPLE__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Waddress-of-packed-member"
+#endif
 #include "mavlink/common/mavlink.h"
+#ifdef __APPLE__
+#pragma clang diagnostic pop
+#endif
+
 #include <vector>
 using namespace fastdelegate;
 using std::vector;

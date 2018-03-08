@@ -3,7 +3,14 @@
 #include <vector>
 using namespace std;
 
+#ifdef __APPLE__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Waddress-of-packed-member"
+#endif
 #include "mavlink/common/mavlink.h"
+#ifdef __APPLE__
+#pragma clang diagnostic pop
+#endif
 
 vector<uint8_t> MakeMavlinkPacket_LocalPose(float simTime, V3F pos, V3F vel)
 {

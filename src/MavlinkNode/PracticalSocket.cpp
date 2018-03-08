@@ -87,7 +87,7 @@ static void fillAddr(const string &address, unsigned short port,
     // is supposedly obsolete
     throw SocketException("Failed to resolve name (gethostbyname())");
   }
-  addr.sin_addr.s_addr = *((unsigned long *) host->h_addr_list[0]);
+  addr.sin_addr.s_addr = (in_addr_t)(*((unsigned long *) host->h_addr_list[0]));
 
   addr.sin_port = htons(port);     // Assign port in network byte order
 }
@@ -219,12 +219,12 @@ void CommunicatingSocket::send(const void *buffer, int bufferLen)
 
 int CommunicatingSocket::recv(void *buffer, int bufferLen) 
     throw(SocketException) {
-  int rtn;
+  ssize_t rtn;
   if ((rtn = ::recv(sockDesc, (raw_type *) buffer, bufferLen, 0)) < 0) {
     throw SocketException("Received failed (recv())", true);
   }
 
-  return rtn;
+  return (int)rtn;
 }
 
 string CommunicatingSocket::getForeignAddress() 
@@ -370,7 +370,7 @@ int UDPSocket::recvFrom(void *buffer, int bufferLen, string &sourceAddress,
     unsigned short &sourcePort) throw(SocketException) {
   sockaddr_in clntAddr;
   socklen_t addrLen = sizeof(clntAddr);
-  int rtn;
+  ssize_t rtn;
   if ((rtn = recvfrom(sockDesc, (raw_type *) buffer, bufferLen, 0, 
                       (sockaddr *) &clntAddr, (socklen_t *) &addrLen)) < 0) {
     throw SocketException("Receive failed (recvfrom())", true);
@@ -378,7 +378,7 @@ int UDPSocket::recvFrom(void *buffer, int bufferLen, string &sourceAddress,
   sourceAddress = inet_ntoa(clntAddr.sin_addr);
   sourcePort = ntohs(clntAddr.sin_port);
 
-  return rtn;
+  return (int)rtn;
 }
 
 void UDPSocket::setMulticastTTL(unsigned char multicastTTL) throw(SocketException) {

@@ -1,5 +1,8 @@
 #include "Common.h"
 #include "MavlinkNode.h"
+#ifndef _WIN32
+#include <pthread.h>
+#endif
 
 MavlinkNode::MavlinkNode(string myIP)
 	: _socket(myIP, MAVLINK_RX_PORT)
@@ -28,7 +31,9 @@ MavlinkNode::~MavlinkNode()
 	}
 #else
 	_socket.shutdown();
-	//pthread_cancel(_thread);
+#ifdef __APPLE__
+	pthread_cancel(_thread);
+#endif
 	pthread_join(_thread, NULL);
 #endif
 	delete [] _packet.data;
@@ -72,7 +77,7 @@ void* MavlinkNode::RxThread(void* param)
 
 void MavlinkNode::Send(const vector<uint8_t>& packet)
 {
-  _socket.sendTo(&packet[0], packet.size(), "127.0.0.1", MAVLINK_TX_PORT);
+  _socket.sendTo(&packet[0], (int)packet.size(), "127.0.0.1", MAVLINK_TX_PORT);
 }
 
 void MavlinkNode::UDPPacketCallback(UDPPacket& m)
