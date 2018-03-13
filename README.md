@@ -95,8 +95,9 @@ Note: if you want to come back to this later, this scenario is "1_Intro".
 
 With the proper mass, your simulation should look a little like this:
 
-![Scenario 1](animations/scenario1.gif)
-
+<p align="center">
+<img src="animations/scenario1.gif" width="500"/>
+</p>
 
 
 ## The Tasks ##
@@ -127,7 +128,9 @@ We won't be worrying about yaw just yet.
 
 If successful you should now see the quad level itself (as shown below), though it’ll still be flying away slowly since we’re not controlling velocity/position!  You should also see the vehicle angle (Roll) get controlled to 0.
 
-![Scenario 2](animations/scenario2.gif)
+<p align="center">
+<img src="animations/scenario2.gif" width="500"/>
+</p>
 
 
 ### Position/velocity and yaw angle control (scenario 3) ###
@@ -146,7 +149,9 @@ If successful, the quads should be going to their destination points and trackin
 
 Tune position control for settling time. Don’t try to tune yaw control too tightly, as yaw control requires a lot of control authority from a quadcopter and can really affect other degrees of freedom.  This is why you often see quadcopters with tilted motors, better yaw authority!
 
-![Scenario 3](animations/scenario3.gif)
+<p align="center">
+<img src="animations/scenario3.gif" width="500"/>
+</p>
 
 
 ### Non-idealities and robustness (scenario 4) ###
@@ -162,7 +167,9 @@ In this part, we will explore some of the non-idealities and robustness of a con
 
 3. Tune the integral control, and other control parameters until all the quads successfully move properly.  Your drones' motion should look like this:
 
-![Scenario 4](animations/scenario4.gif)
+<p align="center">
+<img src="animations/scenario4.gif" width="500"/>
+</p>
 
 
 ### Tracking trajectories ###
@@ -185,7 +192,9 @@ Did the velocity-specified trajectory make a difference? Why?
 
 With the two different trajectories, your drones' motions should look like this:
 
-![Scenario 5](animations/scenario5.gif)
+<p align="center">
+<img src="animations/scenario5.gif" width="500"/>
+</p>
 
 
 ### Extra Challenge 2 (Optional) ###
