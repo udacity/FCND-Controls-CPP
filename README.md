@@ -93,6 +93,10 @@ Therefore, if the mass doesn't match the actual mass of the quad, it'll fall dow
 
 Note: if you want to come back to this later, this scenario is "1_Intro".
 
+With the proper mass, your simulation should look a little like this:
+
+![Scenario 1](animations/scenario1.gif)
+
 
 
 ## The Tasks ##
@@ -121,8 +125,9 @@ We won't be worrying about yaw just yet.
  - implement the code in the function `RollPitchControl()`
  - Tune `Kp_bank` in `QuadControlParams.txt` to minimize settling time but avoid too much overshoot
 
-If successful you should now see the quad level itself, though it’ll still be flying away slowly since we’re not controlling velocity/position!  You should also see the vehicle angle (Roll) get controlled to 0.
+If successful you should now see the quad level itself (as shown below), though it’ll still be flying away slowly since we’re not controlling velocity/position!  You should also see the vehicle angle (Roll) get controlled to 0.
 
+![Scenario 2](animations/scenario2.gif)
 
 
 ### Position/velocity and yaw angle control (scenario 3) ###
@@ -134,12 +139,14 @@ Next, you will implement the position, altitude and yaw control for your quad.  
  - tune parameters `Kp_pos_z` and `Kp_vel_z`
  - tune parameters `Kp_vel_xy` and `Kp_vel_z`
 
-If successful, the quads should be going to their destination points and tracking error should be going down. However, one quad remains rotated in yaw.
+If successful, the quads should be going to their destination points and tracking error should be going down (as shown below). However, one quad remains rotated in yaw.
 
  - implement the code in the function `YawControl()`
  - tune parameters `Kp_yaw` and the 3rd (z) component of `Kp_pqr`
 
 Tune position control for settling time. Don’t try to tune yaw control too tightly, as yaw control requires a lot of control authority from a quadcopter and can really affect other degrees of freedom.  This is why you often see quadcopters with tilted motors, better yaw authority!
+
+![Scenario 3](animations/scenario3.gif)
 
 
 ### Non-idealities and robustness (scenario 4) ###
@@ -153,7 +160,9 @@ In this part, we will explore some of the non-idealities and robustness of a con
 
 2. Edit `AltitudeControl()` to add basic integral control to help with the different-mass vehicle.
 
-3. Tune the integral control, and other control parameters until all the quads successfully move properly.
+3. Tune the integral control, and other control parameters until all the quads successfully move properly.  Your drones' motion should look like this:
+
+![Scenario 4](animations/scenario4.gif)
 
 
 ### Tracking trajectories ###
@@ -173,6 +182,10 @@ You will notice that initially these two trajectories are the same. Let's work o
 
 2. Generate a new `FigureEightFF.txt` that has velocity terms
 Did the velocity-specified trajectory make a difference? Why?
+
+With the two different trajectories, your drones' motions should look like this:
+
+![Scenario 5](animations/scenario5.gif)
 
 
 ### Extra Challenge 2 (Optional) ###
