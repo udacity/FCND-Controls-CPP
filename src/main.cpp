@@ -72,8 +72,6 @@ int main(int argcp, char **argv)
   return 0;
 }
 
-
-
 void LoadScenario(string scenarioFile)
 {
   FILE *f = fopen("../config/LastScenario.txt","w");
@@ -112,9 +110,14 @@ void LoadScenario(string scenarioFile)
   ResetSimulation();
 }
 
+int _simCount = 0;
+
 void ResetSimulation()
 {
+  _simCount++;
   ParamsHandle config = SimpleConfig::GetInstance();
+
+  printf("Simulation #%d (%s)\n", _simCount, _scenarioFile.c_str());
 
   randomNumCarry = -1;
 

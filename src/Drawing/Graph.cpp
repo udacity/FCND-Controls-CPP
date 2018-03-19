@@ -6,6 +6,7 @@
 #include "DataSource.h"
 #include "ColorUtils.h"
 #include "Drawing/AbsThreshold.h"
+#include "Drawing/WindowThreshold.h"
 
 using namespace SLR;
 
@@ -30,6 +31,10 @@ void Graph::AddItem(string path)
   {
     AddAbsThreshold(path.substr(12));
   }
+  else if (path.find("WindowThreshold(") != string::npos)
+  {
+    AddWindowThreshold(path.substr(15));
+  }
   else
   {
     AddSeries(path);
@@ -41,7 +46,7 @@ void Graph::AddAbsThreshold(string path)
   path = SLR::Trim(path);
   if (path.length() < 4 || path[0] != '(' || path[path.length() - 1] != ')')
   {
-    SLR_WARNING1("Malformed AddThreshold command (%s)", path.c_str());
+    SLR_WARNING1("Malformed AbsThreshold command (%s)", path.c_str());
     return;
   }
   path = path.substr(1, path.length() - 2);
@@ -50,11 +55,34 @@ void Graph::AddAbsThreshold(string path)
 
   if (args.size()!=3 || args[0]=="" || args[1]=="" || args[2]=="")
   {
-    SLR_WARNING1("Malformed AddThreshold command (%s)", path.c_str());
+    SLR_WARNING1("Malformed AbsThreshold command (%s)", path.c_str());
     return;
   }
-  
-  _absThreshold.reset(new AbsThreshold(args[0], (float)atof(args[1].c_str()), (float)atof(args[2].c_str())));
+
+  shared_ptr<AbsThreshold> thr(new AbsThreshold(args[0], (float)atof(args[1].c_str()), (float)atof(args[2].c_str())));
+  _analyzers.push_back(thr);
+}
+
+void Graph::AddWindowThreshold(string path)
+{
+  path = SLR::Trim(path);
+  if (path.length() < 4 || path[0] != '(' || path[path.length() - 1] != ')')
+  {
+    SLR_WARNING1("Malformed WindowThreshold command (%s)", path.c_str());
+    return;
+  }
+  path = path.substr(1, path.length() - 2);
+
+  vector<string> args = SLR::Split(path, ',');
+
+  if (args.size() != 3 || args[0] == "" || args[1] == "" || args[2] == "")
+  {
+    SLR_WARNING1("Malformed WindowThreshold command (%s)", path.c_str());
+    return;
+  }
+
+  shared_ptr<WindowThreshold> thr(new WindowThreshold(args[0], (float)atof(args[1].c_str()), (float)atof(args[2].c_str())));
+  _analyzers.push_back(thr);
 }
 
 void Graph::AddSeries(string path, bool autoColor, V3F color)
@@ -100,7 +128,7 @@ bool Graph::IsSeriesPlotted(string path)
 void Graph::RemoveAllElements()
 {
   _series.clear();
-  _absThreshold.reset();
+  _analyzers.clear();
 }
 
 void Graph::Reset()
@@ -139,9 +167,9 @@ void Graph::Reset()
 
 void Graph::Clear()
 {
-  if (_absThreshold)
+  for (unsigned i = 0; i < _analyzers.size(); i++)
   {
-    _absThreshold->Reset();
+    _analyzers[i]->Reset();
   }
 
   if (_series.empty())
@@ -171,9 +199,9 @@ void Graph::Update(double time, std::vector<shared_ptr<DataSource> >& sources)
     } 
   }
 
-  if (_absThreshold)
+  for (unsigned i = 0; i < _analyzers.size(); i++)
   {
-    _absThreshold->Update(time,sources);
+    _analyzers[i]->Update(time,sources);
   }
 }
 
@@ -330,9 +358,10 @@ void Graph::Draw()
 
   glEnd(); // GL_LINES
 
-  if (_absThreshold)
+
+  for (unsigned i = 0; i < _analyzers.size(); i++)
   {
-    _absThreshold->Draw(lowX, highX, lowY, highY);
+    _analyzers[i]->Draw(lowX, highX, lowY, highY);
   }
 
   for (unsigned int i = 0; i < _series.size(); i++)
