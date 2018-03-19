@@ -21,6 +21,7 @@ maxMotorThrust = 4.5
 # Position control gains
 kpPosXY = 1
 kpPosZ = 1
+KiPosZ = 20
 
 # Velocity control gains
 kpVelXY = 4

@@ -28,7 +28,7 @@ public:
   // returns a desired roll and pitch rate 
   V3F RollPitchControl(V3F accelCmd, Quaternion<float> attitude, float collThrustCmd);
 
-  float AltitudeControl(float posZCmd, float velZCmd, float posZ, float velZ, Quaternion<float> attitude, float accelZCmd);
+  float AltitudeControl(float posZCmd, float velZCmd, float posZ, float velZ, Quaternion<float> attitude, float accelZCmd, float dt);
 
   // -------------- PARAMETERS --------------
 
@@ -36,6 +36,7 @@ public:
   float kpPosXY, kpPosZ;
   float kpVelXY, kpVelZ;
   float kpBank, kpYaw;
+  float KiPosZ;
   V3F kpPQR;
   
   // limits & saturations
@@ -44,4 +45,7 @@ public:
   float maxAccelXY;
   float maxTiltAngle;
   float minMotorThrust, maxMotorThrust;
+
+  // integrator
+  float integratedAltitudeError;
 };
