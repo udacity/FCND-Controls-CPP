@@ -16,6 +16,7 @@ void QuadControl::Init()
 {
   BaseController::Init();
 
+  // variables needed for integral control
   integratedAltitudeError = 0;
     
 #ifndef __PX4_NUTTX
@@ -144,7 +145,7 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
   //   posZCmd, velZCmd: desired vertical position and velocity in NED [m]
   //   posZ, velZ: current vertical position and velocity in NED [m]
   //   accelZCmd: feed-forward vertical acceleration in NED [m/s2]
-  //   dt: the time step between measurements [seconds]
+  //   dt: the time step of the measurements [seconds]
   // OUTPUT:
   //   return a collective thrust command in [N]
 

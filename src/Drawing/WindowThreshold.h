@@ -6,21 +6,33 @@
 
 #include "BaseAnalyzer.h"
 
-class AbsThreshold : public BaseAnalyzer
+class WindowThreshold : public BaseAnalyzer
 {
 public:
-  AbsThreshold(string var, float thresh, float quietTime)
+  WindowThreshold(string var, float thresh, float minWindow)
   {
     _var = var;
     _thresh = thresh;
-    _quietTime = quietTime;
+    _minWindow = minWindow;
+    _lastTime = 0;
     Reset();
   }
 
   void Reset()
   {
+    if (_lastTime != 0)
+    {
+      if (_active)
+      {
+        printf("PASS: ABS(%s) was less than %lf for at least %lf seconds\n", _var.c_str(), _thresh, _minWindow);
+      }
+      else
+      {
+        printf("FAIL: ABS(%s) was less than %lf for %lf seconds, which was less than %lf seconds\n", _var.c_str(), _thresh, _lastTime- _lastTimeAboveThresh, _minWindow);
+      }
+    }
     _lastTimeAboveThresh = numeric_limits<float>::infinity();
-    _triggered = false;
+    _active = false;
   }
 
   void Update(double time, std::vector<shared_ptr<DataSource> >& sources)
@@ -38,7 +50,8 @@ public:
 
   void OnNewData(float time, float meas)
   {
-    if (_triggered)
+    _lastTime = time;
+    if (_active)
     {
       return;
     }
@@ -53,9 +66,9 @@ public:
       _lastTimeAboveThresh = time;
     }
 
-    if ((time - _lastTimeAboveThresh) > _quietTime)
+    if ((time - _lastTimeAboveThresh) > _minWindow)
     {
-      _triggered = true;
+      _active = true;
     }
   }
 
@@ -86,26 +99,40 @@ public:
       return;
     }
 
-    if (_triggered)
+    if (_active)
     {
       glColor3f(0, 1, 0);
+      glBegin(GL_LINE_STRIP);
+      glVertex2f(_lastTimeAboveThresh, CONSTRAIN(_thresh,minY,maxY));
+      glVertex2f(_lastTime, CONSTRAIN(_thresh, minY, maxY));
+      glVertex2f(_lastTime, CONSTRAIN(-_thresh, minY, maxY));
+      glVertex2f(_lastTimeAboveThresh, CONSTRAIN(-_thresh, minY, maxY));
+      glVertex2f(_lastTimeAboveThresh, CONSTRAIN(_thresh, minY, maxY));
+      glEnd();
     }
     else
     {
-      glColor3f(.2f, .4f, .2f);
+      glColor3f(.7f, .1f, .1f);
+      if (_thresh > minY && _thresh < maxY)
+      {
+        glBegin(GL_LINES);
+        glVertex2f(minX, _thresh);
+        glVertex2f(maxX, _thresh);
+        glEnd();
+      }
+      if (-_thresh > minY && -_thresh < maxY)
+      {
+        glBegin(GL_LINES);
+        glVertex2f(minX, -_thresh);
+        glVertex2f(maxX, -_thresh);
+        glEnd();
+      }
     }
-    glBegin(GL_LINES);
-    glVertex2f(_lastTimeAboveThresh, minY);
-    glVertex2f(_lastTimeAboveThresh, maxY);
-    glEnd();
-
-    char buf[100];
-    sprintf_s(buf, 100, "t_set = %.3lf", _lastTimeAboveThresh);
-    DrawStrokeText(buf, _lastTimeAboveThresh + (maxX - minX)*.05f , minY + (maxY - minY) / 2.f, 0, 1.2f, (maxX - minX) / 2.f, (maxY - minY) / 2.f *2.f);
   }
 
-  bool _triggered;
+  bool _active;
   string _var;
   float _lastTimeAboveThresh;
-  float _thresh, _quietTime;
+  float _thresh, _minWindow;
+  float _lastTime;
 };
