@@ -27,9 +27,9 @@ Commands.2=AddGraph1.AbsThreshold(Quad1.Pos.X,0.05,0.5)
 Commands.3=AddGraph1.Quad2.Pos.X
 Commands.4=AddGraph2.Quad1.Yaw
 Commands.5=AddGraph2.Quad2.Yaw
-Commands.6=AddGraph1.WindowThreshold(Quad1.Pos.X,0.1,1)
-Commands.7=AddGraph1.WindowThreshold(Quad2.Pos.X,0.1,1)
-Commands.8=AddGraph2.WindowThreshold(Quad2.Yaw,0.1,1)
+Commands.6=AddGraph1.WindowThreshold(Quad1.Pos.X,0.1,1.25)
+Commands.7=AddGraph1.WindowThreshold(Quad2.Pos.X,0.1,1.25)
+Commands.8=AddGraph2.WindowThreshold(Quad2.Yaw,0.1,1.0)
 
 INCLUDE QuadControlParams.txt
 INCLUDE Simulation.txt
