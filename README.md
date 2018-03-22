@@ -7,11 +7,12 @@ For easy navigation throughout this document, here is an outline:
  - [Development environment setup](#development-environment-setup)
  - [Simulator walkthrough](#simulator-walkthrough)
  - [The tasks](#the-tasks)
+ - [Evaluation](#evaluation)
 
 
 ## Development Environment Setup ##
 
-Regardless of your development platform, the first step is to download or clone the [simulator repository]() (TODO: add link).
+Regardless of your development platform, the first step is to download or clone this repository.
 
 Once you have the code for the simulator, you will need to install the necessary compiler and IDE necessary for running the simulator.
 
@@ -78,6 +79,19 @@ Due to deterministic timing and careful control over how the pseudo-random numbe
 Vehicles are created and graphs are reset whenever a scenario is loaded. When a scenario is reset (due to an end condition such as time or user pressing the ‘R’ key), the config files are all re-read and state of the simulation/vehicles/graphs is reset -- however the number/name of vehicles and displayed graphs are left untouched.
 
 When the simulation is running, you can use the arrow keys on your keyboard to impact forces on your drone to see how your controller reacts to outside forces being applied.
+
+#### Keyboard / Mouse Controls ####
+
+There are a handful of keyboard / mouse commands to help with the simulator itself, including applying external forces on your drone to see how your controllers reacts!
+
+ - Left drag - rotate
+ - X + left drag - pan
+ - Z + left drag - zoom
+ - arrow keys - apply external force
+ - C - clear all graphs
+ - R - reset simulation
+ - Space - pause simulation
+
 
 
 
@@ -203,3 +217,32 @@ For flying a trajectory, is there a way to provide even more information for eve
 
 How about trying to fly this trajectory as quickly as possible (but within following threshold)!
 
+
+## Evaluation ##
+
+To assist with tuning of your controller, the simulator contains real time performance evaluation.  We have defined a set of performance metrics for each of the scenarios that your controllers must meet for a successful submission.
+
+There are two ways to view the output of the evaluation:
+
+ - in the command line, at the end of each simulation loop, a **PASS** or a **FAIL** for each metric being evaluated in that simulation
+ - on the plots, once your quad meets the metrics, you will see a green box appear on the plot notifying you of a **PASS**
+
+
+### Performance Metrics ###
+
+The specific performance metrics are as follows:
+
+ - scenario 2
+   - roll should less than 0.025 radian of nominal for 0.75 seconds (3/4 of the duration of the loop)
+   - roll rate should less than 2.5 radian/sec for 0.75 seconds
+
+ - scenario 3
+   - X position of both drones should be within 0.1 meters of the target for at least 1.25 seconds
+   - Quad2 yaw should be within 0.1 of the target for at least 1 second
+
+
+ - scenario 4
+   - position error for all 3 quads should be less than 0.1 meters for at least 1.5 seconds
+
+ - scenario 5
+   - position error of the quad should be less than 0.25 meters for at least 3 seconds
