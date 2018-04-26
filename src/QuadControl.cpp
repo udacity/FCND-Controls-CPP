@@ -183,7 +183,6 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   //   return a V3F with desired horizontal accelerations. 
   //     the Z component should be 0
   // HINTS: 
-  //  - use fmodf(foo,b) to constrain float foo to range [0,b]
   //  - use the gain parameters kpPosXY and kpVelXY
   //  - make sure you cap the horizontal velocity and acceleration
   //    to maxSpeedXY and maxAccelXY
@@ -212,7 +211,7 @@ float QuadControl::YawControl(float yawCmd, float yaw)
   // OUTPUT:
   //   return a desired yaw rate [rad/s]
   // HINTS: 
-  //  - use fmodf(foo,b) to constrain float foo to range [0,b]
+  //  - use fmodf(foo,b) to unwrap a radian angle measure float foo to range [0,b]. 
   //  - use the yaw control gain parameter kpYaw
 
   float yawRateCmd=0;
