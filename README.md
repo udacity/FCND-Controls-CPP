@@ -246,3 +246,7 @@ The specific performance metrics are as follows:
 
  - scenario 5
    - position error of the quad should be less than 0.25 meters for at least 3 seconds
+
+## Authors ##
+
+Thanks to Fotokite for the initial development of the project code and simulator.
