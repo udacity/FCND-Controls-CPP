@@ -45,9 +45,10 @@ For Mac OS X, the recommended IDE is XCode, which you can get via the App Store.
 For Linux, the recommended IDE is QtCreator.
 
 1. Download and install QtCreator.
-2. Open the project from the `<simulator>/project` directory.
-3. Compile and run the project.  You should see a single quadcopter, falling down.
+2. Open the `.pro` file from the `<simulator>/project` directory.
+3. Compile and run the project (using the tab `Build` select the `qmake` option.  You should see a single quadcopter, falling down.
 
+**NOTE:** You may need to install the GLUT libs using `sudo apt-get install freeglut3-dev`
 
 ## Simulator Walkthrough ##
 
