@@ -117,7 +117,11 @@ With the proper mass, your simulation should look a little like this:
 
 ## The Tasks ##
 
-For this project, you will be rebuilding your python controller into C++.  Much like in python, you will be implementing this controller in several steps.
+For this project, you will be rebuilding your python controller into C++.  Much like in python, you will be implementing and tuning this controller in several steps.
+
+#### A Note on Parameter Tuning
+
+You can find the vehicle's control parameters in a file called `QuadControlParams.txt`. The default values for these parameters are all too small by a factor of somewhere between about 2X and 4X. So if a parameter has a starting value of 12, it will likely have a value somewhere between 24 and 48 once it's properly tuned.
 
 ### Body rate and roll/pitch control (scenario 2) ###
 
