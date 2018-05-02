@@ -69,8 +69,11 @@ void SimpleConfig::ReadFile(const string& filename, int depth)
   fclose(f);
 }
 
-void SimpleConfig::ParseLine(const string& filename, const string& s, int lineNum, string& curNamespace, int depth)
+void SimpleConfig::ParseLine(const string& filename, const string& line, int lineNum, string& curNamespace, int depth)
 {
+  // primitive trailing removal
+  string s = SLR::LeftOf(line, '#');
+
   std::size_t firstNonWS = s.find_first_not_of("\n\t ");
 
   // is it a comment?
