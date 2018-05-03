@@ -136,17 +136,17 @@ To accomplish this, you will:
 
  - implement the code in the function `GenerateMotorCommands()`
  - implement the code in the function `BodyRateControl()`
- - Tune `Kp_pqr` in `QuadControlParams.txt` to get the vehicle to stop spinning quickly but not overshoot
+ - Tune `kpPQR` in `QuadControlParams.txt` to get the vehicle to stop spinning quickly but not overshoot
 
 If successful, you should see the rotation of the vehicle about roll (omega.x) get controlled to 0 while other rates remain zero.  Note that the vehicle will keep flying off quite quickly, since the angle is not yet being controlled back to 0.  Also note that some overshoot will happen due to motor dynamics!.
 
-If you come back to this step after the next step, you can try tuning just the body rate omega (without the outside angle controller) by setting `QuadControlParams.Kp_bank = 0`.
+If you come back to this step after the next step, you can try tuning just the body rate omega (without the outside angle controller) by setting `QuadControlParams.kpBank = 0`.
 
 2. Implement roll / pitch control
 We won't be worrying about yaw just yet.
 
  - implement the code in the function `RollPitchControl()`
- - Tune `Kp_bank` in `QuadControlParams.txt` to minimize settling time but avoid too much overshoot
+ - Tune `kpBank` in `QuadControlParams.txt` to minimize settling time but avoid too much overshoot
 
 If successful you should now see the quad level itself (as shown below), though it’ll still be flying away slowly since we’re not controlling velocity/position!  You should also see the vehicle angle (Roll) get controlled to 0.
 
@@ -161,13 +161,13 @@ Next, you will implement the position, altitude and yaw control for your quad.  
 
  - implement the code in the function `LateralPositionControl()`
  - implement the code in the function `AltitudeControl()`
- - tune parameters `Kp_pos_z` and `Kp_vel_z`
- - tune parameters `Kp_vel_xy` and `Kp_vel_z`
+ - tune parameters `kpPosZ` and `kpPosZ`
+ - tune parameters `kpVelXY` and `kpVelZ`
 
 If successful, the quads should be going to their destination points and tracking error should be going down (as shown below). However, one quad remains rotated in yaw.
 
  - implement the code in the function `YawControl()`
- - tune parameters `Kp_yaw` and the 3rd (z) component of `Kp_pqr`
+ - tune parameters `kpYaw` and the 3rd (z) component of `kpPQR`
 
 Tune position control for settling time. Don’t try to tune yaw control too tightly, as yaw control requires a lot of control authority from a quadcopter and can really affect other degrees of freedom.  This is why you often see quadcopters with tilted motors, better yaw authority!
 
@@ -175,6 +175,7 @@ Tune position control for settling time. Don’t try to tune yaw control too tig
 <img src="animations/scenario3.gif" width="500"/>
 </p>
 
+**Hint:**  For a second order system, such as the one for this quadcopter, the velocity gain (`kpVelXY` and `kpVelZ`) should be at least ~3-4 times greater than the respective position gain (`kpPosXY` and `kpVelZ`).
 
 ### Non-idealities and robustness (scenario 4) ###
 
