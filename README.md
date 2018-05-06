@@ -25,7 +25,11 @@ For Windows, the recommended IDE is Visual Studio.  Here are the steps required 
 1. Download and install [Visual Studio](https://www.visualstudio.com/vs/community/)
 2. Select *Open Project / Solution* and open `<simulator>/project/Simulator.sln`
 3. From the *Project* menu, select the *Retarget solution* option and select the Windows SDK that is installed on your computer (this should have been installed when installing Visual Studio or upon opening of the project).
-4. To compile and run the project / simulator, simply click on the green play button at the top of the screen.  When you run the simulator, you should see a single quadcopter, falling down.
+4. Make sure platform matches the flavor of Windows you are using (x86 or x64). The platform is visible next to the green play button in the Visual Studio toolbar:
+
+![x64](x64.png)
+
+5. To compile and run the project / simulator, simply click on the green play button at the top of the screen.  When you run the simulator, you should see a single quadcopter, falling down.
 
 
 ### OS X ###
@@ -98,7 +102,7 @@ There are a handful of keyboard / mouse commands to help with the simulator itse
 
 ### Testing it Out ###
 
-When you run the simulator, you'll notice your quad is falling straight down.  This is due to the fact that the thrusts are simply being set to: 
+When you run the simulator, you'll notice your quad is falling straight down.  This is due to the fact that the thrusts are simply being set to:
 
 ```
 QuadControlParams.Mass * 9.81 / 4
