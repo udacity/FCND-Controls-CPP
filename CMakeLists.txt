@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.5)
 project(CPPSim)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -30,8 +30,13 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
-find_package(GLU REQUIRED)
+# /System/Library/Frameworks/GLUT.framework
+find_package(GLUT REQUIRED)
+include_directories(${GLUT_INCLUDE_DIR})
+# /System/Library/Frameworks/OpenGL.framework
 find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIR})
+
 #find_package(GL REQUIRED)
 #find_package(pthread REQUIRED)
 
@@ -44,9 +49,7 @@ target_link_libraries(CPPSim
         Qt5::Core
         Qt5::Network
         Qt5::Widgets
-        glut
-        GLU
-        GL
+        ${GLUT_LIBRARIES}
+        ${OPENGL_LIBRARIES}
         pthread
         )
-
