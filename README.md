@@ -54,6 +54,38 @@ For Linux, the recommended IDE is QtCreator.
 
 **NOTE:** You may need to install the GLUT libs using `sudo apt-get install freeglut3-dev`
 
+
+### Advanced Versions ###
+
+These are some more advanced setup instructions for those of you who prefer to use a different IDE or build the code manually.  Note that these instructions do assume a certain level of familiarity with the approach and are not as detailed as the instructions above.
+
+#### CLion IDE ####
+
+For those of you who are using the CLion IDE for developement on your platform, we have included the necessary `CMakeLists.txt` file needed to build the simulation.
+
+#### CMake on Linux ####
+
+For those of you interested in doing manual builds using `cmake`, we have provided a `CMakeLists.txt` file with the necessary configuration.
+
+**NOTE: This has only been tested on Ubuntu 16.04, however, these instructions should work for most linux versions.  Also note that these instructions assume knowledge of `cmake` and the required `cmake` dependencies are installed.**
+
+1. Create a new directory for the build files:
+
+```sh
+cd FCND-Controls-CPP
+mkdir build
+```
+
+2. Navigate to the build directory and run `cmake` and then compile and build the code:
+
+```sh
+cd build
+cmake ..
+make
+```
+
+3. You should now be able to run the simulator with `./CPPSim` and you should see a single quadcopter, falling down.
+
 ## Simulator Walkthrough ##
 
 Now that you have all the code on your computer and the simulator running, let's walk through some of the elements of the code and the simulator itself.
