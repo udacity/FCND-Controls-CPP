@@ -9,7 +9,7 @@
 UseIdealEstimator=1
 
 # Physical properties
-Mass = 0.4
+Mass = 0.49
 L = 0.17
 Ixx = 0.0023
 Iyy = 0.0023
@@ -32,7 +32,7 @@ kpBank = 5
 kpYaw = 1
 
 # Angle rate gains
-kpPQR = 23, 23, 5
+kpPQR = 86, 1, 1
 
 # limits
 maxAscentRate = 5

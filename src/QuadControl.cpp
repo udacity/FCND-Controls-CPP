@@ -69,11 +69,32 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
   // You'll need the arm length parameter L, and the drag/thrust ratio kappa
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	// ref: https://www.overleaf.com/read/thzntmhcqkkp#/63267348/
+	// and Motor Control .pdf from JID
 
-  cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
-  cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
-  cmd.desiredThrustsN[2] = mass * 9.81f / 4.f; // rear left
-  cmd.desiredThrustsN[3] = mass * 9.81f / 4.f; // rear right
+	ParamsHandle config = SimpleConfig::GetInstance();
+	float L = config->Get(_config + ".L", 0);
+	float l = L / sqrt(2);
+	float kappa = config->Get(_config + ".kappa", 0);
+
+	// F_c = F_1+F_2+F_3+F_4
+	// tau_x = (F_1+F_3-F_2-F_4) L
+	// tau_y = (F_1 + F_2 - F_3 - F_4) L
+
+	// Z axis rotation would be the net effect of clockwise rotating props subtracted from counterclockwise
+	// -F1 + F2 + F3 - F4
+	// Also, tau_z = tau_1 + tau_2 + tau_3 + tau_4
+	// Using kappa, we can find out Thrust from Moment. moment = kappa * thrust
+	
+	float a = collThrustCmd;
+	float b = momentCmd.x / l;
+	float c = momentCmd.y / l;
+	float d = momentCmd.z / kappa;
+
+	cmd.desiredThrustsN[0] = 1 / 4.0 * (a + b + c + d);
+	cmd.desiredThrustsN[1] = 1 / 4.0 * (a - b + c - d);
+	cmd.desiredThrustsN[2] = 1 / 4.0 * (a + b - c - d);
+	cmd.desiredThrustsN[3] = 1 / 4.0 * (a - b - c + d);
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
@@ -97,10 +118,22 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
   V3F momentCmd;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	ParamsHandle config = SimpleConfig::GetInstance();
 
-  
+	float Ixx = config->Get(_config + ".Ixx", 0);
+	float Iyy = config->Get(_config + ".Iyy", 0);
+	float Izz = config->Get(_config + ".Izz", 0);
+	kpPQR = config->Get(_config + ".kpPQR", 0);
 
-  /////////////////////////////// END STUDENT CODE ////////////////////////////
+	V3F error = pqrCmd - pqr;
+	V3F p_term = kpPQR * error;
+
+	// moment = I * a
+	V3F I(Ixx, Iyy, Izz);
+	//momentCmd = I * p_term;
+	momentCmd = p_term;
+
+	/////////////////////////////// END STUDENT CODE ////////////////////////////
 
   return momentCmd;
 }
