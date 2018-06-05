@@ -70,6 +70,10 @@ void GraphManager::Clear()
   graph2->Clear();
 }
 
+bool GraphManager::WasGood() {
+  return graph1->WasGood(1);
+}
+
 void GraphManager::UpdateData(double time)
 {
   if (graph1)

@@ -12,6 +12,10 @@
 #include <systemlib/param/param.h>
 #endif
 
+void QuadControl::IncKpPqr() {
+  kpPQR[0] += 0.1;
+}
+
 void QuadControl::Init()
 {
   BaseController::Init();
@@ -78,6 +82,7 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 	float kappa = config->Get(_config + ".kappa", 0);
 
 	// F_c = F_1+F_2+F_3+F_4
+  // M = F * L
 	// tau_x = (F_1+F_3-F_2-F_4) L
 	// tau_y = (F_1 + F_2 - F_3 - F_4) L
 
@@ -123,15 +128,13 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
 	float Ixx = config->Get(_config + ".Ixx", 0);
 	float Iyy = config->Get(_config + ".Iyy", 0);
 	float Izz = config->Get(_config + ".Izz", 0);
-	kpPQR = config->Get(_config + ".kpPQR", 0);
 
 	V3F error = pqrCmd - pqr;
 	V3F p_term = kpPQR * error;
 
 	// moment = I * a
 	V3F I(Ixx, Iyy, Izz);
-	//momentCmd = I * p_term;
-	momentCmd = p_term;
+	momentCmd = I * p_term;
 
 	/////////////////////////////// END STUDENT CODE ////////////////////////////
 
