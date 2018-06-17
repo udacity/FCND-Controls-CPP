@@ -89,24 +89,21 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 	// Mz = M1 - M2 - M3 - M4
 	//    where M1, M2 etc. are moments influenced by each motor
 	// Using kappa, we can find out Thrust from Moment. moment = kappa * thrust
-
-	// Z axis rotation would be the net effect of clockwise rotating props subtracted from counterclockwise
-	// -F1 + F2 + F3 - F4
-	// Also, tau_z = tau_1 + tau_2 + tau_3 + tau_4
 	
 	float a = collThrustCmd;
 	float b = momentCmd.x / l;
 	float c = momentCmd.y / l;
 	float d = momentCmd.z / kappa;
 
+	// use simultaneous equation solver to find the equation for
+	// each individual motor thrust
 	cmd.desiredThrustsN[0] = 1 / 4.0 * (a + b + c + d);
 	cmd.desiredThrustsN[1] = 1 / 4.0 * (a - b + c - d);
 	cmd.desiredThrustsN[2] = 1 / 4.0 * (a + b - c - d);
 	cmd.desiredThrustsN[3] = 1 / 4.0 * (a - b - c + d);
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
-
-  return cmd;
+	return cmd;
 }
 
 V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
