@@ -9,7 +9,7 @@
 UseIdealEstimator=1
 
 # Physical properties
-Mass = 0.49
+Mass = 0.51
 L = 0.17
 Ixx = 0.0023
 Iyy = 0.0023
@@ -28,7 +28,7 @@ kpVelXY = 4
 kpVelZ = 4
 
 # Angle control gains
-kpBank = 5
+kpBank = 16
 kpYaw = 1
 
 # Angle rate gains

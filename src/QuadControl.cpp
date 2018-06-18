@@ -164,8 +164,29 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
   Mat3x3F R = attitude.RotationMatrix_IwrtB();
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	ParamsHandle config = SimpleConfig::GetInstance();
+	float mass = config->Get(_config + ".Mass", 0);
+	float kpBank= config->Get(_config + ".kpBank", 0);
 
+	float collAccel = collThrustCmd / mass;
+	/*float target_R13 = accelCmd.x / collAccel;
+	float target_R23 = accelCmd.y / collAccel;
+*/
+	// reference 4.2 of Lesson 4 - 3D Drone Full Notebook exercise
+	float bx_c = accelCmd.x / collAccel;
+	float by_c = accelCmd.y / collAccel;
 
+	float bx_a = R(0, 2); 
+	float by_a = R(1, 2);
+
+	float bx_c_dot = kpBank * (bx_a - bx_c);
+	float by_c_dot = kpBank * (by_a - by_c);
+
+	float r33 = 1 / R(2, 2);
+
+	pqrCmd.x = r33 * (-R(1, 0) * bx_c_dot + R(0, 0) * by_c_dot);
+	pqrCmd.y = r33 * (-R(1, 1) * bx_c_dot + R(0, 1) * by_c_dot);
+	pqrCmd.z = 0.0;
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
