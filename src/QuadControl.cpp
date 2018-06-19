@@ -217,8 +217,32 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
   float thrust = 0;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	ParamsHandle config = SimpleConfig::GetInstance();
+	float kpPosZ = config->Get(_config + ".kpPosZ", 0);
+	float kpVelZ = config->Get(_config + ".kpVelZ", 0);
 
+	float maxAscentRate = config->Get(_config + ".maxAscentRate", 0);
+	float maxDescentRate = config->Get(_config + ".maxDescentRate", 0);
+	float mass = config->Get(_config + ".Mass", 0);
 
+	float error_z = (posZCmd - posZ) * dt;
+	float error_z_dot = (velZCmd - velZ) * dt;
+
+	// No idea why are we adding velZCmd here??????
+	float h_dot_cmd = kpPosZ * error_z + velZCmd * dt;
+
+	if (error_z < 0 && h_dot_cmd > maxAscentRate)
+		h_dot_cmd = maxAscentRate;
+	else if (error_z > 0 && h_dot_cmd > maxDescentRate)
+		h_dot_cmd = maxDescentRate;
+		
+	float error_z_dotdot = (h_dot_cmd - velZ) * dt;
+	float acceleration_cmd = accelZCmd + kpVelZ * error_z_dotdot;
+
+	float R33 = R(2, 2);
+	thrust = mass * acceleration_cmd / R33;
+
+	assert(thrust >= 0);
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
   
@@ -255,8 +279,30 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   V3F accelCmd = accelCmdFF;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	ParamsHandle config = SimpleConfig::GetInstance();
+	float kpPosXY = config->Get(_config + ".kpPosXY", 0);
+	float kpVelXY = config->Get(_config + ".kpVelXY", 0);
 
-  
+	float maxSpeedXY = config->Get(_config + ".maxSpeedXY", 0);
+	float maxAccelXY = config->Get(_config + ".maxAccelXY", 0);
+
+	V3F error_pos_xy = posCmd - pos;
+	V3F error_vel_xy = velCmd - vel;		// this tells us the acceleration
+
+	float pos_norm = error_pos_xy.magXY();
+	if (pos_norm > maxSpeedXY) {
+		error_pos_xy = error_pos_xy * maxSpeedXY / pos_norm;
+	}
+
+	float vel_norm = error_vel_xy.magXY();
+	if (vel_norm > maxAccelXY) {
+		error_vel_xy = error_vel_xy * maxAccelXY / vel_norm;
+	}
+
+	V3F term1 = kpPosXY * error_pos_xy;
+	V3F term2 = kpVelXY * error_vel_xy;
+
+	accelCmd += term1 + term2;
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
