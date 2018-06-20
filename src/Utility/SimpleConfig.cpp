@@ -111,6 +111,7 @@ void SimpleConfig::ParseLine(const string& filename, const string& line, int lin
       curNamespace = Trim(LeftOf(curNamespace, ':'));
       CopyNamespaceParams(baseNamespace, curNamespace);
     }
+
     return;
   }
 
@@ -137,11 +138,15 @@ void SimpleConfig::ParseLine(const string& filename, const string& line, int lin
 
   if (curNamespace != "")
   {
+    auto val = curNamespace + "." + leftPart;
     _params[curNamespace + "." + leftPart] = rightPart;
+
+//    printf("%s Reading: %s = %s (%s)\n", filename.c_str(), val.c_str(), rightPart.c_str(), s.c_str());
   }
   else
   {
     _params[leftPart] = rightPart;
+//    printf("Reading: %s = %s\n", leftPart.c_str(), rightPart.c_str());
   }
 }
 

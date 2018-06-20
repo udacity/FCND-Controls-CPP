@@ -12,9 +12,9 @@
 #include <systemlib/param/param.h>
 #endif
 
-void QuadControl::IncKpPqr() {
-  kpPQR[0] += 0.1;
-}
+//void QuadControl::IncKpPqr() {
+//  kpPQR[0] += 0.1;
+//}
 
 void QuadControl::Init()
 {
@@ -75,7 +75,8 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	// ref: https://www.overleaf.com/read/thzntmhcqkkp#/63267348/
 	// and Motor Control.pdf from JID
-
+  // https://www.wolframalpha.com/input/?i=%7B%7B1,1,1,1%7D,%7B1,-1,1,-1%7D,%7B1,1,-1,-1%7D,%7B-1,1,1,-1%7D%7D+*+%7BF0,F1,F2,F3%7D+%3D+%7BA,B,C,D%7D
+  
 	ParamsHandle config = SimpleConfig::GetInstance();
 	float L = config->Get(_config + ".L", 0);
 	float l = L / sqrt(2);
@@ -84,9 +85,9 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 	// c = F_1 + F_2 + F_3 + F_4
   
 	// M = F * L
-	// Mx = (F_1 + F_3 - F_2 -F_4) * L
-	// My = (F_1 + F_2 - F_3 - F_4) * L
-	// Mz = M1 - M2 - M3 - M4
+	// Mx = (F_1 - F_2 + F_3 - F_4) * l
+	// My = (F_1 + F_2 - F_3 - F_4) * l
+	// Mz = -M1 + M2 + M3 - M4
 	//    where M1, M2 etc. are moments influenced by each motor
 	// Using kappa, we can find out Thrust from Moment. moment = kappa * thrust
 	
@@ -97,10 +98,15 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 
 	// use simultaneous equation solver to find the equation for
 	// each individual motor thrust
-	cmd.desiredThrustsN[0] = 1 / 4.0 * (a + b + c + d);
-	cmd.desiredThrustsN[1] = 1 / 4.0 * (a - b + c - d);
-	cmd.desiredThrustsN[2] = 1 / 4.0 * (a + b - c - d);
-	cmd.desiredThrustsN[3] = 1 / 4.0 * (a - b - c + d);
+  cmd.desiredThrustsN[0] = 0.25 * (a + b + c - d);
+  cmd.desiredThrustsN[1] = 0.25 * (a - b + c + d);
+  cmd.desiredThrustsN[2] = 0.25 * (a + b - c + d);
+  cmd.desiredThrustsN[3] = 0.25 * (a - b - c - d);
+//  cmd.desiredThrustsN[0] = 0.25 * (a + b + c + d);
+//  cmd.desiredThrustsN[1] = 0.25 * (a - b + c - d);
+//  cmd.desiredThrustsN[2] = 0.25 * (a + b - c - d);
+//  cmd.desiredThrustsN[3] = 0.25 * (a - b - c + d);
+
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 	return cmd;
@@ -166,12 +172,9 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	ParamsHandle config = SimpleConfig::GetInstance();
 	float mass = config->Get(_config + ".Mass", 0);
-	float kpBank= config->Get(_config + ".kpBank", 0);
 
-	float collAccel = collThrustCmd / mass;
-	/*float target_R13 = accelCmd.x / collAccel;
-	float target_R23 = accelCmd.y / collAccel;
-*/
+	float collAccel = -collThrustCmd / mass;
+
 	// reference 4.2 of Lesson 4 - 3D Drone Full Notebook exercise
 	float bx_c = accelCmd.x / collAccel;
 	float by_c = accelCmd.y / collAccel;
@@ -179,8 +182,10 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
 	float bx_a = R(0, 2); 
 	float by_a = R(1, 2);
 
-	float bx_c_dot = kpBank * (bx_a - bx_c);
-	float by_c_dot = kpBank * (by_a - by_c);
+//	float bx_c_dot = kpBank * (bx_a - bx_c);
+//	float by_c_dot = kpBank * (by_a - by_c);
+  float bx_c_dot = kpBank * (bx_a - bx_c);
+  float by_c_dot = kpBank * (by_a - by_c);
 
 	float r33 = 1 / R(2, 2);
 
@@ -218,39 +223,17 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	ParamsHandle config = SimpleConfig::GetInstance();
-	float kpPosZ = config->Get(_config + ".kpPosZ", 0);
-	float kpVelZ = config->Get(_config + ".kpVelZ", 0);
-	float maxAscentRate = config->Get(_config + ".maxAscentRate", 0);
-	float maxDescentRate = config->Get(_config + ".maxDescentRate", 0);
-	float maxMotorThrust = config->Get(_config + ".maxMotorThrust", 0.1);
-	float minMotorThrust = config->Get(_config + ".minMotorThrust", 0.1);
 	float mass = config->Get(_config + ".Mass", 0);
 
-	float error_z = (posZCmd - posZ) * dt;
-	float error_z_dot = (velZCmd - velZ) * dt;
+  float hdot_cmd = kpPosZ * (posZCmd - posZ) + velZCmd;
+  hdot_cmd = CONSTRAIN(hdot_cmd, -maxAscentRate, maxDescentRate);
 
-	// No idea why are we adding velZCmd here??????
-	float h_dot_cmd = kpPosZ * error_z + velZCmd * dt;
-
-	if (error_z < 0 && h_dot_cmd > maxAscentRate)
-		h_dot_cmd = maxAscentRate;
-	else if (error_z > 0 && h_dot_cmd > maxDescentRate)
-		h_dot_cmd = maxDescentRate;
-		
-	float error_z_dotdot = (h_dot_cmd - velZ) * dt;
-	float acceleration_cmd = accelZCmd + kpVelZ * error_z_dotdot;
-
-	float R33 = R(2, 2);
-	thrust = mass * -acceleration_cmd / R33;
-
-	if (thrust < minMotorThrust)
-		thrust = 0;
-	else if (thrust > maxMotorThrust)
-		thrust = maxMotorThrust;
+  float accel_cmd = accelZCmd  + kpVelZ * (hdot_cmd - velZ);
+  thrust = mass * (accel_cmd - CONST_GRAVITY) / R(2,2);
+//  thrust = CONSTRAIN(thrust, minMotorThrust, maxMotorThrust);
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
-  
-  return thrust;
+  return -thrust;
 }
 
 // returns a desired acceleration in global frame
@@ -280,33 +263,26 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   // we initialize the returned desired acceleration to the feed-forward value.
   // Make sure to _add_, not simply replace, the result of your controller
   // to this variable
-  V3F accelCmd = accelCmdFF;
+  V3F accelCmd;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-	ParamsHandle config = SimpleConfig::GetInstance();
-	float kpPosXY = config->Get(_config + ".kpPosXY", 0);
-	float kpVelXY = config->Get(_config + ".kpVelXY", 0);
-
-	float maxSpeedXY = config->Get(_config + ".maxSpeedXY", 0);
-	float maxAccelXY = config->Get(_config + ".maxAccelXY", 0);
-
 	V3F error_pos_xy = posCmd - pos;
 	V3F error_vel_xy = velCmd - vel;		// this tells us the acceleration
 
-	float pos_norm = error_pos_xy.magXY();
+  V3F term1 = kpPosXY * error_pos_xy;
+  V3F term2 = kpVelXY * error_vel_xy;
+
+  float pos_norm = term1.magXY();
 	if (pos_norm > maxSpeedXY) {
-		error_pos_xy = error_pos_xy * maxSpeedXY / pos_norm;
+		term1 *= maxSpeedXY / pos_norm;
 	}
 
-	float vel_norm = error_vel_xy.magXY();
+	float vel_norm = term2.magXY();
 	if (vel_norm > maxAccelXY) {
-		error_vel_xy = error_vel_xy * maxAccelXY / vel_norm;
+		term2 *= maxAccelXY / vel_norm;
 	}
 
-	V3F term1 = kpPosXY * error_pos_xy;
-	V3F term2 = kpVelXY * error_vel_xy;
-
-	accelCmd += term1 + term2;
+	accelCmd = accelCmdFF + term1 + term2;
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
@@ -363,5 +339,6 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
 
   V3F desMoment = BodyRateControl(desOmega, estOmega);
 
+//  printf("Coll Thrust: %f, Desired Moment: %f\n", collThrustCmd, desMoment);
   return GenerateMotorCommands(collThrustCmd, desMoment);
 }
