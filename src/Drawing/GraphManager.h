@@ -20,8 +20,6 @@ public:
   void InitPaint();
   void Paint();
 
-  bool WasGood();
-
   void RegisterDataSource(shared_ptr<DataSource> src);
   
   shared_ptr<Graph> graph1, graph2;

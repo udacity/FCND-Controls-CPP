@@ -15,6 +15,7 @@ Ixx = 0.0023
 Iyy = 0.0023
 Izz = 0.0046
 kappa = 0.016
+
 minMotorThrust = .1
 maxMotorThrust = 4.5
 
@@ -22,20 +23,20 @@ maxMotorThrust = 4.5
 #kpPosXY = 1
 #kpPosZ = 1
 
-kpPosXY = 1
-kpPosZ = 2000
-
-kiPosZ = 20
+kpPosXY = 7
+kpPosZ = 7
+kiPosZ = 80
 
 # Velocity control gains
 #kpVelXY = 4
 #kpVelZ = 4
-kpVelXY = 1
-kpVelZ = 5000
+
+kpVelXY = 28
+kpVelZ = 28
 
 # Angle control gains
 kpBank = 16
-kpYaw = 1
+kpYaw = 4
 
 # Angle rate gains
 kpPQR = 83, 1, 1

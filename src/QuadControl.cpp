@@ -74,7 +74,7 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	// ref: https://www.overleaf.com/read/thzntmhcqkkp#/63267348/
-	// and Motor Control .pdf from JID
+	// and Motor Control.pdf from JID
 
 	ParamsHandle config = SimpleConfig::GetInstance();
 	float L = config->Get(_config + ".L", 0);
@@ -220,9 +220,10 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 	ParamsHandle config = SimpleConfig::GetInstance();
 	float kpPosZ = config->Get(_config + ".kpPosZ", 0);
 	float kpVelZ = config->Get(_config + ".kpVelZ", 0);
-
 	float maxAscentRate = config->Get(_config + ".maxAscentRate", 0);
 	float maxDescentRate = config->Get(_config + ".maxDescentRate", 0);
+	float maxMotorThrust = config->Get(_config + ".maxMotorThrust", 0.1);
+	float minMotorThrust = config->Get(_config + ".minMotorThrust", 0.1);
 	float mass = config->Get(_config + ".Mass", 0);
 
 	float error_z = (posZCmd - posZ) * dt;
@@ -240,9 +241,12 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 	float acceleration_cmd = accelZCmd + kpVelZ * error_z_dotdot;
 
 	float R33 = R(2, 2);
-	thrust = mass * acceleration_cmd / R33;
+	thrust = mass * -acceleration_cmd / R33;
 
-	assert(thrust >= 0);
+	if (thrust < minMotorThrust)
+		thrust = 0;
+	else if (thrust > maxMotorThrust)
+		thrust = maxMotorThrust;
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
   
@@ -324,8 +328,18 @@ float QuadControl::YawControl(float yawCmd, float yaw)
 
   float yawRateCmd=0;
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	ParamsHandle config = SimpleConfig::GetInstance();
+	float kpYaw = config->Get(_config + ".kpYaw", 0);
+	
+	yawCmd = fmodf(yawCmd, 2.0 * M_PI);
+	float yaw_error = yawCmd - yaw;
 
-
+	if (yaw_error > M_PI)
+		yaw_error = yaw_error - 2.0 * M_PI;
+	else if (yaw_error < -M_PI)
+		yaw_error = yaw_error + 2.0 * M_PI;
+	
+	yawRateCmd = kpYaw * yaw_error;
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
   return yawRateCmd;

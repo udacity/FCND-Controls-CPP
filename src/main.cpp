@@ -9,7 +9,6 @@
 #include "Utility/StringUtils.h"
 #include "Drawing/GraphManager.h"
 #include "MavlinkNode/MavlinkTranslation.h"
-#include "QuadControl.h"
 
 using SLR::Quaternion;
 using SLR::ToUpper;
@@ -42,8 +41,6 @@ string _scenarioFile="../config/1_Intro.txt";
 
 #include "MavlinkNode/MavlinkNode.h"
 shared_ptr<MavlinkNode> mlNode;
-
-float g_kpPQR = 0;
 
 int main(int argcp, char **argv)
 {
@@ -110,8 +107,6 @@ void LoadScenario(string scenarioFile)
     mlNode.reset(new MavlinkNode());
   }
 
-  g_kpPQR = config->Get("QuadControlParams.kpPQR", V3F()).x;
-
   ResetSimulation();
 }
 
@@ -147,19 +142,7 @@ void OnTimer(int)
   if(receivedResetRequest ==true ||
      (ToUpper(config->Get("Sim.RunMode", "Continuous"))=="REPEAT" && endTime>0 && simulationTime >= endTime))
   {
-    bool good = grapher->WasGood();
-    if (!good)
-      g_kpPQR += 0.01;
-
     ResetSimulation();
-
-    if (!good) {
-      QuadControl *q = dynamic_cast<QuadControl *>(quads[0]->controller.get());
-      if (q)
-        q->kpPQR.x = g_kpPQR;
-
-      printf("No it was not good. Using new kpPQR %.4f\n", q->kpPQR.x);
-    }
   }
   
   visualizer->OnMainTimer();

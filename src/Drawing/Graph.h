@@ -24,8 +24,7 @@ public:
   void AddWindowThreshold(string path);
   bool IsSeriesPlotted(string path);
   void RemoveAllElements();
-  
-  bool WasGood(int counter);
+
 
   struct Series
   {

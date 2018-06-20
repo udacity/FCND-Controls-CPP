@@ -165,12 +165,6 @@ void Graph::Reset()
   }
 }
 
-bool Graph::WasGood(int counter) {
-    WindowThreshold *w = dynamic_cast<WindowThreshold*>(_analyzers[counter].get());
-    if (w)
-        return w->_active;
-}
-
 void Graph::Clear()
 {
   for (unsigned i = 0; i < _analyzers.size(); i++)
