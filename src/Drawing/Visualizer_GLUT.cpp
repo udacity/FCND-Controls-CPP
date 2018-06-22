@@ -497,6 +497,15 @@ void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
     _glDraw->DrawArrow(pos - fr, pos- fr + down* cmd.desiredThrustsN[2] / maxThrust, FalseColorRGB(cmd.desiredThrustsN[2] / maxThrust));		// rear left
     _glDraw->DrawArrow(pos - fl, pos - fl + down* cmd.desiredThrustsN[3] / maxThrust, FalseColorRGB(cmd.desiredThrustsN[3] / maxThrust));	// front right
   }
+
+	// FZ
+	//V3D pos = quad->Position();
+	////V3D fl = quad->Attitude().Rotate_BtoI(V3F(1, 0, 0));
+	//V3F cmd = quad->pqrCmd.norm();
+	//V3D fl = quad->Attitude().Rotate_BtoI(cmd);
+	//_glDraw->DrawArrow(pos, pos + fl, V3D(255,0,0));			// front left
+
+	//printf("%.2f, %.2f, %.2f\n", cmd.x, cmd.y, cmd.z);
 }
 
 void Visualizer_GLUT::VisualizeTrajectory(const Trajectory& traj, bool drawPoints, V3F color, float alpha, V3F pointColor, V3F curPointColor, V3F offset, int style)

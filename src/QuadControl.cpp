@@ -83,11 +83,10 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 	float kappa = config->Get(_config + ".kappa", 0);
 
 	// c = F_1 + F_2 + F_3 + F_4
-  
 	// M = F * L
 	// Mx = (F_1 - F_2 + F_3 - F_4) * l
 	// My = (F_1 + F_2 - F_3 - F_4) * l
-	// Mz = -M1 + M2 + M3 - M4
+	// Mz = M1 - M2 - M3 + M4
 	//    where M1, M2 etc. are moments influenced by each motor
 	// Using kappa, we can find out Thrust from Moment. moment = kappa * thrust
 	
@@ -102,11 +101,12 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
   cmd.desiredThrustsN[1] = 0.25 * (a - b + c + d);
   cmd.desiredThrustsN[2] = 0.25 * (a + b - c + d);
   cmd.desiredThrustsN[3] = 0.25 * (a - b - c - d);
-//  cmd.desiredThrustsN[0] = 0.25 * (a + b + c + d);
-//  cmd.desiredThrustsN[1] = 0.25 * (a - b + c - d);
-//  cmd.desiredThrustsN[2] = 0.25 * (a + b - c - d);
-//  cmd.desiredThrustsN[3] = 0.25 * (a - b - c + d);
 
+	// using positive pitch in forward direction (https://www.wolframalpha.com/input/?i=solve+%5BF0,F1,F2,F3%5D+in+%7B%7B1,1,1,1%7D,%7B1,-1,1,-1%7D,%7B-1,-1,1,1%7D,%7B-1,1,1,-1%7D%7D+*+%7BF0,F1,F2,F3%7D+%3D+%7BA,B,C,D%7D)
+	// cmd.desiredThrustsN[0] = 0.25 * (a + b - c - d);
+  // cmd.desiredThrustsN[1] = 0.25 * (a - b - c + d);
+  // cmd.desiredThrustsN[2] = 0.25 * (a + b + c + d);
+  // cmd.desiredThrustsN[3] = 0.25 * (a - b + c - d);
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 	return cmd;
@@ -129,12 +129,6 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
   V3F momentCmd;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-	ParamsHandle config = SimpleConfig::GetInstance();
-
-	float Ixx = config->Get(_config + ".Ixx", 0);
-	float Iyy = config->Get(_config + ".Iyy", 0);
-	float Izz = config->Get(_config + ".Izz", 0);
-
 	V3F error = pqrCmd - pqr;
 	V3F p_term = kpPQR * error;
 
@@ -170,9 +164,6 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
   Mat3x3F R = attitude.RotationMatrix_IwrtB();
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-	ParamsHandle config = SimpleConfig::GetInstance();
-	float mass = config->Get(_config + ".Mass", 0);
-
 	float collAccel = -collThrustCmd / mass;
 
 	// reference 4.2 of Lesson 4 - 3D Drone Full Notebook exercise
@@ -184,13 +175,13 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
 
 //	float bx_c_dot = kpBank * (bx_a - bx_c);
 //	float by_c_dot = kpBank * (by_a - by_c);
-  float bx_c_dot = kpBank * (bx_a - bx_c);
-  float by_c_dot = kpBank * (by_a - by_c);
+  float bx_c_dot = kpBank * (bx_c - bx_a);
+  float by_c_dot = kpBank * (by_c - by_a);
 
 	float r33 = 1 / R(2, 2);
 
-	pqrCmd.x = r33 * (-R(1, 0) * bx_c_dot + R(0, 0) * by_c_dot);
-	pqrCmd.y = r33 * (-R(1, 1) * bx_c_dot + R(0, 1) * by_c_dot);
+	pqrCmd.x = r33 * (R(1, 0) * bx_c_dot - R(0, 0) * by_c_dot);
+	pqrCmd.y = r33 * (R(1, 1) * bx_c_dot - R(0, 1) * by_c_dot);
 	pqrCmd.z = 0.0;
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
@@ -222,18 +213,16 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
   float thrust = 0;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-	ParamsHandle config = SimpleConfig::GetInstance();
-	float mass = config->Get(_config + ".Mass", 0);
-
   float hdot_cmd = kpPosZ * (posZCmd - posZ) + velZCmd;
   hdot_cmd = CONSTRAIN(hdot_cmd, -maxAscentRate, maxDescentRate);
 
   float accel_cmd = accelZCmd  + kpVelZ * (hdot_cmd - velZ);
   thrust = mass * (accel_cmd - CONST_GRAVITY) / R(2,2);
+	thrust = -thrust;
 //  thrust = CONSTRAIN(thrust, minMotorThrust, maxMotorThrust);
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
-  return -thrust;
+  return thrust;
 }
 
 // returns a desired acceleration in global frame
@@ -266,23 +255,39 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   V3F accelCmd;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+
+	float vel_norm = velCmd.magXY();
+	if (vel_norm > maxSpeedXY) {
+		velCmd *= maxSpeedXY / vel_norm;
+	}
+
 	V3F error_pos_xy = posCmd - pos;
 	V3F error_vel_xy = velCmd - vel;		// this tells us the acceleration
 
   V3F term1 = kpPosXY * error_pos_xy;
   V3F term2 = kpVelXY * error_vel_xy;
 
-  float pos_norm = term1.magXY();
-	if (pos_norm > maxSpeedXY) {
-		term1 *= maxSpeedXY / pos_norm;
-	}
+	// make sure z component is not effected
+	term1.z = 0;
+	term2.z = 0;
 
-	float vel_norm = term2.magXY();
-	if (vel_norm > maxAccelXY) {
-		term2 *= maxAccelXY / vel_norm;
-	}
+ // float pos_norm = term1.magXY();
+	//if (pos_norm > maxSpeedXY) {
+	//	term1 *= maxSpeedXY / pos_norm;
+	//}
+
+	//float vel_norm = term2.magXY();
+	//if (vel_norm > maxAccelXY) {
+	//	term2 *= maxAccelXY / vel_norm;
+	//}
 
 	accelCmd = accelCmdFF + term1 + term2;
+	assert(accelCmd.z == 0);
+
+	float accelNorm = accelCmd.magXY();
+	if (accelNorm > maxAccelXY) {
+		term2 *= maxAccelXY / accelNorm;
+	}
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
@@ -303,11 +308,9 @@ float QuadControl::YawControl(float yawCmd, float yaw)
   //  - use the yaw control gain parameter kpYaw
 
   float yawRateCmd=0;
-  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-	ParamsHandle config = SimpleConfig::GetInstance();
-	float kpYaw = config->Get(_config + ".kpYaw", 0);
-	
-	yawCmd = fmodf(yawCmd, 2.0 * M_PI);
+
+	////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	yawCmd = CONSTRAIN(yawCmd, -2.0 * M_PI, 2.0 * M_PI);
 	float yaw_error = yawCmd - yaw;
 
 	if (yaw_error > M_PI)
@@ -339,6 +342,35 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
 
   V3F desMoment = BodyRateControl(desOmega, estOmega);
 
-//  printf("Coll Thrust: %f, Desired Moment: %f\n", collThrustCmd, desMoment);
-  return GenerateMotorCommands(collThrustCmd, desMoment);
+	//printf("sim time: %f\n", simTime);
+
+	// DEBUG - testing
+	// Generate a collThrushCmd and see if it works ok
+
+#ifdef CONFIRM_PITCH
+	ParamsHandle config = SimpleConfig::GetInstance();
+	float L = config->Get(_config + ".L", 0);
+	float l = L / sqrt(2);
+
+	collThrustCmd = mass * CONST_GRAVITY;
+	desMoment.x = 0;
+	//desMoment.x = 10.0 / 180.0 * M_PI * l;
+	desMoment.y = 0;
+	desMoment.y = 10.0 / 180.0 * M_PI * l;
+	desMoment.z = 0;
+	//desMoment.z = -10.0/180.0 * M_PI * l;
+#endif
+
+	//ParamsHandle config = SimpleConfig::GetInstance();
+	//float L = config->Get(_config + ".L", 0);
+	//float l = L / sqrt(2);
+
+	//desMoment.x = -20 / 180.0 * M_PI * l;
+	//desMoment.y = 0;
+	//desMoment.z = 0;
+
+	_desOmega = desOmega;
+
+	VehicleCommand cmd = GenerateMotorCommands(collThrustCmd, desMoment);
+	return cmd;
 }

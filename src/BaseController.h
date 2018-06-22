@@ -70,5 +70,7 @@ public:
 
   V3F _trajectoryOffset;
   float _trajectoryTimeOffset;
+
+	V3F _desOmega;
 };
 

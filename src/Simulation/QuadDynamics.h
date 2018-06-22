@@ -98,4 +98,6 @@ protected:
 
   V3F color;  
   string _flightMode;
+
+	V3F pqrCmd;
 };
