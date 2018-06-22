@@ -35,8 +35,10 @@ INCLUDE QuadControlParams.txt
 INCLUDE Simulation.txt
 
 [Quad1:Quad]
-InitialPos=0.5,1,-1
-TrajectoryOffset=0,1,0
+#InitialPos=0.5,1,-1
+#InitialPos=0,0,-2
+InitialPos=0,0,-1
+TrajectoryOffset=0,0,-0.5
 
 [Quad2:Quad]
 InitialPos=0.5,-1,-1

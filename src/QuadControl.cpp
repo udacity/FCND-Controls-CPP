@@ -166,7 +166,7 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	float collAccel = -collThrustCmd / mass;
 
-	// reference 4.2 of Lesson 4 - 3D Drone Full Notebook exercise
+	// reference 4.1/4.2 of Lesson 4 - 3D Drone Full Notebook exercise
 	float bx_c = accelCmd.x / collAccel;
 	float by_c = accelCmd.y / collAccel;
 
@@ -214,12 +214,11 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
   float hdot_cmd = kpPosZ * (posZCmd - posZ) + velZCmd;
-  hdot_cmd = CONSTRAIN(hdot_cmd, -maxAscentRate, maxDescentRate);
+  hdot_cmd = CONSTRAIN(hdot_cmd, -maxDescentRate, maxAscentRate);
 
   float accel_cmd = accelZCmd  + kpVelZ * (hdot_cmd - velZ);
   thrust = mass * (accel_cmd - CONST_GRAVITY) / R(2,2);
 	thrust = -thrust;
-//  thrust = CONSTRAIN(thrust, minMotorThrust, maxMotorThrust);
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
   return thrust;
@@ -256,16 +255,23 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 
+  // https://www.overleaf.com/read/bgrkghpggnyc#/61023787/
+  // a cascaded P controller is of the form
+  // \ddot{x} = K_v(K_p (u - x) - \dot{x})
+
 	float vel_norm = velCmd.magXY();
 	if (vel_norm > maxSpeedXY) {
 		velCmd *= maxSpeedXY / vel_norm;
 	}
 
-	V3F error_pos_xy = posCmd - pos;
-	V3F error_vel_xy = velCmd - vel;		// this tells us the acceleration
+	V3F delta_xy = posCmd - pos;
+  V3F term1 = kpPosXY * delta_xy + velCmd;
 
-  V3F term1 = kpPosXY * error_pos_xy;
-  V3F term2 = kpVelXY * error_vel_xy;
+  printf("delta_xy: %.4f, delta_vel: %.4f\n", delta_xy, (velCmd - vel));
+
+//	V3F delta_xy_dot = velCmd - vel;
+//  V3F delta_xy_dot = velCmd - vel;
+  V3F term2 = kpVelXY * (term1 - vel);
 
 	// make sure z component is not effected
 	term1.z = 0;
@@ -340,6 +346,7 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
   V3F desOmega = RollPitchControl(desAcc, estAtt, collThrustCmd);
   desOmega.z = YawControl(curTrajPoint.attitude.Yaw(), estAtt.Yaw());
 
+//  printf("desAcc: %.4f collThrust: %.4f, desOmega: %.4f\n", desAcc.y, collThrustCmd, desOmega.y);
   V3F desMoment = BodyRateControl(desOmega, estOmega);
 
 	//printf("sim time: %f\n", simTime);
