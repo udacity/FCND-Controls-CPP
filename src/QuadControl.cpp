@@ -211,12 +211,13 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 
   Mat3x3F R = attitude.RotationMatrix_IwrtB();
   float thrust = 0;
-
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
   float hdot_cmd = kpPosZ * (posZCmd - posZ) + velZCmd;
-  hdot_cmd = CONSTRAIN(hdot_cmd, -maxDescentRate, maxAscentRate);
+  //hdot_cmd = CONSTRAIN(hdot_cmd, -maxDescentRate, maxAscentRate);
 
   float accel_cmd = accelZCmd  + kpVelZ * (hdot_cmd - velZ);
+  accel_cmd = CONSTRAIN(accel_cmd, -maxDescentRate, maxAscentRate);
+
   thrust = mass * (accel_cmd - CONST_GRAVITY) / R(2,2);
 	thrust = -thrust;
 
@@ -259,6 +260,7 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   // a cascaded P controller is of the form
   // \ddot{x} = K_v(K_p (u - x) - \dot{x})
 
+#ifdef CASCADED
 	float vel_norm = velCmd.magXY();
 	if (vel_norm > maxSpeedXY) {
 		velCmd *= maxSpeedXY / vel_norm;
@@ -267,33 +269,43 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 	V3F delta_xy = posCmd - pos;
   V3F term1 = kpPosXY * delta_xy + velCmd;
 
-  printf("delta_xy: %.4f, delta_vel: %.4f\n", delta_xy, (velCmd - vel));
-
-//	V3F delta_xy_dot = velCmd - vel;
-//  V3F delta_xy_dot = velCmd - vel;
   V3F term2 = kpVelXY * (term1 - vel);
 
 	// make sure z component is not effected
 	term1.z = 0;
 	term2.z = 0;
 
- // float pos_norm = term1.magXY();
-	//if (pos_norm > maxSpeedXY) {
-	//	term1 *= maxSpeedXY / pos_norm;
-	//}
-
-	//float vel_norm = term2.magXY();
-	//if (vel_norm > maxAccelXY) {
-	//	term2 *= maxAccelXY / vel_norm;
-	//}
-
 	accelCmd = accelCmdFF + term1 + term2;
 	assert(accelCmd.z == 0);
 
 	float accelNorm = accelCmd.magXY();
 	if (accelNorm > maxAccelXY) {
-		term2 *= maxAccelXY / accelNorm;
-	}
+    term2 *= maxAccelXY / accelNorm;
+  }
+#else
+  float vel_norm = velCmd.magXY();
+  if (vel_norm > maxSpeedXY) {
+    velCmd *= maxSpeedXY / vel_norm;
+  }
+
+  V3F delta_xy = posCmd - pos;
+  V3F term1 = kpPosXY * delta_xy + velCmd;
+
+  V3F delta_v = velCmd - vel;
+  V3F term2 = kpVelXY * delta_v;
+
+  // make sure z component is not effected
+  term1.z = 0;
+  term2.z = 0;
+
+  accelCmd = accelCmdFF + term1 + term2;
+  assert(accelCmd.z == 0);
+
+  float accelNorm = accelCmd.magXY();
+  if (accelNorm > maxAccelXY) {
+    term2 *= maxAccelXY / accelNorm;
+  }
+#endif
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
@@ -354,12 +366,13 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
 	// DEBUG - testing
 	// Generate a collThrushCmd and see if it works ok
 
+//#define CONFIRM_PITCH
 #ifdef CONFIRM_PITCH
 	ParamsHandle config = SimpleConfig::GetInstance();
 	float L = config->Get(_config + ".L", 0);
 	float l = L / sqrt(2);
 
-	collThrustCmd = mass * CONST_GRAVITY;
+	//collThrustCmd = mass * CONST_GRAVITY;
 	desMoment.x = 0;
 	//desMoment.x = 10.0 / 180.0 * M_PI * l;
 	desMoment.y = 0;
@@ -368,7 +381,14 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
 	//desMoment.z = -10.0/180.0 * M_PI * l;
 #endif
 
-	//ParamsHandle config = SimpleConfig::GetInstance();
+//#define CONFIRM_COLTHRUST
+#ifdef CONFIRM_COLTHRUST
+	desMoment.x = 0;
+	desMoment.y = 0;
+	desMoment.z = 0;
+#endif
+
+  //ParamsHandle config = SimpleConfig::GetInstance();
 	//float L = config->Get(_config + ".L", 0);
 	//float l = L / sqrt(2);
 
