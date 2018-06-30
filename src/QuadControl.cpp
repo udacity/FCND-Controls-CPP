@@ -260,7 +260,7 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   // a cascaded P controller is of the form
   // \ddot{x} = K_v(K_p (u - x) - \dot{x})
 
-#define CASCADED
+//#define CASCADED
 
 #ifdef CASCADED
 	float vel_norm = velCmd.magXY();
