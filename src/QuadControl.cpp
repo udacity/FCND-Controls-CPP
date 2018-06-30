@@ -260,6 +260,8 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   // a cascaded P controller is of the form
   // \ddot{x} = K_v(K_p (u - x) - \dot{x})
 
+#define CASCADED
+
 #ifdef CASCADED
 	float vel_norm = velCmd.magXY();
 	if (vel_norm > maxSpeedXY) {
@@ -267,9 +269,10 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 	}
 
 	V3F delta_xy = posCmd - pos;
-  V3F term1 = kpPosXY * delta_xy + velCmd;
+	V3F delta_vel_xy = velCmd - vel;
 
-  V3F term2 = kpVelXY * (term1 - vel);
+  V3F term1 = kpPosXY * delta_xy;
+  V3F term2 = kpVelXY * (term1 + delta_vel_xy);
 
 	// make sure z component is not effected
 	term1.z = 0;

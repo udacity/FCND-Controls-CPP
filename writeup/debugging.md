@@ -180,3 +180,21 @@ The RollPitchControl figures out the required atttiude and then feeds that into 
 ## Yaw Control
 
 `kpYaw` is the factor that needs to be tuned
+
+## Debugging LateralPositionControl
+
+Copy 3_PositionControl.txt to 3_1_PositionControl.txt and do the following changes:
+
+### Quad 1 (on the right)
+
+1) Make it come down from top
+
+[Quad1:Quad]
+InitialPos=0, 0, -3
+TrajectoryOffset=0, 0, -1
+
+
+### Quad 2 (on the left)
+
+1) Make it go left
+2) Once successful, make it go down and left at the same time
