@@ -4,7 +4,6 @@
 # Namespace and parameter names are not case-sensitive
 # X=Y sets X to Y. Y may be a string, float, or list of 3 floats
 ############################################################################
-
 [QuadControlParams] 
 
 UseIdealEstimator=1
