@@ -413,6 +413,6 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
 	//	desMoment.z = 0;
 	//	//desMoment.z = -10.0/180.0 * M_PI * l;
 	//#endif
-	        
+
   return GenerateMotorCommands(collThrustCmd, desMoment);
 }

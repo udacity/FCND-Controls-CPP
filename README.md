@@ -1,6 +1,11 @@
 # The C++ Control Project
 
-A cascaded PID controller has been implemented
+A cascaded PID controller has been implemented to control the quad copter. 
+
+# Shortcomings
+
+. Scenario 5, red drone needs to be tuned
+. LateralPositionControl, acts more like a PD rather than a cascaded controller
 
 ## Ruburic Points
 
