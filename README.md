@@ -2,12 +2,16 @@
 
 A cascaded PID controller has been implemented to control the quad copter. 
 
+![writeup/scenario5.png](writeup/scenario5.png)
+
 # Shortcomings
 
-. Scenario 5, red drone needs to be tuned
-. LateralPositionControl, acts more like a PD rather than a cascaded controller
+Due to shortage of time, the following are some shortcomings that will need to be rectified in future
 
-## Ruburic Points
+. Scenario 5, red drone needs to be tuned   
+. LateralPositionControl, acts more like a PD rather than a cascaded controller   
+
+## Rubric Points
 
 ### Body Rate Control
 
@@ -21,7 +25,7 @@ A simple propotional controller that uses `kpBank` as the gain variable. The fun
 
 Implementation uses formulae from lecture notes, specifically Lecture 14 - Lesson 4.2:
 
-bx_c_dot = kpBank * (bx_c - bx_a)
+bx_c_dot = kpBank * (bx_c - bx_a)   
 by_c_dot = kpBank * (by_c - by_a)
 
 where *bx_c = commanded acceleration in body frame*, *bx_a is the actual acceleration* in the body frame
@@ -34,7 +38,7 @@ For P gain is controlled by: kpPosZ
 For D gain is controlled by: kpVelZ   
 For I gain is controlled by: KiPosZ   
 
-First the required control is computed and then from that required acceleration is computed. Required acceleration is constrained to be within maxDescent and maxAscent rates. 
+First the required control is computed and then required acceleration is computed. Required acceleration is constrained to be within maxDescent and maxAscent rates. 
 
 The function returns thrust using the mass and acceleration computed.
 
@@ -43,6 +47,14 @@ The function returns thrust using the mass and acceleration computed.
 This function is reponsible for figuring out the acceleration required in X and Y axis given the next trajectory position and velocity and the current position and velocity.
 
 I tried implementing a cascaded controller (ref: [https://www.overleaf.com/read/bgrkghpggnyc#/61023787/](https://www.overleaf.com/read/bgrkghpggnyc#/61023787/)) but just could not get it to tune within the given time frame. Have instead implemented a PD controller that uses `kpVelXY` as the derivative gain on the velocity error.
+
+```
+	V3F error_pos = posCmd - pos;
+	V3F error_v = velCmd - vel;
+
+	V3F term1 = kpPosXY * error_pos;
+	V3F term2 = kpVelXY * error_v;
+```
 
 This function returns the required acceleration in X and Y direction.
 
@@ -68,46 +80,67 @@ Combined thrust from clock wise motors (F1 + F4) is substracted from the anti cl
 
 ## Tuning Method Used
 
-The controller was tuned manually by increasing each value by not more than 50% of its current value.
+The controller was tuned manually by increasing each value by not more than 10% of its current value.
 
 ### Future Work
 
-. Use twiddle algorithm as described by Sebastian
+. Use twiddle algorithm as described by Sebastian   
 . Use gradient descent for tuning as described by Andrew Ng in his lecture notes
 
 ## Testing Methodology
 
 ### Motor Thrust 
 
-Altitude, roll, pitch and yaw were all confirmed by setting `desMoment` in RunControl just before calling generateMotorCommands in RunControl function.
+Altitude, roll, pitch and yaw were all confirmed by manually setting `desMoment` in RunControl just before calling generateMotorCommands in RunControl function.
 
-For Hover:
+```
+ParamsHandle config = SimpleConfig::GetInstance();
+float L = config->Get(_config + ".L", 0);
+float l = L / sqrt(2);
 
 collThrustCmd = mass * CONST_GRAVITY;
+
 desMoment.x = 0;
 desMoment.y = 0;
 desMoment.z = 0;
 
+return GenerateMotorCommands(collThrustCmd, desMoment);
+```
+
+For Hover:
+
+```
+collThrustCmd = mass * CONST_GRAVITY;
+desMoment.x = 0;
+desMoment.y = 0;
+desMoment.z = 0;
+```
+
 For Positive Altitude:
 
+```
 collThrustCmd = mass * 1.5 * CONST_GRAVITY;
 desMoment.x = 0;
 desMoment.y = 0;
 desMoment.z = 1;
+```
 
 ![writeup/simple_thrust.png](writeup/simple_thrust.png)
 
 For Roll:
 
+```
 collThrustCmd = mass * CONST_GRAVITY;
 desMoment.x = 1.0 / 180.0 * M_PI * l;
 desMoment.y = 0;
 desMoment.z = 0;
-	
+```
+
 For Pitch:
 
+```
 collThrustCmd = mass * CONST_GRAVITY;
 desMoment.x = 0;
 desMoment.y = 1.0 / 180.0 * M_PI * l;;
 desMoment.z = 0;
-	
+```
