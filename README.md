@@ -78,6 +78,8 @@ Combined thrust from front two motors (F1+F2) is subtracted from the combined th
 
 Combined thrust from clock wise motors (F1 + F4) is substracted from the anti clockwise motors (F2+F3) to get moment around z axis.
 
+[Equation for Thrust](https://www.wolframalpha.com/input/?i=%7B%7B1,1,1,1%7D,%7B1,-1,1,-1%7D,%7B1,1,-1,-1%7D,%7B-1,1,1,-1%7D%7D+*+%7BF0,F1,F2,F3%7D+%3D+%7BA,B,C,D%7D)
+
 ## Tuning Method Used
 
 The controller was tuned manually by increasing each value by not more than 10% of its current value.
