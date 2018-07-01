@@ -288,28 +288,36 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 	//#define CASCADED
 
 #ifdef CASCADED
+//	float vel_norm = velCmd.magXY();
+//	if (vel_norm > maxSpeedXY) {
+//		velCmd *= maxSpeedXY / vel_norm;
+//	}
+//
+//	V3F delta_xy = posCmd - pos;
+//	V3F delta_vel_xy = velCmd - vel;
+//
+//	V3F term1 = kpPosXY * delta_xy;
+//	V3F term2 = kpVelXY * (term1 + delta_vel_xy);
+//
+//	// make sure z component is not effected
+//	term1.z = 0;
+//	term2.z = 0;
+//
+//	accelCmd = accelCmdFF + term1 + term2;
+//	assert(accelCmd.z == 0);
+	// ref: https://www.overleaf.com/read/bgrkghpggnyc#/61023787/
+
 	float vel_norm = velCmd.magXY();
 	if (vel_norm > maxSpeedXY) {
 		velCmd *= maxSpeedXY / vel_norm;
 	}
 
-	V3F delta_xy = posCmd - pos;
-	V3F delta_vel_xy = velCmd - vel;
-
-	V3F term1 = kpPosXY * delta_xy;
-	V3F term2 = kpVelXY * (term1 + delta_vel_xy);
-
+	V3F double_p = kpVelXY * (kpPosXY * (posCmd - pos) - vel);
 	// make sure z component is not effected
-	term1.z = 0;
-	term2.z = 0;
+	double_p.z = 0;
 
-	accelCmd = accelCmdFF + term1 + term2;
+	accelCmd = accelCmdFF + double_p;
 	assert(accelCmd.z == 0);
-
-	float accelNorm = accelCmd.magXY();
-	if (accelNorm > maxAccelXY) {
-		term2 *= maxAccelXY / accelNorm;
-	}
 #else
 	// constrain required velocity to the maximum allowed velocity
 	float vel_norm = velCmd.magXY();
@@ -319,7 +327,7 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 
 	V3F error_pos = posCmd - pos;
 	V3F error_v = velCmd - vel;
-	
+
 	V3F term1 = kpPosXY * error_pos;
 	V3F term2 = kpVelXY * error_v;
 
@@ -329,14 +337,13 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 
 	accelCmd = accelCmdFF + term1 + term2;
 	assert(accelCmd.z == 0);
-
-	//// make sure we don't accelerate > the max acceleration allowed
-	float accelNorm = accelCmd.magXY();
-	if (accelNorm > maxAccelXY) {
-		accelCmd *= maxAccelXY / accelNorm;
-	}
-
 #endif
+
+  //// make sure we don't accelerate > the max acceleration allowed
+  float accelNorm = accelCmd.magXY();
+  if (accelNorm > maxAccelXY) {
+    accelCmd *= maxAccelXY / accelNorm;
+  }
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
