@@ -70,13 +70,20 @@ Basic formula used is: `Thrust = Moment * l`
 
 To figure out thrust a simultaneous equation solver has been used that uses the following constraints:
 
-All four motor thrust is added to equal the given collThrustCmd
+All four motor thrusts add up to equal the given collThrustCmd
 
 Combined thrust from left two motors (F1+F3) is subtracted from the combined thrust from right two motors (F2+F4) to give moment around X
 
 Combined thrust from front two motors (F1+F2) is subtracted from the combined thrust from back two motors (F3+F4) to give moment around Y
 
 Combined thrust from clock wise motors (F1 + F4) is substracted from the anti clockwise motors (F2+F3) to get moment around z axis.
+
+```
+F1 + F2 + F3 + F4 = collThrustCmd
+F1 - F2 + F3 - F4 = momentCmd.x / l
+F1 + F2 - F3 - F4 = momentCmd.y / l
+F1 - F2 - F3 + F4 = momentCmd.z / kappa
+```
 
 [Equation for Thrust](https://www.wolframalpha.com/input/?i=%7B%7B1,1,1,1%7D,%7B1,-1,1,-1%7D,%7B1,1,-1,-1%7D,%7B-1,1,1,-1%7D%7D+*+%7BF0,F1,F2,F3%7D+%3D+%7BA,B,C,D%7D)
 
