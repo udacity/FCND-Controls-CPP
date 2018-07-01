@@ -413,15 +413,6 @@ VehicleCommand QuadControl::RunControl(float dt, float simTime)
 	//	desMoment.z = 0;
 	//	//desMoment.z = -10.0/180.0 * M_PI * l;
 	//#endif
-
-  ParamsHandle config = SimpleConfig::GetInstance();
-  float L = config->Get(_config + ".L", 0);
-  float l = L / sqrt(2);
-
-  collThrustCmd = mass * CONST_GRAVITY;
-  desMoment.x = 1.0 / 180.0 * M_PI * l;
-  desMoment.y = 0;
-  desMoment.z = 0;
-
+	        
   return GenerateMotorCommands(collThrustCmd, desMoment);
 }
