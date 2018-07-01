@@ -82,7 +82,7 @@ Combined thrust from clock wise motors (F1 + F4) is substracted from the anti cl
 F1 + F2 + F3 + F4 = collThrustCmd
 F1 - F2 + F3 - F4 = momentCmd.x / l
 F1 + F2 - F3 - F4 = momentCmd.y / l
-F1 - F2 - F3 + F4 = momentCmd.z / kappa
+-F1 + F2 + F3 - F4 = momentCmd.z / kappa
 ```
 
 [Equation for Thrust](https://www.wolframalpha.com/input/?i=%7B%7B1,1,1,1%7D,%7B1,-1,1,-1%7D,%7B1,1,-1,-1%7D,%7B-1,1,1,-1%7D%7D+*+%7BF0,F1,F2,F3%7D+%3D+%7BA,B,C,D%7D)
