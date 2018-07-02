@@ -169,8 +169,6 @@ void QuadDynamics::Run(float dt, float simulationTime, int &idum, V3F externalFo
 			{
         curCmd = controller->RunControl(controllerUpdateInterval, simulationTime);
         _lastPosFollowErr = controller->curTrajPoint.position.dist(Position());
-
-				pqrCmd = controller->_desOmega;
 			}
 
       if (simulationTime < 0.0000001){
