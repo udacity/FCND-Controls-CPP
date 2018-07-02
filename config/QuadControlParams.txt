@@ -1,3 +1,4 @@
+# current working params
 ############################## SLR SIMPLECONFIG ############################
 # this is a comment. [X] is a namespace. [X:Y] initializes X from Y
 # Namespace and parameter names are not case-sensitive
@@ -19,13 +20,13 @@ minMotorThrust = .1
 maxMotorThrust = 4.5
 
 # Position control gains
-kpPosXY = 21
-kpPosZ = 29
-KiPosZ = 30
+kpPosXY = 31
+kpPosZ = 49
+KiPosZ = 45
 
 # Velocity control gains
-kpVelXY = 9
-kpVelZ = 11
+kpVelXY = 11
+kpVelZ = 19
 
 # Angle control gains
 kpBank = 13
