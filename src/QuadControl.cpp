@@ -78,11 +78,6 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
     float tau_y = momentCmd.y / l;
     float tau_z = momentCmd.z / kappa;
     
-//    float f1 = (collThrustCmd + tau_x + tau_y + tau_z) / 4.f * motorsAssign[0]; // front left  CCW
-//    float f2 = (collThrustCmd - tau_x + tau_y - tau_z) / 4.f * motorsAssign[1]; // front right CW
-//    float f3 = (collThrustCmd + tau_x - tau_y - tau_z) / 4.f * motorsAssign[2]; // rear  left  CW
-//    float f4 = (collThrustCmd - tau_x - tau_y + tau_z) / 4.f * motorsAssign[3]; // rear  right CCW
-    
     float f1 = (collThrustCmd + tau_x + tau_y - tau_z) / 4.f * motorsAssign[0]; // front left  CW
     float f2 = (collThrustCmd - tau_x + tau_y + tau_z) / 4.f * motorsAssign[1]; // front right CCW
     float f3 = (collThrustCmd + tau_x - tau_y + tau_z) / 4.f * motorsAssign[2]; // rear  left  CCW
