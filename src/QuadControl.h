@@ -5,10 +5,12 @@
 #include "Trajectory.h"
 #include "BaseController.h"
 
+using std::vector;
+
 class QuadControl : public BaseController
 {
 public:
-  QuadControl(string config) : BaseController(config) { Init(); };
+  QuadControl(string config) : BaseController(config), motorsAssign(4) { Init(); };
 
   virtual void Init();
 
@@ -38,6 +40,8 @@ public:
   float kpBank, kpYaw;
   float KiPosZ;
   V3F kpPQR;
+    
+    vector< float > motorsAssign;
   
   // limits & saturations
   float maxAscentRate, maxDescentRate;
