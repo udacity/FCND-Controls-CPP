@@ -486,9 +486,9 @@ void Visualizer_GLUT::VisualizeQuadCopter(shared_ptr<QuadDynamics> quad)
   if (showPropCommands)
   {
     V3D pos = quad->Position();
-    V3D fl = quad->GetArmLength() / sqrtf(2) * quad->Attitude().Rotate_BtoI(V3F(1, 1, 0)); 
-    V3D fr = quad->GetArmLength() / sqrtf(2) * quad->Attitude().Rotate_BtoI(V3F(1, -1, 0));
-    V3D down = fl.cross(fr).norm();
+    V3D fr = quad->GetArmLength() / sqrtf(2) * quad->Attitude().Rotate_BtoI(V3F(1, 1, 0));
+    V3D fl = quad->GetArmLength() / sqrtf(2) * quad->Attitude().Rotate_BtoI(V3F(1, -1, 0));
+    V3D down = fr.cross(fl).norm();
     const float maxThrust = 4.5f;
     
 		VehicleCommand cmd = quad->GetCommands();
