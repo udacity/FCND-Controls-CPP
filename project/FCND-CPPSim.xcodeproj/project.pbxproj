@@ -47,7 +47,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		29B2452D20C58ADB00307622 /* WindowThreshold.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowThreshold.h; sourceTree = "<group>"; };
 		DB076C8A202A34C500386052 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		DB31989E20334078008ACD56 /* Simulation.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Simulation.txt; path = ../config/Simulation.txt; sourceTree = "<group>"; };
 		DB3198A320334078008ACD56 /* QuadPhysicalParams.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = QuadPhysicalParams.txt; path = ../config/QuadPhysicalParams.txt; sourceTree = "<group>"; };
@@ -224,7 +223,6 @@
 		DB49FB3A202A0CC600DED4E6 /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
-				29B2452D20C58ADB00307622 /* WindowThreshold.h */,
 				DB49FB3B202A0CC600DED4E6 /* ColorUtils.cpp */,
 				DB49FB3C202A0CC600DED4E6 /* ColorUtils.h */,
 				DB49FB3D202A0CC600DED4E6 /* DrawingFuncs.cpp */,
