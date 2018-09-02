@@ -176,7 +176,7 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
 		  printf("Negative thrust command\n");
 		  pCmd = 0.0;
 		  qCmd = 0.0;
-		  cCmd = 0.0;
+		  collThrustCmd = 0.0;
 	  }
 
 	  pqrCmd.x = pCmd;
