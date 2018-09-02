@@ -70,21 +70,20 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 
-  
-  float c_bar = collThrustCmd * mass / kappa;
-  float p_bar = Ixx * momentCmd.x / (kappa * L);
-  float q_bar = Iyy * momentCmd.y / (kappa * L);
-  float r_bar = Izz * momentCmd.z / kappa;
+  float cCmd = collThrustCmd / kappa;
+  float pCmd = momentCmd.x / (kappa * L);
+  float qCmd = momentCmd.y / (kappa * L);
+  float rCmd = momentCmd.z / kappa;
 
-  float omega1 = -sqrt(c_bar + p_bar + q_bar + r_bar) / 2.f;
-  float omega2 = sqrt(c_bar - p_bar + q_bar - r_bar) / 2.f;
-  float omega3 = sqrt(c_bar - p_bar - q_bar + r_bar) / 2.f;
-  float omega4 = -sqrt(c_bar + p_bar - q_bar - r_bar) / 2.f;
+  float omega1_sqr = (cCmd + pCmd + qCmd + rCmd) / 4.f;
+  float omega2_sqr = (cCmd - pCmd + qCmd - rCmd) / 4.f;
+  float omega3_sqr = (cCmd - pCmd - qCmd + rCmd) / 4.f;
+  float omega4_sqr = (cCmd + pCmd - qCmd - rCmd) / 4.f;
 
-  cmd.desiredThrustsN[0] = CONSTRAIN(kappa * pow(omega1, 2), minMotorThrust, maxMotorThrust); // front left
-  cmd.desiredThrustsN[1] = CONSTRAIN(kappa * pow(omega2, 2), minMotorThrust, maxMotorThrust); // front right
-  cmd.desiredThrustsN[2] = CONSTRAIN(kappa * pow(omega3, 2), minMotorThrust, maxMotorThrust); // rear left
-  cmd.desiredThrustsN[3] = CONSTRAIN(kappa * pow(omega4, 2), minMotorThrust, maxMotorThrust); // rear right
+  cmd.desiredThrustsN[0] = CONSTRAIN(kappa * omega1_sqr, minMotorThrust, maxMotorThrust); // front left
+  cmd.desiredThrustsN[1] = CONSTRAIN(kappa * omega2_sqr, minMotorThrust, maxMotorThrust); // front right
+  cmd.desiredThrustsN[2] = CONSTRAIN(kappa * omega3_sqr, minMotorThrust, maxMotorThrust); // rear left
+  cmd.desiredThrustsN[3] = CONSTRAIN(kappa * omega4_sqr, minMotorThrust, maxMotorThrust); // rear right
 
   //cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
   //cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
