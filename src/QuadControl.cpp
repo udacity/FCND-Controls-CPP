@@ -70,10 +70,26 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 
-  cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
-  cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
-  cmd.desiredThrustsN[2] = mass * 9.81f / 4.f; // rear left
-  cmd.desiredThrustsN[3] = mass * 9.81f / 4.f; // rear right
+  
+  float c_bar = -collThrustCmd * mass / kappa;
+  float p_bar = Ixx * momentCmd.x / (kappa * L);
+  float q_bar = Iyy * momentCmd.y / (kappa * L);
+  float r_bar = Izz * momentCmd.z / kappa;
+
+  float omega1 = -sqrt(c_bar + p_bar + q_bar + r_bar) / 2.f;
+  float omega2 = sqrt(c_bar - p_bar + q_bar - r_bar) / 2.f;
+  float omega3 = sqrt(c_bar - p_bar - q_bar + r_bar) / 2.f;
+  float omega4 = -sqrt(c_bar + p_bar - q_bar - r_bar) / 2.f;
+
+  cmd.desiredThrustsN[0] = kappa * pow(omega1,2); // front left
+  cmd.desiredThrustsN[1] = kappa * pow(omega2, 2); // front right
+  cmd.desiredThrustsN[2] = kappa * pow(omega3, 2); // rear left
+  cmd.desiredThrustsN[3] = kappa * pow(omega4, 2); // rear right
+
+  //cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
+  //cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
+  //cmd.desiredThrustsN[2] = mass * 9.81f / 4.f; // rear left
+  //cmd.desiredThrustsN[3] = mass * 9.81f / 4.f; // rear right
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
