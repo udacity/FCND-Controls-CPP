@@ -154,10 +154,34 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
 
 	  V3F pqrCmd;
 	  Mat3x3F R = attitude.RotationMatrix_IwrtB();
-
+	  float cCmd = collThrustCmd / mass;
+	  float pCmd, qCmd;
 	  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	  if (collThrustCmd > 0.0) {
 
+		  //Negative due to the banking direction to achieve the desired motion direction
+		  float b_xCmd = -CONSTRAIN(accelCmd.x/cCmd, -maxTiltAngle, maxTiltAngle);
+		  float b_yCmd = -CONSTRAIN(accelCmd.y/cCmd, -maxTiltAngle, maxTiltAngle);
 
+		  float b_x = R(0, 2);
+		  float b_y = R(1, 2);
+
+		  float b_x_dotCmd = kpBank * (b_xCmd - b_x);
+		  float b_y_dotCmd = kpBank * (b_yCmd - b_y);
+
+		  pCmd = (1 / R(2, 2)) * (R(1, 0) * b_x_dotCmd) + (-R(0, 0) * b_y_dotCmd);
+		  qCmd = (1 / R(2, 2)) * (R(1, 1) * b_x_dotCmd) + (-R(0, 1) * b_y_dotCmd);
+	  }
+	  else {
+		  printf("Negative thrust command\n");
+		  pCmd = 0.0;
+		  qCmd = 0.0;
+		  cCmd = 0.0;
+	  }
+
+	  pqrCmd.x = pCmd;
+	  pqrCmd.y = qCmd;
+	  pqrCmd.z = 0.0;
 
 	  /////////////////////////////// END STUDENT CODE ////////////////////////////
 
