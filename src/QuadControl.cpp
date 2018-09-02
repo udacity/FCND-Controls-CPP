@@ -115,7 +115,17 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
 
   V3F pqrError = pqrCmd - pqr;
 
-  momentCmd = kpPQR * pqrError;
+  V3F MOI;
+  MOI.x = Ixx;
+  MOI.y = Iyy;
+  MOI.z = Izz;
+  
+  momentCmd = MOI * kpPQR * pqrError;
+
+  if (momentCmd.mag() > maxMotorThrust * L) {
+	  momentCmd = momentCmd * maxMotorThrust * L / momentCmd.mag();
+  }
+
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
