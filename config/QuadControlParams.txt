@@ -25,7 +25,7 @@ KiPosZ = 30
 
 # Velocity control gains
 kpVelXY = 3.4
-kpVelZ = 2000
+kpVelZ = 15000
 
 # Angle control gains
 kpBank = 22
