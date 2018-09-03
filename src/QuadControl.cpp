@@ -302,7 +302,7 @@ float QuadControl::YawControl(float yawCmd, float yaw)
 	  if (yawError > M_PI) { yawError -= 2.0*M_PI; }
 	  else if (yawError < -M_PI) { yawError += 2.0*M_PI; }
 
-	  yawRateCmd = 5*kpYaw * yawError;
+	  yawRateCmd = kpYaw * yawError;
 	  /////////////////////////////// END STUDENT CODE ////////////////////////////
 
 	  return yawRateCmd;
