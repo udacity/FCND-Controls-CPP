@@ -299,8 +299,16 @@ float QuadControl::YawControl(float yawCmd, float yaw)
 
 	  float yawRateCmd=0;
 	  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	  //Ensure the target is within 0 and 2*pi
+	  yawCmd = fmodf(yawCmd, 2 * M_PI);
 
+	  float yawError = yawCmd - yaw;
 
+	  //Normalize yawError between -PI and PI
+	  if (yawError > M_PI) { yawError -= 2.0*M_PI; }
+	  else if (yawError < -M_PI) { yawError += 2.0*M_PI; }
+
+	  yawRateCmd = 5*kpYaw * yawError;
 	  /////////////////////////////// END STUDENT CODE ////////////////////////////
 
 	  return yawRateCmd;
