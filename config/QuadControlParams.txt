@@ -28,11 +28,11 @@ kpVelXY = 3.4
 kpVelZ = 2000
 
 # Angle control gains
-kpBank = 15
-kpYaw = 1
+kpBank = 22
+kpYaw = 2
 
 # Angle rate gains
-kpPQR = 100, 100, 38
+kpPQR = 80, 80, 38
 
 # limits
 maxAscentRate = 5
