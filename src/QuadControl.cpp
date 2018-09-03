@@ -264,9 +264,21 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 	  V3F accelCmd = accelCmdFF;
 
 	  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+	  float x_dotCmd = kpPosXY * (posCmd.x - pos.x);
+	  float y_dotCmd = kpPosXY * (posCmd.y - pos.y);
 
-  
+	  x_dotCmd = CONSTRAIN(x_dotCmd, -maxSpeedXY, maxSpeedXY);
+	  y_dotCmd = CONSTRAIN(y_dotCmd, -maxSpeedXY, maxSpeedXY);
 
+	  float x_dot_dotCmd = x_dotCmd + kpVelXY * (velCmd.x - vel.x) + accelCmdFF.x;
+	  float y_dot_dotCmd = y_dotCmd + kpVelXY * (velCmd.y - vel.y) + accelCmdFF.y;
+		
+	  x_dot_dotCmd = CONSTRAIN(x_dot_dotCmd, -maxAccelXY, maxAccelXY);
+	  y_dot_dotCmd = CONSTRAIN(y_dot_dotCmd, -maxAccelXY, maxAccelXY);
+
+	  accelCmd.x = x_dot_dotCmd;
+	  accelCmd.y = y_dot_dotCmd;
+	  accelCmd.z = 0.0;
 	  /////////////////////////////// END STUDENT CODE ////////////////////////////
 
 	  return accelCmd;
