@@ -70,27 +70,15 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
 
 	  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	  float l = L / sqrt(2.f);
-	  float cCmd = collThrustCmd / kappa;
-	  float pCmd = momentCmd.x / (kappa * l);
-	  float qCmd = momentCmd.y / (kappa * l);
-	  float rCmd = momentCmd.z / kappa;
+	  float collF_t = collThrustCmd;
+	  float collF_x = momentCmd.x / l;
+	  float collF_y = momentCmd.y / l;
+	  float collF_z = -momentCmd.z / kappa;
 
-	  float omega1_sqr = (cCmd + pCmd + qCmd + rCmd) / 4.f; // front left
-	  float omega2_sqr = (cCmd - pCmd + qCmd - rCmd) / 4.f; // front right
-	  float omega3_sqr = (cCmd + pCmd - qCmd - rCmd) / 4.f; // rear left
-	  float omega4_sqr = (cCmd - pCmd - qCmd + rCmd) / 4.f; // rear right
-  
-
-	  cmd.desiredThrustsN[0] = CONSTRAIN(kappa * omega1_sqr, minMotorThrust, maxMotorThrust); // front left
-	  cmd.desiredThrustsN[1] = CONSTRAIN(kappa * omega2_sqr, minMotorThrust, maxMotorThrust); // front right
-	  cmd.desiredThrustsN[2] = CONSTRAIN(kappa * omega3_sqr, minMotorThrust, maxMotorThrust); // rear left
-	  cmd.desiredThrustsN[3] = CONSTRAIN(kappa * omega4_sqr, minMotorThrust, maxMotorThrust); // rear right
-
-	  //cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
-	  //cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
-	  //cmd.desiredThrustsN[2] = mass * 9.81f / 4.f; // rear left
-	  //cmd.desiredThrustsN[3] = mass * 9.81f / 4.f; // rear right
-
+	  cmd.desiredThrustsN[0] = CONSTRAIN((collF_t + collF_x + collF_y + collF_z) / 4.f, minMotorThrust, maxMotorThrust); // front left
+	  cmd.desiredThrustsN[1] = CONSTRAIN((collF_t - collF_x + collF_y - collF_z) / 4.f, minMotorThrust, maxMotorThrust); // front right
+	  cmd.desiredThrustsN[2] = CONSTRAIN((collF_t + collF_x - collF_y - collF_z) / 4.f, minMotorThrust, maxMotorThrust); // rear left
+	  cmd.desiredThrustsN[3] = CONSTRAIN((collF_t - collF_x - collF_y + collF_z) / 4.f, minMotorThrust, maxMotorThrust); // rear right
 	  /////////////////////////////// END STUDENT CODE ////////////////////////////
 
 	  return cmd;
