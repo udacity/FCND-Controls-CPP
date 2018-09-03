@@ -214,13 +214,13 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 	  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	  float posZError = posZCmd - posZ;
 
-	  float h_dotCmd = kpPosZ * posZError + velZCmd;
+	  float h_dotCmd = kpPosZ * posZError;
 	  
 	  h_dotCmd = CONSTRAIN(h_dotCmd, -maxDescentRate, maxAscentRate);
 
-	  float velZError = h_dotCmd - velZ;
+	  float velZError = velZCmd - velZ;
 
-	  float u_1_bar = kpVelZ * velZError + accelZCmd;
+	  float u_1_bar = h_dotCmd + kpVelZ * velZError + accelZCmd;
 	  
 	  float R33 = R(2, 2);
 	  float b_z = R33;
