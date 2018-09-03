@@ -99,9 +99,6 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
 	  //  - you'll also need the gain parameter kpPQR (it's a V3F)
 
 	  V3F momentCmd;
-	  float yaw_rate = pqrCmd.z;
-
-	  pqrCmd.z = (yaw_rate - pqrCmd.y * sin(estAtt.Roll()) * (1 / cos(estAtt.Pitch()))) / (cos(estAtt.Roll()) * (1 / cos(estAtt.Pitch())));
 
 	  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
 	  float l = L / sqrt(2.f);
