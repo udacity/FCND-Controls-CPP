@@ -251,27 +251,15 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 	  V3F accelCmd = accelCmdFF;
 
 	  ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-	  float xCmdError = (posCmd.x - pos.x);
-	  float yCmdError = (posCmd.y - pos.y);
+	  V3F posError = posCmd - pos;
+	  
+	  if (velCmd.mag() > maxSpeedXY) { velCmd = velCmd * maxSpeedXY / velCmd.mag(); }
 
-	  float x_dotCmd = kpPosXY * xCmdError;
-	  float y_dotCmd = kpPosXY * yCmdError;
+	  V3F velErr = velCmd - vel;
 
-	  x_dotCmd = CONSTRAIN(x_dotCmd, -maxSpeedXY, maxSpeedXY);
-	  y_dotCmd = CONSTRAIN(y_dotCmd, -maxSpeedXY, maxSpeedXY);
+	  accelCmd += kpPosXY * posError + kpVelXY * velErr;
 
-	  float x_dotCmdError = (velCmd.x - vel.x);
-	  float y_dotCmdError = (velCmd.y - vel.y);
-
-	  float x_dot_dotCmd = x_dotCmd + kpVelXY * x_dotCmdError + accelCmdFF.x;
-	  float y_dot_dotCmd = y_dotCmd + kpVelXY * y_dotCmdError + accelCmdFF.y;
-		
-	  x_dot_dotCmd = CONSTRAIN(x_dot_dotCmd, -maxAccelXY, maxAccelXY);
-	  y_dot_dotCmd = CONSTRAIN(y_dot_dotCmd, -maxAccelXY, maxAccelXY);
-
-	  accelCmd.x = x_dot_dotCmd;
-	  accelCmd.y = y_dot_dotCmd;
-	  accelCmd.z = 0.0;
+	  if (accelCmd.mag() > maxAccelXY) { accelCmd = accelCmd * maxAccelXY / accelCmd.mag(); }
 	  /////////////////////////////// END STUDENT CODE ////////////////////////////
 
 	  return accelCmd;
