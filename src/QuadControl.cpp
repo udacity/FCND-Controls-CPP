@@ -204,8 +204,8 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 	  
 	  if (velCmd.mag() > maxSpeedXY) { velCmd = velCmd * maxSpeedXY / velCmd.mag(); }
 
-	  V3F velErr = velCmd - vel;
-	  accelCmd += kpPosXY * posError + kpVelXY * velErr;
+	  V3F velError = velCmd - vel;
+	  accelCmd += kpPosXY * posError + kpVelXY * velError;
 
 	  if (accelCmd.mag() > maxAccelXY) { accelCmd = accelCmd * maxAccelXY / accelCmd.mag(); }
 
