@@ -196,4 +196,19 @@
       <Filter>MavlinkNode</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\config\1_Intro.txt" />
+    <Text Include="..\config\2_AttitudeControl.txt" />
+    <Text Include="..\config\3_PositionControl.txt" />
+    <Text Include="..\config\4_Nonidealities.txt" />
+    <Text Include="..\config\5_TrajectoryFollow.txt" />
+    <Text Include="..\config\LastScenario.txt" />
+    <Text Include="..\config\QuadControlParams.txt" />
+    <Text Include="..\config\QuadPhysicalParams.txt" />
+    <Text Include="..\config\Scenarios.txt" />
+    <Text Include="..\config\Simulation.txt" />
+    <Text Include="..\config\X_Scenarios.txt" />
+    <Text Include="..\config\X_TestManyQuads.txt" />
+    <Text Include="..\config\X_TestMavlink.txt" />
+  </ItemGroup>
 </Project>
