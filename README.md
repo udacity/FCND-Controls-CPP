@@ -199,7 +199,7 @@ Next, you will implement the position, altitude and yaw control for your quad.  
 
  - implement the code in the function `LateralPositionControl()`
  - implement the code in the function `AltitudeControl()`
- - tune parameters `kpPosZ` and `kpPosZ`
+ - tune parameters `kpPosXY` and `kpPosZ`
  - tune parameters `kpVelXY` and `kpVelZ`
 
 If successful, the quads should be going to their destination points and tracking error should be going down (as shown below). However, one quad remains rotated in yaw.
