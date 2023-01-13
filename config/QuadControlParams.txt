@@ -19,20 +19,20 @@ minMotorThrust = .1
 maxMotorThrust = 4.5
 
 # Position control gains
-kpPosXY = 1
-kpPosZ = 1
-KiPosZ = 20
+kpPosXY = 35 #1 # Tune for position control
+kpPosZ = 30 #1  # tune for altitude control
+KiPosZ = 20 # Tuned for altitude control (1)
 
 # Velocity control gains
-kpVelXY = 4
+kpVelXY = 12 #4 # Tune in part for position control
 kpVelZ = 4
 
 # Angle control gains
-kpBank = 5
-kpYaw = 1
+kpBank = 13 #4 # Tuned for attitude control (2)
+kpYaw = 5 #1 # Tune in part for position control 
 
 # Angle rate gains
-kpPQR = 23, 23, 5
+kpPQR = 50, 50, 10 #23, 23, 5 # Tuned for attitude control
 
 # limits
 maxAscentRate = 5
