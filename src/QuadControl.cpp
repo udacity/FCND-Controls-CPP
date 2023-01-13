@@ -69,11 +69,31 @@ VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momen
   // You'll need the arm length parameter L, and the drag/thrust ratio kappa
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-
+  /*
+  // Initial hover only code for scenario 1
   cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
   cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
   cmd.desiredThrustsN[2] = mass * 9.81f / 4.f; // rear left
   cmd.desiredThrustsN[3] = mass * 9.81f / 4.f; // rear right
+  */
+    
+    float l = L / sqrt(2);
+    // Calculate force vector
+    float f_c = collThrustCmd;
+    float f_p = momentCmd.x / l;        // torque converted to force
+    float f_q = momentCmd.y / l;        // torque to force
+    float f_r = momentCmd.z / kappa;    // torque to force
+    // Calculate individual rotor forces
+    float f1 = (f_c + f_p + f_q - f_r) / 4.0;
+    float f2 = f1 - (f_p - f_r) / 2.0;
+    float f4 = (f_c - f_p) / 2.0 - f2;
+    float f3 = f_c - f1 - f2 - f4;
+
+    cmd.desiredThrustsN[0] = f1;
+    cmd.desiredThrustsN[1] = f2;
+    cmd.desiredThrustsN[2] = f3;
+    cmd.desiredThrustsN[3] = f4;
+    
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
@@ -160,11 +180,12 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
   float thrust = 0;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-
-
-
-  /////////////////////////////// END STUDENT CODE ////////////////////////////
-  
+  float z_err = posZCmd - posZ;
+  float z_dot_err = CONSTRAIN(velZCmd, -maxAscentRate, maxDescentRate) - velZ;
+  integratedAltitudeError += z_err * dt;
+  float ubar = kpPosZ * z_err + kpVelZ * z_dot_err + accelZCmd + KiPosZ * integratedAltitudeError;
+  thrust = -mass * (ubar - CONST_GRAVITY) / R(2, 2);
+  /////////////////////////////// END STUDENT CODE ////////////////////////////  
   return thrust;
 }
 
