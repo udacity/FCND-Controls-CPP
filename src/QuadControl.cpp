@@ -117,9 +117,7 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
   V3F momentCmd;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-
-  
-
+  momentCmd = V3F(Ixx, Iyy, Izz) * kpPQR * (pqrCmd - pqr);
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
   return momentCmd;
@@ -148,9 +146,25 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
   Mat3x3F R = attitude.RotationMatrix_IwrtB();
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
+  pqrCmd.x = 0;
+  pqrCmd.y = 0;
+  pqrCmd.z = 0;
+  if (collThrustCmd > 0)
+  {
+      float c = -collThrustCmd / mass; // convert thrust from Newtons to m/s^2
 
+      float bx = CONSTRAIN(accelCmd.x / c, -maxTiltAngle, maxTiltAngle);
+      float bx_err = bx - R(0, 2);
+      float bx_dot = kpBank * bx_err;
 
+      float by = CONSTRAIN(accelCmd.y / c, -maxTiltAngle, maxTiltAngle);
+      float by_err = by - R(1, 2);
+      float by_dot = kpBank * by_err;
 
+      pqrCmd.x = (R(1, 0) * bx_dot - R(0, 0) * by_dot) / R(2, 2);
+      pqrCmd.y = (R(1, 1) * bx_dot - R(0, 1) * by_dot) / R(2, 2);
+  }
+  
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
   return pqrCmd;
@@ -219,7 +233,10 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
   V3F accelCmd = accelCmdFF;
 
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-
+  V3F err = posCmd - pos;
+  V3F v_err = velCmd - vel;
+  
+  accelCmd += kpPosXY * err + kpVelXY * v_err;
   
 
   /////////////////////////////// END STUDENT CODE ////////////////////////////
@@ -242,8 +259,7 @@ float QuadControl::YawControl(float yawCmd, float yaw)
 
   float yawRateCmd=0;
   ////////////////////////////// BEGIN STUDENT CODE ///////////////////////////
-
-
+  yawRateCmd = kpYaw * (fmodf(yawCmd, 2 * F_PI) - yaw);
   /////////////////////////////// END STUDENT CODE ////////////////////////////
 
   return yawRateCmd;
